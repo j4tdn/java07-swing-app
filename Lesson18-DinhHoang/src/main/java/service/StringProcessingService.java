@@ -6,4 +6,6 @@ public interface StringProcessingService {
 	String countDuplicateWords(String input);
 
 	String switchTo(String input);
+
+	boolean isAlphabet(String input);
 }

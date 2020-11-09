@@ -161,11 +161,10 @@ public class Ex02 extends JFrame {
 
 	private void convert() {
 		String input = tfInput.getText();
-		String regex = "[0-9]+";
 
 		if (input.isEmpty()) {
 			return;
-		} else if (input.trim().matches(regex)) {
+		} else if (!service.isAlphabet(input)) {
 			lbError.setVisible(true);
 		} else {
 			String select = (String) cbPerform.getSelectedItem();

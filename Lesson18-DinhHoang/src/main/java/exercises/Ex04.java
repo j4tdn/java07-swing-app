@@ -44,6 +44,7 @@ public class Ex04 extends JFrame {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		con.setBackground(service.getBackgroundColor(1));
+		setTitle("Thread Demo");
 
 		lbImageRandom = new JLabel();
 		btStop = new JButton();

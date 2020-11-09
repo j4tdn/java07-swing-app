@@ -90,6 +90,7 @@ public class Ex01 extends JFrame {
 		add(lbResult);
 
 		tfResult.setFont(textFont);
+		tfResult.setRequestFocusEnabled(false);
 		tfResult.setBounds(130 + getPreWidth(lbInput), 120 + getPreHeight(lbInput) + getPreHeight(lbTitle), 270, 30);
 		add(tfResult);
 

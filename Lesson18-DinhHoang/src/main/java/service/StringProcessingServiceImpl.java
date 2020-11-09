@@ -37,4 +37,15 @@ public class StringProcessingServiceImpl implements StringProcessingService {
 		}
 		return result;
 	}
+
+	@Override
+	public boolean isAlphabet(String input) {
+		String str = "0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~}";
+		for (int i = 0; i < input.length(); i++) {
+			if (!" ".equals(String.valueOf(input.charAt(i))) && str.contains(String.valueOf(input.charAt(i)))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
