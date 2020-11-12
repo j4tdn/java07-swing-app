@@ -61,20 +61,25 @@ public class Ex04 extends JFrame {
 
 	private void initEvents() {
 
-		new Thread(() -> randomImage()).start();
+		Thread threadImage = new Thread(() -> randomImage());
+		threadImage.start();
+
+		Thread threadColor = new Thread(() -> randomColor());
+		threadColor.start();
 
 		btStop.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new Thread(() -> {
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					System.exit(0);
-				}).start();
+				threadImage.interrupt();
+				threadColor.interrupt();
+
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				setVisible(isUndecorated());
 			}
 		});
 	}
@@ -91,9 +96,26 @@ public class Ex04 extends JFrame {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					System.out.print(e.getMessage());
 				}
 				tmp = image;
+			}
+		}
+	}
+
+	private void randomColor() {
+		int colorNumber = 6;
+		int tmp = -1;
+		while (true) {
+			int color = service.getIndex(colorNumber);
+			if (color != tmp) {
+				con.setBackground(service.getBackgroundColor(color));
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					System.out.print(e.getMessage());
+				}
+				tmp = color;
 			}
 		}
 	}

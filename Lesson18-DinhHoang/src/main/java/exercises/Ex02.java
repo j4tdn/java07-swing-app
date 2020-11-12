@@ -154,7 +154,7 @@ public class Ex02 extends JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				System.exit(0);
+				setVisible(isUndecorated());
 			}
 		});
 	}

@@ -60,20 +60,21 @@ public class Ex03 extends JFrame {
 
 	private void initEvents() {
 
-		new Thread(() -> randomColor()).start();
+		Thread thread = new Thread(() -> randomColor());
+		thread.start();
 
 		btStop.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				new Thread(() -> {
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					System.exit(0);
-				}).start();
+				thread.interrupt();
+
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				setVisible(isUndecorated());
 			}
 		});
 
@@ -92,7 +93,7 @@ public class Ex03 extends JFrame {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					System.out.print(e.getMessage());
 				}
 				tmp = color;
 			}
