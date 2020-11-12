@@ -8,6 +8,8 @@ package view;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Period;
@@ -63,7 +65,28 @@ public class Ex05 extends javax.swing.JFrame {
                                 + period.getMonths() + " tháng"
                                 + period.getDays() + " ngày");
             }
-            
+        });
+        
+        tfFirstPersion.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (tfFirstPersion.getText().isEmpty()) {
+                    lbError1.setVisible(true);
+                } else {
+                    lbError1.setVisible(false);
+                }          
+            } 
+        });
+        
+        tSecondPersion.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (tSecondPersion.getText().isEmpty()) {
+                    lbError2.setVisible(true);
+                } else {
+                    lbError2.setVisible(false);
+                }          
+            } 
         });
     }
 
