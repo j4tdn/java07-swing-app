@@ -34,6 +34,10 @@ public class Ex05 extends javax.swing.JFrame {
         initComponents();
         initComponentsManually();
         initEvent();
+        lbResult.setSize(100, 30);
+        
+        lbFirstError.setVisible(false);
+        lbSecondError.setVisible(false);
     }
     private void initComponentsManually(){
         setResizable(false);
@@ -50,6 +54,7 @@ public class Ex05 extends javax.swing.JFrame {
         
     }
     private void initEvent(){
+        btlikeEvent();
         btLoveEvent();
         
         
@@ -64,8 +69,12 @@ public class Ex05 extends javax.swing.JFrame {
                 final Date end = dcEnd.getDate();
                 
                 Period period = timeService.getPeriod(start, end);
-                
-                lbresult.setText("Kết Quả :"
+                if (secondName.isEmpty()) {
+                    lbSecondError.setVisible(true);
+                }
+                else{
+                    lbSecondError.setVisible(false);
+                lbResult.setText("Kết Quả :"
                         +firstName
                         + "&"
                         + secondName
@@ -73,6 +82,38 @@ public class Ex05 extends javax.swing.JFrame {
                         +period.getYears()+"Năm"
                         +period.getMonths()+"Tháng"
                         +period.getDays()+"Ngày");
+                }
+            }
+            
+        });
+        
+    }
+    private void btlikeEvent(){
+        btLike.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                final String firstName = tfFirstPersion.getText();
+                final String secondName= tfSecondPersion.getText();
+                final Date start= dcStart.getDate();
+                final Date end = dcEnd.getDate();
+                
+                Period period = timeService.getPeriod(start, end);
+                
+                if (firstName.isEmpty()) {
+                    lbFirstError.setVisible(true);
+                }
+                else {
+                       lbResult.setText("Kết Quả :"
+                        +firstName
+                        + "&"
+                        + secondName
+                        +"Đã Quen Nhau"
+                        +period.getYears()+"Năm"
+                        +period.getMonths()+"Tháng"
+                        +period.getDays()+"Ngày");
+                    lbSecondError.setVisible(false);
+                    
+                }
                 
             }
             
@@ -101,7 +142,7 @@ public class Ex05 extends javax.swing.JFrame {
         dcStart = new com.toedter.calendar.JDateChooser();
         dcEnd = new com.toedter.calendar.JDateChooser();
         lbEnd = new javax.swing.JLabel();
-        lbresult = new javax.swing.JLabel();
+        lbResult = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Love - Time Application");
@@ -159,8 +200,8 @@ public class Ex05 extends javax.swing.JFrame {
         lbEnd.setForeground(new java.awt.Color(204, 204, 255));
         lbEnd.setText("Ngày Hiện Tại");
 
-        lbresult.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        lbresult.setForeground(new java.awt.Color(255, 255, 255));
+        lbResult.setForeground(new java.awt.Color(255, 255, 255));
+        lbResult.setText("Kết Quả");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,8 +237,8 @@ public class Ex05 extends javax.swing.JFrame {
                 .addComponent(lbTitle)
                 .addGap(188, 188, 188))
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(lbresult, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62)
+                .addComponent(lbResult)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -216,9 +257,7 @@ public class Ex05 extends javax.swing.JFrame {
                         .addComponent(lbStart)
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(dcStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(164, 164, 164))
+                            .addComponent(dcStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(tfFirstPersion, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(107, 107, 107)
@@ -240,9 +279,9 @@ public class Ex05 extends javax.swing.JFrame {
                                     .addComponent(lbFirstError))
                                 .addGap(60, 60, 60)
                                 .addComponent(btLove)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addComponent(lbresult, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addComponent(lbResult)
+                .addGap(35, 35, 35))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(92, 92, 92)
@@ -305,12 +344,12 @@ public class Ex05 extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser dcStart;
     private javax.swing.JLabel lbEnd;
     private javax.swing.JLabel lbFirstError;
+    private javax.swing.JLabel lbResult;
     private javax.swing.JLabel lbSecondError;
     private javax.swing.JLabel lbSecondPersion;
     private javax.swing.JLabel lbStart;
     private javax.swing.JLabel lbTimePersion;
     private javax.swing.JLabel lbTitle;
-    private javax.swing.JLabel lbresult;
     private javax.swing.JTextField tfFirstPersion;
     private javax.swing.JTextField tfSecondPersion;
     // End of variables declaration//GEN-END:variables
