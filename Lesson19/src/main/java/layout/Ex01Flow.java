@@ -6,10 +6,14 @@
 package layout;
 
 import java.awt.Color;
+import static java.awt.ComponentOrientation.LEFT_TO_RIGHT;
+import static java.awt.ComponentOrientation.RIGHT_TO_LEFT;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -61,12 +65,12 @@ public class Ex01Flow extends JFrame {
     }
 
     private void addForm() {
-
         rdLtoR = new JRadioButton();
         rdLtoR.setText("Left to Right");
         rdLtoR.setFont(font);
         rdLtoR.setFocusPainted(false);
         orientationGroup.add(rdLtoR);
+        rdLtoR.setSelected(true);
         conn.add(rdLtoR);
 
         rdRtoL = new JRadioButton();
@@ -107,7 +111,13 @@ public class Ex01Flow extends JFrame {
     }
 
     private void initEvents() {
-
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnButtons.applyComponentOrientation(rdLtoR.isSelected() ? LEFT_TO_RIGHT : RIGHT_TO_LEFT);
+                pnButtons.revalidate();
+            }
+        });
     }
 
     public static void main(String[] args) {
