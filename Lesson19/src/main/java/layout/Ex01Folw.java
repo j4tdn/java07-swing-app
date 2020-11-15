@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+import static java.awt.ComponentOrientation.*;
 
 /**
  *
@@ -92,6 +95,13 @@ public class Ex01Folw extends JFrame {
     }
 
     private void initEvents() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnButton.applyComponentOrientation(rdLtoR.isSelected() ? LEFT_TO_RIGHT : RIGHT_TO_LEFT);
+                pnButton.revalidate();
+            }
+        });
     }
 
     public static void main(String[] args) {
