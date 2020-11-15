@@ -6,11 +6,14 @@
 package layout;
 
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.LayoutManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -99,7 +102,13 @@ public class Ex01FlowLayout extends JFrame{
     }
     
     private void initEvents() {
-        
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnButtons.applyComponentOrientation(rdLeft.isSelected() ? ComponentOrientation.LEFT_TO_RIGHT: ComponentOrientation.RIGHT_TO_LEFT);
+                pnButtons.revalidate();
+            }            
+        });
     }
     
     public static void main(String[] args) {
