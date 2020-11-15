@@ -7,10 +7,14 @@ package layout;
 
 
 import java.awt.Color;
+import java.awt.ComponentOrientation;
+import static java.awt.ComponentOrientation.*;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 
@@ -99,6 +103,7 @@ public class Ex01Flow extends JFrame{
         rdLtoR.setText("Left To Right");
         rdLtoR.setFocusable(false);
         rdLtoR.setFont(font);
+        rdLtoR.setSelected(true);
         conn.add(rdLtoR);
         orientationGroup.add(rdLtoR);
         
@@ -121,6 +126,22 @@ public class Ex01Flow extends JFrame{
         
     }
     private void initEvent(){
+        
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                
+                pnButton.applyComponentOrientation(rdLtoR.isSelected()?LEFT_TO_RIGHT : RIGHT_TO_LEFT);
+                pnButton.revalidate();
+                
+                //revalidate = invalidate + validate
+                //validate
+                //invalidate
+                
+                
+            }
+            
+        });
         
     }
     public static void main(String[] args) {
