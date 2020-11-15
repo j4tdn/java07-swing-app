@@ -6,10 +6,13 @@
 package layout;
 
 import java.awt.Color;
+import static java.awt.ComponentOrientation.*;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -68,6 +71,7 @@ public class Ex01Flow extends JFrame {
         rdLtoR.setText("Left to Right");
         rdLtoR.setFont(font);
         rdLtoR.setFocusPainted(false);
+        rdLtoR.setSelected(true);
         conn.add(rdLtoR);
 
         rdRtoL = new JRadioButton();
@@ -78,7 +82,7 @@ public class Ex01Flow extends JFrame {
 
         orientationGroup.add(rdLtoR);
         orientationGroup.add(rdRtoL);
-        
+
         btSubmit = new JButton();
         btSubmit.setText("Submit");
         btSubmit.setFont(font);
@@ -110,7 +114,17 @@ public class Ex01Flow extends JFrame {
     }
 
     private void initEvent() {
-
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnButtons.applyComponentOrientation(rdLtoR.isSelected() ? LEFT_TO_RIGHT : RIGHT_TO_LEFT);
+                pnButtons.validate();
+                
+                //reValidate=invalidate+validate
+                //validate :redraw invalidate component
+                //invalidate:check list of comp need to be redraw
+            }
+        });
     }
 
     public static void main(String[] args) {
