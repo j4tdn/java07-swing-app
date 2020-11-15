@@ -9,6 +9,6 @@ package service;
  *
  * @author ADMIN
  */
-public interface ConverterService {
+public interface TruncateService {
     String truncate(String input);
 }

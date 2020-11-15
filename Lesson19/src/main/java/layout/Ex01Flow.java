@@ -7,12 +7,11 @@ package layout;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.File;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -22,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+
+import static java.awt.ComponentOrientation.*;
 
 /**
  *
@@ -37,8 +38,8 @@ public class Ex01Flow extends JFrame {
     private JRadioButton rdLtoR;
     private JRadioButton rdRtoL;
     private JButton btSubmit;
-    private ButtonGroup orientationGroup=new ButtonGroup();
-    
+    private ButtonGroup orientationGroup = new ButtonGroup();
+
     public Ex01Flow() {
         //UI
         initComponents();
@@ -68,6 +69,7 @@ public class Ex01Flow extends JFrame {
         rdLtoR.setText("Left To Right");
         rdLtoR.setFont(font);
         rdLtoR.setFocusPainted(false);
+        rdLtoR.setSelected(true);
         conn.add(rdLtoR);
 
         rdRtoL = new JRadioButton();
@@ -75,10 +77,10 @@ public class Ex01Flow extends JFrame {
         rdRtoL.setFont(font);
         rdRtoL.setFocusPainted(false);
         conn.add(rdRtoL);
-        
+
         orientationGroup.add(rdLtoR);
         orientationGroup.add(rdRtoL);
-        
+
         btSubmit = new JButton();
         btSubmit.setText("Submit");
         btSubmit.setFont(font);
@@ -91,9 +93,9 @@ public class Ex01Flow extends JFrame {
         flayout.setVgap(10);
         pnButtons = new JPanel();
         pnButtons.setLayout(flayout);
-        
+
         Border insideBorder = BorderFactory.createEtchedBorder(Color.PINK, Color.BLACK);
-        Border outsideBorder = BorderFactory.createEmptyBorder(30,0,0,0);
+        Border outsideBorder = BorderFactory.createEmptyBorder(30, 0, 0, 0);
         Border border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder);
         pnButtons.setBorder(border);
         for (int i = 1; i <= nofButtons; i++) {
@@ -107,7 +109,16 @@ public class Ex01Flow extends JFrame {
     }
 
     private void initEvents() {
-
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnButtons.applyComponentOrientation(rdLtoR.isSelected()?LEFT_TO_RIGHT:RIGHT_TO_LEFT);
+                pnButtons.revalidate();
+                // revalidate = invalidate + validate 
+                // validate : redraw invalidate comps
+                // invalidate : check list of comps need to be redraw
+            }
+        });
     }
 
     public static void main(String[] args) {

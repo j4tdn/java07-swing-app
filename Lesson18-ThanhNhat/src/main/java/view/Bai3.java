@@ -25,16 +25,15 @@ import static utils.CompUtils.*;
  *
  * @author ADMIN
  */
-public class Ex06 extends JFrame{
+public class Bai3 extends JFrame{
     private JLabel lbText;
     private JButton btStop;
     
     private  Thread thread;
     private final Random rd=new Random();
     private Container conn=getContentPane();
-    //private static final String PROJECT_PATH=new File("").getAbsolutePath();
-    //private static final String IMAGES_PATH=PROJECT_PATH+"\\src\\main\\java\\images";
-    public Ex06(){
+  
+    public Bai3(){
         
         //ui
         initComponent();
@@ -43,18 +42,9 @@ public class Ex06 extends JFrame{
     }
     private void initComponent(){
         setResizable(false);
-        setTitle("JAVA07-Random Background");
+        setTitle("Exercise3");
         setSize(440,400);
-        
-//        Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
-//        int x=screenSize.width/2-frame.getWidth()/2;
-//        int y=screenSize.height/2-frame.getHeight()/2;
-//        frame.setLocation(x,y);
-        
-        //full screen
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
-        //ss url uri
+
         Image image=new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
         setIconImage(image);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -87,9 +77,14 @@ public class Ex06 extends JFrame{
     private void randomBackground(){
         // create thread rn parallel with main thread
         thread=new Thread(() -> {
+            Colour lastColour=null;
             while (true) {                    
                 Colour[] colours=Colour.values();
-                Colour colour=colours[rd.nextInt(colours.length)];// xu li mau sau ko dc trung mau truoc
+                Colour colour=colours[rd.nextInt(colours.length)];
+                if (colour.equals(lastColour)) {
+                    continue;
+                }
+                lastColour=colour;
                 lbText.setText("Random: "+colour.name().toUpperCase());
                 conn.setBackground(colour.getColor());
                 sleep(1);
@@ -118,7 +113,7 @@ public class Ex06 extends JFrame{
     }
     
     public static void main(String[] args) {
-       Ex06 that= new Ex06();
+       Bai3 that= new Bai3();
        that.setVisible(true);
     }
          

@@ -18,9 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
-import service.ConverterService;
-import service.ConverterServiceImpl;
+import service.TruncateServiceImpl;
 import static utils.CompUtils.*;
+import service.TruncateService;
 
 /**
  *
@@ -41,10 +41,10 @@ public class Bai1 extends JFrame {
     private JButton btSubmit;
     private JTextField tfResult;
 
-    private final ConverterService converter;
+    private final TruncateService truncate;
 
     public Bai1() {
-        converter = new ConverterServiceImpl();
+        truncate = new TruncateServiceImpl();
 
         //UI
         initComponents();
@@ -61,7 +61,6 @@ public class Bai1 extends JFrame {
 
         //Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
         //setIconImage(image);
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //JFrame layout default : BorderLayout
@@ -83,32 +82,32 @@ public class Bai1 extends JFrame {
         lbMessage.setFont(textFont);
         lbMessage.setBounds(90, getPreHeight(lbTitle) + 30 * 2, getPreWidth(lbMessage), getPreHeight(lbMessage));
         add(lbMessage);
-        
+
         tfInput = new JTextField();
         tfInput.setFont(textFont);
-        tfInput.setBounds(90+getDWidth(lbMessage)+30, getPreHeight(lbTitle) + 30 * 2, 360, 32);
+        tfInput.setBounds(90 + getDWidth(lbMessage) + 30, getPreHeight(lbTitle) + 30 * 2, 360, 32);
         add(tfInput);
-        
+
         lbResult = new JLabel();
         lbResult.setText("Kết quả:");
         lbResult.setFont(textFont);
-        lbResult.setBounds(130, getPreHeight(lbTitle)+ getPreHeight(lbMessage) + 30 * 3, getPreWidth(lbResult), getPreHeight(lbResult));
+        lbResult.setBounds(130, getPreHeight(lbTitle) + getPreHeight(lbMessage) + 30 * 3, getPreWidth(lbResult), getPreHeight(lbResult));
         add(lbResult);
-        
+
         tfResult = new JTextField();
         tfResult.setFont(textFont);
-        tfResult.setBounds(130 + getPreWidth(lbResult) + 30, getPreHeight(lbTitle)+ getPreHeight(lbMessage) + 30 * 3, 190, 32);
+        tfResult.setBounds(130 + getPreWidth(lbResult) + 30, getPreHeight(lbTitle) + getPreHeight(lbMessage) + 30 * 3, 190, 32);
         tfResult.setEditable(false);
         add(tfResult);
-        
+
         btSubmit = new JButton();
-        btSubmit.setBounds(130 + getPreWidth(lbResult) + getDWidth(tfResult)+50, getPreHeight(lbTitle)+ getPreHeight(lbMessage) + 30 * 3, 150, 32);
+        btSubmit.setBounds(130 + getPreWidth(lbResult) + getDWidth(tfResult) + 50, getPreHeight(lbTitle) + getPreHeight(lbMessage) + 30 * 3, 150, 32);
         btSubmit.setFont(textFont);
         btSubmit.setFocusPainted(false);
         btSubmit.setText("Thực hiện");
         btSubmit.setCursor(new Cursor(Cursor.HAND_CURSOR));
         add(btSubmit);
-        
+
         lbErrorMessage = new JLabel();
         lbErrorMessage.setText("Input value is not valid !!!");
         lbErrorMessage.setForeground(Color.red);
@@ -123,7 +122,7 @@ public class Bai1 extends JFrame {
         btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                convertTfInput();
+                truncateTfInput();
             }
 
             @Override
@@ -143,22 +142,22 @@ public class Bai1 extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    convertTfInput();
+                    truncateTfInput();
                 }
             }
         });
     }
 
-    private void convertTfInput() {
+    private void truncateTfInput() {
         String input = tfInput.getText().trim();
-        if (input.isEmpty()){
+        if (input.isEmpty()) {
             lbErrorMessage.setVisible(false);
-            return ;
+            return;
         }
-        if (!input.trim().matches("[0-9,\\s]{1,}")){
+        if (!input.trim().matches("[0-9,\\s]{1,}")) {
             lbErrorMessage.setVisible(true);
         } else {
-            //tfResult.setText(converter.truncate(input));
+            tfResult.setText(truncate.truncate(input));
             lbErrorMessage.setVisible(false);
         }
     }
