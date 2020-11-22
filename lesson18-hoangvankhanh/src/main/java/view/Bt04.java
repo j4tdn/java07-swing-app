@@ -32,11 +32,12 @@ import java.awt.event.MouseEvent;
  * @author ADMIN
  */
 public class Bt04 extends JFrame{
-    private final Random rd = new Random();
-    private  Thread thread;
-    private final Container conn = getContentPane();
     private JLabel lbText;
-    private JButton btStop;
+    private JButton btnStop;
+    private  Thread thread;
+    private final Random rd = new Random();
+    
+    private final Container conn = getContentPane();
     
     
     
@@ -49,70 +50,67 @@ public class Bt04 extends JFrame{
     }
     private void initComponent(){
         setResizable(false);
-        
-        setTitle("Java07 - Random BackGround");
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setSize(440,400);
-        // get screen size with height 
-       // Dimension screensize =Toolkit.getDefaultToolkit().getScreenSize();
-       // int x=screensize.width/2-frame.getWidth()/2;
-       // int y=screensize.height/2-frame.getHeight()/2;
-       // frame.setLocation(x, y);
+        setSize(440, 400);
+        setTitle("Random Background");
+
         setLocationRelativeTo(null);
-        Image img=new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
-        setIconImage(img);
-        
-        
+        Font font = new Font("Tahoma",Font.BOLD,18);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(null);
-        Font font = new Font("Tahoma",Font.BOLD, 18);
         lbText = new JLabel();
-        lbText.setText("Random : Green" );
+        lbText.setIcon(new ImageIcon(getClass().getResource("/images/ghost/1.jpg")));
         lbText.setFont(font);
-        lbText.setBounds(120, 50, CompUtils.getPreWidth(lbText)+30, CompUtils.getPreHeight(lbText));
-        
+        lbText.setBounds(145, 50, 100, 100);
         conn.add(lbText);
         
+        btnStop = new JButton();
+        btnStop.setText("Stop");
+        btnStop.setFocusPainted(false);
+        btnStop.setFont(font);
+        btnStop.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnStop.setBounds(160,150  ,120, CompUtils.getPreHeight(btnStop));
+        conn.add(btnStop);
         
-        btStop = new JButton();
-        btStop.setText("Stop");
-        btStop.setFocusable(false);
-        btStop.setCursor(new Cursor(Cursor.HAND_CURSOR) {
-        });
-        btStop.setBounds(145, 150, CompUtils.getPreWidth(btStop)+30, CompUtils.getPreHeight(btStop));
-        
-        conn.add(btStop);
         
         
         randomBackground();
+        randomImages();
      
         
     }
-    private void randomBackground(){
-        //create thread run parallel
-         thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {  
-                    System.out.println("Thread Running :)");
-                Colour[] colors = Colour.values();
-                Colour colour = colors[rd.nextInt(colors.length)];
-                lbText.setText("Random :" + colour.name());
+    private void randomImages(){
+        
+        thread = new Thread(()->{
+            while(true){
+                int imgNumbers = rd.nextInt(8)+1;
+                lbText.setIcon(new ImageIcon(getClass().getResource("/images/ghost/"+imgNumbers+".jpg")));
+                sleep(1);
+            }
+        });
+        thread.start();
+    }
+     private void randomBackground(){
+        //create thread run paralle
+        
+        thread = new Thread(()->{
+            while(true){
+                Colour[] colours = Colour.values();
+                Colour colour = colours[rd.nextInt(colours.length)];
+        
                 conn.setBackground(colour.getColour());
-                    sleep(1);
-                    
+                    sleep(3);
                 }
-                
-                
         }
-        } );
+
+        );
         thread.start();
         
+    }
       
        
         
         
-    }
+    
     private void sleep(long second){
         try {
             Thread.sleep(second *1000);
@@ -120,17 +118,19 @@ public class Bt04 extends JFrame{
             System.out.println(ex.getMessage());
         }
     }
-    private void initEvent(){
-        btStop.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                thread.interrupt();
-                sleep(3);
-                System.exit(0);
-            }
+    
+            private void initEvent() {
+            btnStop.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    thread.interrupt();
+                    
+                    sleep(1);
+                    System.exit(0);
+                }
+                
+            });
             
-        });
-        
     }
     public static void main(String[] args) {
        Bt04 that = new Bt04();

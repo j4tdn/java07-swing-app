@@ -12,6 +12,13 @@ package service;
 public interface ConverterService {
     String convert(String input);
     String getResult(String input);
+    
+    int countWords(String input);
+    String countDuplicateWords(String input);
+
+    String switchTo(String input);
+
+    boolean isAlphabet(String input);
         
     
     

@@ -6,6 +6,7 @@
 package layout;
 
 
+import common.cardType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -26,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,7 +42,7 @@ import view.sub.pnHomePage;
  *
  * @author ADMIN
  */
-public class Ex04Card extends JFrame{
+public class Ex04CardRemoveAll extends JFrame{
         private JSplitPane splitpane;
         private JSplitPane splPanePnLeft;
         
@@ -58,8 +60,12 @@ public class Ex04Card extends JFrame{
         private final Container conn = getContentPane();
         private Font font = new Font("Tahoma", Font.PLAIN, 18);
         private final BorderLayout borderLayout = new BorderLayout();
+        private final BorderLayout borderLayoutpnCenter = new BorderLayout();
         private final GridLayout gridLayout = new GridLayout(4, 0);
-        private final CardLayout cardLayout= new CardLayout();
+        
+        
+        private final EnumMap<cardType,JPanel> cardMap;
+        
         
         
         
@@ -67,7 +73,11 @@ public class Ex04Card extends JFrame{
         
     
     
-    public Ex04Card(){
+    public Ex04CardRemoveAll(){
+        cardMap = new EnumMap<>(cardType.class);
+        cardMap.put(cardType.Employee, new pnEmployee());
+        cardMap.put(cardType.HomePage, new pnHomePage());
+        
         
         //ui
         initComponent();
@@ -106,9 +116,9 @@ public class Ex04Card extends JFrame{
         pnleftTop.setLayout(gridLayout);
         
         
-        List<String> buttons = Arrays.asList("HomePage","Employee");
+        cardType[] cards = cardType.values();
         JButton btHomepage = new JButton();
-            btHomepage.setText(buttons.get(0));
+            btHomepage.setText(cards[0].name());
             
             btHomepage.setFont(font);
             btHomepage.setFocusable(false);
@@ -118,9 +128,9 @@ public class Ex04Card extends JFrame{
             
             
             previousClickedButton = btHomepage;
-        for(int i=1;i<buttons.size();i++ ){
+        for(int i=1;i<cards.length;i++ ){
             JButton button = new JButton();
-            button.setText(buttons.get(i));
+            button.setText(cards[i].name());
             
             button.setFont(font);
             button.setFocusable(false);
@@ -143,16 +153,17 @@ public class Ex04Card extends JFrame{
         
         //conn.add(splPanePnLeft, WEST);
         
-        
+       
         pnCenter = new JPanel();
         pnCenter.setBackground(Color.pink);
-        pnCenter.setLayout(cardLayout);
+        pnCenter.setLayout(borderLayoutpnCenter);
         
         
-        pnCenter.add(new pnHomePage(),"HomePage");
-        pnCenter.add(new pnEmployee(),"Employee");
         
-        cardLayout.show(pnCenter, "HomePage");
+        pnCenter.add(new pnHomePage(),BorderLayout.CENTER);
+        
+        
+        
         
         splitpane = new JSplitPane();
         splitpane.setOneTouchExpandable(true);
@@ -179,8 +190,12 @@ public class Ex04Card extends JFrame{
                     @Override
                     public void mousePressed(MouseEvent e) {
                         //show corrent card panel
-                        String cardKey = button.getText();
-                        cardLayout.show(pnCenter, cardKey);
+                        pnCenter.removeAll();
+                        System.out.println(button.getText());
+                        JPanel panel = cardMap.get(cardType.from(button.getText()));
+                        pnCenter.add(panel);
+                        pnCenter.repaint();
+                        pnCenter.revalidate();
                           //highlight corrent button
                         button.setBorder(highlightBorder);
                         //unhighlight previous button
@@ -205,7 +220,7 @@ public class Ex04Card extends JFrame{
         
     
     public static void main(String[] args) {
-       Ex04Card that = new Ex04Card();
+       Ex04CardRemoveAll that = new Ex04CardRemoveAll();
        that.setVisible(true);
     }
          
