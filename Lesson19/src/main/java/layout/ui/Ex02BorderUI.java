@@ -29,6 +29,10 @@ public class Ex02BorderUI extends javax.swing.JFrame {
 
         pnTop = new javax.swing.JPanel();
         splitPane = new javax.swing.JSplitPane();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,6 +50,56 @@ public class Ex02BorderUI extends javax.swing.JFrame {
         );
 
         getContentPane().add(pnTop, java.awt.BorderLayout.NORTH);
+
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 177, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jSplitPane1.setTopComponent(jPanel1);
+
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 177, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 145, Short.MAX_VALUE)
+        );
+
+        jSplitPane1.setRightComponent(jPanel2);
+
+        splitPane.setLeftComponent(jSplitPane1);
+
+        jPanel3.setBackground(new java.awt.Color(204, 255, 0));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 447, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 252, Short.MAX_VALUE)
+        );
+
+        splitPane.setRightComponent(jPanel3);
+
         getContentPane().add(splitPane, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -87,6 +141,10 @@ public class Ex02BorderUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel pnTop;
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
