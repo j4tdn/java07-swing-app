@@ -29,7 +29,7 @@ public class pnEmployee extends javax.swing.JPanel {
 
         lbEmployee = new javax.swing.JLabel();
 
-        lbEmployee.setText("jLabel1");
+        lbEmployee.setText("Employee");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -38,7 +38,7 @@ public class pnEmployee extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(145, 145, 145)
                 .addComponent(lbEmployee)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
