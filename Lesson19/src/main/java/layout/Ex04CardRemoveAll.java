@@ -5,6 +5,7 @@
  */
 package layout;
 
+import common.CardType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -14,13 +15,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import static java.awt.BorderLayout.*;
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
-import java.util.Arrays;
+import java.util.EnumMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
@@ -33,13 +32,15 @@ import view.sub.panelHomePage;
  *
  * @author DangHoang
  */
-public class Ex04Card extends JFrame {
+public class Ex04CardRemoveAll extends JFrame {
 
     private final Container con = getContentPane();
     private final Font font = new Font("Tahoma", Font.PLAIN, 13);
     private final BorderLayout borderLayout = new BorderLayout();
+    private final BorderLayout borderLayoutPanelCenter = new BorderLayout();
     private final GridLayout gridLayout = new GridLayout(4, 0);
-    private final CardLayout cardLayout = new CardLayout();
+    private final CardType[] cardTypes = CardType.values();
+    private final EnumMap<CardType, JPanel> enumMap;
 
     private JPanel pnTop;
     private JSplitPane spPane;
@@ -51,7 +52,11 @@ public class Ex04Card extends JFrame {
     private Border defaulBorder;
     private JButton previousClickedButton;
 
-    public Ex04Card() {
+    public Ex04CardRemoveAll() {
+        enumMap = new EnumMap<>(CardType.class);
+        enumMap.put(CardType.Homepage, new panelHomePage());
+        enumMap.put(CardType.Homepage, new panelEmployes());
+
         initComponents();
         initEvents();
     }
@@ -80,23 +85,22 @@ public class Ex04Card extends JFrame {
         pnTop.setBackground(Color.GREEN);
         con.add(pnTop, NORTH);
 
-        pnLeftTop.setPreferredSize(new Dimension(140, 300));
+        pnLeftTop.setPreferredSize(new Dimension(140, 500));
         pnLeftTop.setBackground(Color.BLACK);
         pnLeftTop.setLayout(gridLayout);
 
-        List<String> buttons = Arrays.asList("Employes");
         JButton btHome = new JButton();
         btHome.setFont(new Font("Tahoma", Font.BOLD, 16));
-        btHome.setText("HomePage");
+        btHome.setText(cardTypes[0].name());
         defaulBorder = btHome.getBorder();
         btHome.setBorder(border);
         previousClickedButton = btHome;
         btHome.setFocusable(false);
         pnLeftTop.add(btHome);
-        for (int i = 0; i < buttons.size(); i++) {
+        for (int i = 1; i < cardTypes.length; i++) {
             JButton bt = new JButton();
             bt.setFont(font);
-            bt.setText(buttons.get(i));
+            bt.setText(cardTypes[i].name());
             bt.setFocusable(false);
             pnLeftTop.add(bt);
         }
@@ -107,11 +111,8 @@ public class Ex04Card extends JFrame {
         spPaneLeft.add(pnLeftBottom, BOTTOM);
 
         pnCenter.setBackground(Color.PINK);
-        pnCenter.setLayout(cardLayout);
-        pnCenter.add(new panelHomePage(), "HomePage");
-        pnCenter.add(new panelEmployes(), "Employes");
-
-        cardLayout.show(pnCenter, "Employes");
+        pnCenter.setLayout(borderLayoutPanelCenter);
+        pnCenter.add(new panelHomePage(), CENTER);
 
         spPane.setOneTouchExpandable(true);
         spPane.setOrientation(HORIZONTAL_SPLIT);
@@ -133,8 +134,11 @@ public class Ex04Card extends JFrame {
                 button.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        String key = button.getText();
-                        cardLayout.show(pnCenter, key);
+                        pnCenter.removeAll();
+                        JPanel panel = enumMap.get(CardType.from(button.getText()));
+                        pnCenter.add(panel);
+
+                        pnCenter.repaint();
                         previousClickedButton.setBorder(defaulBorder);
                         button.setBorder(border);
                         previousClickedButton = button;
@@ -145,6 +149,6 @@ public class Ex04Card extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Ex04Card().setVisible(true);
+        new Ex04CardRemoveAll().setVisible(true);
     }
 }
