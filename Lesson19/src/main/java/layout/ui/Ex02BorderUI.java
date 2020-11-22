@@ -28,14 +28,15 @@ public class Ex02BorderUI extends javax.swing.JFrame {
     private void initComponents() {
 
         pnTop = new javax.swing.JPanel();
+        spPane = new javax.swing.JSplitPane();
+        spPaneLeft = new javax.swing.JSplitPane();
+        spPaneLeftTop = new javax.swing.JPanel();
+        spPaneLeftBottom = new javax.swing.JPanel();
         pnCenter = new javax.swing.JPanel();
-        splitPanePnLeft = new javax.swing.JSplitPane();
-        pnLeftTop = new javax.swing.JPanel();
-        pnLeftBottom = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pnTop.setBackground(new java.awt.Color(51, 255, 204));
+        pnTop.setBackground(new java.awt.Color(153, 255, 255));
 
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
@@ -48,58 +49,58 @@ public class Ex02BorderUI extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        getContentPane().add(pnTop, java.awt.BorderLayout.NORTH);
+        getContentPane().add(pnTop, java.awt.BorderLayout.PAGE_START);
 
-        splitPanePnLeft.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        spPaneLeft.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        pnLeftTop.setBackground(new java.awt.Color(255, 204, 204));
+        spPaneLeftTop.setBackground(new java.awt.Color(255, 204, 204));
 
-        javax.swing.GroupLayout pnLeftTopLayout = new javax.swing.GroupLayout(pnLeftTop);
-        pnLeftTop.setLayout(pnLeftTopLayout);
-        pnLeftTopLayout.setHorizontalGroup(
-            pnLeftTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 175, Short.MAX_VALUE)
+        javax.swing.GroupLayout spPaneLeftTopLayout = new javax.swing.GroupLayout(spPaneLeftTop);
+        spPaneLeftTop.setLayout(spPaneLeftTopLayout);
+        spPaneLeftTopLayout.setHorizontalGroup(
+            spPaneLeftTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 177, Short.MAX_VALUE)
         );
-        pnLeftTopLayout.setVerticalGroup(
-            pnLeftTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        spPaneLeftTopLayout.setVerticalGroup(
+            spPaneLeftTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        splitPanePnLeft.setTopComponent(pnLeftTop);
+        spPaneLeft.setTopComponent(spPaneLeftTop);
 
-        pnLeftBottom.setBackground(new java.awt.Color(255, 153, 153));
+        spPaneLeftBottom.setBackground(new java.awt.Color(255, 153, 153));
 
-        javax.swing.GroupLayout pnLeftBottomLayout = new javax.swing.GroupLayout(pnLeftBottom);
-        pnLeftBottom.setLayout(pnLeftBottomLayout);
-        pnLeftBottomLayout.setHorizontalGroup(
-            pnLeftBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 175, Short.MAX_VALUE)
+        javax.swing.GroupLayout spPaneLeftBottomLayout = new javax.swing.GroupLayout(spPaneLeftBottom);
+        spPaneLeftBottom.setLayout(spPaneLeftBottomLayout);
+        spPaneLeftBottomLayout.setHorizontalGroup(
+            spPaneLeftBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 177, Short.MAX_VALUE)
         );
-        pnLeftBottomLayout.setVerticalGroup(
-            pnLeftBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+        spPaneLeftBottomLayout.setVerticalGroup(
+            spPaneLeftBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 269, Short.MAX_VALUE)
         );
 
-        splitPanePnLeft.setRightComponent(pnLeftBottom);
+        spPaneLeft.setRightComponent(spPaneLeftBottom);
+
+        spPane.setLeftComponent(spPaneLeft);
+
+        pnCenter.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout pnCenterLayout = new javax.swing.GroupLayout(pnCenter);
         pnCenter.setLayout(pnCenterLayout);
         pnCenterLayout.setHorizontalGroup(
             pnCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCenterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(splitPanePnLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(608, Short.MAX_VALUE))
+            .addGap(0, 609, Short.MAX_VALUE)
         );
         pnCenterLayout.setVerticalGroup(
             pnCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCenterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(splitPanePnLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 376, Short.MAX_VALUE)
         );
 
-        getContentPane().add(pnCenter, java.awt.BorderLayout.CENTER);
+        spPane.setRightComponent(pnCenter);
+
+        getContentPane().add(spPane, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -141,9 +142,10 @@ public class Ex02BorderUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel pnCenter;
-    private javax.swing.JPanel pnLeftBottom;
-    private javax.swing.JPanel pnLeftTop;
     private javax.swing.JPanel pnTop;
-    private javax.swing.JSplitPane splitPanePnLeft;
+    private javax.swing.JSplitPane spPane;
+    private javax.swing.JSplitPane spPaneLeft;
+    private javax.swing.JPanel spPaneLeftBottom;
+    private javax.swing.JPanel spPaneLeftTop;
     // End of variables declaration//GEN-END:variables
 }
