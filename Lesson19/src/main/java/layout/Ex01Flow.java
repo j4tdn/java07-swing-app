@@ -20,12 +20,13 @@ import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import static java.awt.ComponentOrientation.*;
+import javax.swing.ButtonModel;
 
 /**
  *
  * @author DangHoang
  */
-public class Ex01Folw extends JFrame {
+public class Ex01Flow extends JFrame {
 
     private final Container con = getContentPane();
     private JPanel pnButton;
@@ -37,7 +38,7 @@ public class Ex01Folw extends JFrame {
     private final FlowLayout flowLayout = new FlowLayout();
     private final Font font = new Font("Tahoma", Font.PLAIN, 13);
 
-    public Ex01Folw() {
+    public Ex01Flow() {
         initComponents();
         initEvents();
     }
@@ -105,6 +106,6 @@ public class Ex01Folw extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Ex01Folw().setVisible(true);
+        new Ex01Flow().setVisible(true);
     }
 }
