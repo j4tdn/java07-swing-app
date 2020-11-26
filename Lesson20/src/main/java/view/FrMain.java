@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package layout;
+package view;
 
 import common.CardType;
 import java.awt.BorderLayout;
@@ -34,12 +34,13 @@ import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
 import view.sub.PnEmployee;
 import view.sub.PnHomePage;
+import view.sub.PnStudent;
 
 /**
  *
  * @author qphan
  */
-public class Ex04CardRemoveAll extends JFrame {
+public class FrMain extends JFrame {
 
     private JPanel pnTop;
     private JPanel pnLeftTop;
@@ -62,22 +63,24 @@ public class Ex04CardRemoveAll extends JFrame {
 
     private final EnumMap<CardType, JPanel> cardMap;
     
-    public Ex04CardRemoveAll() {    
+    public FrMain() {
+        
         cardMap = new EnumMap<>(CardType.class);
-        cardMap.put(CardType.HomePage, new PnEmployee());
+        cardMap.put(CardType.Employee, new PnEmployee());
         cardMap.put(CardType.HomePage, new PnHomePage());
+        cardMap.put(CardType.Student, new PnStudent());
         
         initComponents();
         initEvents();
     }
 
     private void initComponents() {
-        setTitle("JAVA07 - BorderLayout");
+        setTitle("Da Nang University UI/UX");
 
-        setSize(1080, 700);
+        setSize(1320, 800);
         setLocationRelativeTo(null);
 
-        Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
+        Image image = new ImageIcon(getClass().getResource("/images/student.png")).getImage();
         setIconImage(image);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -159,8 +162,6 @@ public class Ex04CardRemoveAll extends JFrame {
                         
                         // show correct card panel
                         JPanel panel = cardMap.get(CardType.from(button.getText()));
-                        System.out.println("Key: " + button.getText());
-                        System.out.println("Val: " + panel);
                         pnCenter.add(panel);
                         
                         // validate
@@ -189,7 +190,7 @@ public class Ex04CardRemoveAll extends JFrame {
     }
 
     public static void main(String[] args) {
-        Ex04CardRemoveAll that = new Ex04CardRemoveAll();
+        FrMain that = new FrMain();
         that.setVisible(true);
     }
 }
