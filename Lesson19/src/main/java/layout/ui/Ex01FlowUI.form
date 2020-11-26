@@ -25,7 +25,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnButtons" max="32767" attributes="0"/>
+              <Component id="pnButtons" pref="380" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -35,7 +35,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnButtons" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="221" max="32767" attributes="0"/>
+              <EmptySpace pref="219" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,7 +52,7 @@
               <Border PropertyName="inside" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder>
                   <Color PropertyName="highlight" blue="33" green="33" red="ff" type="rgb"/>
-                  <Color PropertyName="shadow" blue="66" green="66" red="ff" type="rgb"/>
+                  <Color PropertyName="shadow" blue="33" green="ff" red="33" type="rgb"/>
                 </EtchetBorder>
               </Border>
             </CompoundBorder>
@@ -75,16 +75,6 @@
         <Component class="javax.swing.JButton" name="jButton3">
           <Properties>
             <Property name="text" type="java.lang.String" value="jButton3"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton4"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton5">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jButton5"/>
           </Properties>
         </Component>
       </SubComponents>
