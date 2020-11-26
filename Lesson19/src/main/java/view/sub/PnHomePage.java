@@ -7,7 +7,7 @@ package view.sub;
 
 /**
  *
- * @author USER
+ * @author qphan
  */
 public class PnHomePage extends javax.swing.JPanel {
 
@@ -30,7 +30,7 @@ public class PnHomePage extends javax.swing.JPanel {
         lbHomePage = new javax.swing.JLabel();
 
         lbHomePage.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        lbHomePage.setForeground(new java.awt.Color(255, 0, 0));
+        lbHomePage.setForeground(new java.awt.Color(255, 0, 102));
         lbHomePage.setText("THIS IS HOME PAGE");
         add(lbHomePage);
     }// </editor-fold>//GEN-END:initComponents

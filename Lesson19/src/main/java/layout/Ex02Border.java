@@ -15,49 +15,49 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import javax.swing.JSplitPane;
 
 import static java.awt.BorderLayout.*;
-import javax.swing.JSplitPane;
-import static javax.swing.JSplitPane.LEFT;
-import static javax.swing.JSplitPane.RIGHT;
+import static javax.swing.JSplitPane.*;
+
 
 /**
  *
- * @author USER
+ * @author qphan
  */
 public class Ex02Border extends JFrame {
-    
+
     private JPanel pnTop;
     private JPanel pnLeftTop;
     private JPanel pnLeftBottom;
     private JPanel pnCenter;
     
-    private JSplitPane splitPanelLeft;
-    private JSplitPane splitPanel;
-    
-    private final Font font = new Font("Tahoma", Font.PLAIN, 20);
-    
+    private JSplitPane splitPane;
+    private JSplitPane splitPanePnLeft;
+            
     private final Container conn = getContentPane();
-    
+    private final Font font = new Font("Tahoma", Font.PLAIN, 20);
+
     private final BorderLayout borderLayout = new BorderLayout();
     
     public Ex02Border() {
         initComponents();
         initEvents();
     }
-    
+
     private void initComponents() {
         setTitle("JAVA07 - BorderLayout");
-        
+
         setSize(1080, 700);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        
+
         Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
         setIconImage(image);
-        
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         conn.setLayout(borderLayout);
-        
+
         addPanels();
     }
     
@@ -75,28 +75,30 @@ public class Ex02Border extends JFrame {
         pnLeftBottom.setPreferredSize(new Dimension(140, 0));
         pnLeftBottom.setBackground(Color.YELLOW);
         
-        splitPanelLeft = new JSplitPane();
-        splitPanelLeft.setOneTouchExpandable(true);
-        splitPanelLeft.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        splitPanelLeft.add(pnLeftTop, JSplitPane.TOP);
-        splitPanelLeft.add(pnLeftBottom, JSplitPane.BOTTOM);
+        splitPanePnLeft = new JSplitPane();
+        splitPanePnLeft.setOneTouchExpandable(true);
+        splitPanePnLeft.setOrientation(VERTICAL_SPLIT);
+        splitPanePnLeft.add(pnLeftTop, TOP);
+        splitPanePnLeft.add(pnLeftBottom, BOTTOM);
         
         pnCenter = new JPanel();
         pnCenter.setBackground(Color.PINK);
         
-        splitPanel = new JSplitPane();
-        splitPanel.setOneTouchExpandable(true);
-        splitPanel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        splitPanel.add(splitPanelLeft, LEFT);
-        splitPanel.add(pnCenter, RIGHT);
-        
-        conn.add(splitPanel, CENTER);
+        splitPane = new JSplitPane();
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setOrientation(HORIZONTAL_SPLIT);
+        splitPane.add(splitPanePnLeft, LEFT);
+        splitPane.add(pnCenter, RIGHT);
+    
+        conn.add(splitPane, CENTER);
     }
     
     private void initEvents() {
         
     }
+
     
+
     public static void main(String[] args) {
         Ex02Border that = new Ex02Border();
         that.setVisible(true);

@@ -6,8 +6,6 @@
 package layout;
 
 import java.awt.Color;
-import static java.awt.ComponentOrientation.LEFT_TO_RIGHT;
-import static java.awt.ComponentOrientation.RIGHT_TO_LEFT;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -24,24 +22,24 @@ import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import static java.awt.ComponentOrientation.*;
+
 /**
  *
- * @author USER
+ * @author qphan
  */
 public class Ex01Flow extends JFrame {
 
     private JPanel pnButtons;
-
     private JRadioButton rdLtoR;
     private JRadioButton rdRtoL;
     private JButton btSubmit;
-    private ButtonGroup orientationGroup = new ButtonGroup();
-
-    private final Font font = new Font("Tahoma", Font.PLAIN, 20);
-
-    private final FlowLayout flayout = new FlowLayout();
 
     private final Container conn = getContentPane();
+    private final FlowLayout flayout = new FlowLayout();
+    private final Font font = new Font("Tahoma", Font.PLAIN, 20);
+
+    private ButtonGroup orientationGroup = new ButtonGroup();
 
     public Ex01Flow() {
         initComponents();
@@ -53,58 +51,59 @@ public class Ex01Flow extends JFrame {
 
         setSize(870, 300);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
         setIconImage(image);
 
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         conn.setLayout(flayout);
 
-        addButton(5);
+        addButtons(5);
         addForm();
     }
 
     private void addForm() {
         rdLtoR = new JRadioButton();
-        rdLtoR.setText("Left to Right");
+        rdLtoR.setText("Left To Right");
         rdLtoR.setFont(font);
         rdLtoR.setFocusPainted(false);
-        orientationGroup.add(rdLtoR);
         rdLtoR.setSelected(true);
         conn.add(rdLtoR);
 
         rdRtoL = new JRadioButton();
-        rdRtoL.setText("Right to Left");
+        rdRtoL.setText("Right To Left");
         rdRtoL.setFont(font);
         rdRtoL.setFocusPainted(false);
-        orientationGroup.add(rdRtoL);
         conn.add(rdRtoL);
+
+        orientationGroup.add(rdLtoR);
+        orientationGroup.add(rdRtoL);
 
         btSubmit = new JButton();
         btSubmit.setText("Submit");
         btSubmit.setFont(font);
+        btSubmit.setFocusPainted(false);
         conn.add(btSubmit);
     }
 
-    private void addButton(int number) {
-        flayout.setHgap(10);
+    private void addButtons(int nofButtons) {
+        flayout.setHgap(15);
         flayout.setVgap(10);
 
         pnButtons = new JPanel();
         pnButtons.setLayout(flayout);
-
+        // factory pattern
         Border insideBorder = BorderFactory.createEtchedBorder(Color.RED, Color.GREEN);
         Border outsideBorder = BorderFactory.createEmptyBorder(30, 0, 0, 0);
-
         Border border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder);
-
         pnButtons.setBorder(border);
-
-        for (int i = 1; i <= number; i++) {
+        for (int i = 1; i <= nofButtons; i++) {
             JButton button = new JButton();
             button.setFont(font);
             button.setFocusPainted(false);
-            button.setText(i == 4 ? "Long-Named Button " + i : "Button " + i);
+            button.setText(i == 4 ? "Long-Named Button " + i
+                    : "Button " + i);
             pnButtons.add(button);
         }
         conn.add(pnButtons);
@@ -115,7 +114,11 @@ public class Ex01Flow extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 pnButtons.applyComponentOrientation(rdLtoR.isSelected() ? LEFT_TO_RIGHT : RIGHT_TO_LEFT);
-                pnButtons.revalidate();
+                pnButtons.invalidate();
+                
+                // revalidate = invalidate + validate
+                // invalidate: check list of comps need to be redraw
+                // validate: redraw invalidate components
             }
         });
     }

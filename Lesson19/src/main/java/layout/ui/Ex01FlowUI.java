@@ -7,7 +7,7 @@ package layout.ui;
 
 /**
  *
- * @author USER
+ * @author qphan
  */
 public class Ex01FlowUI extends javax.swing.JFrame {
 
@@ -34,12 +34,12 @@ public class Ex01FlowUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pnButtons.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEmptyBorder(30, 1, 1, 1), javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(255, 0, 51), new java.awt.Color(102, 255, 0))));
+        pnButtons.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEmptyBorder(30, 1, 1, 1), javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(255, 51, 51), new java.awt.Color(51, 255, 51))));
 
         jButton1.setText("jButton1");
         pnButtons.add(jButton1);
 
-        jButton2.setText("jButton1");
+        jButton2.setText("jButton2");
         pnButtons.add(jButton2);
 
         jButton3.setText("jButton3");
@@ -59,7 +59,7 @@ public class Ex01FlowUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addContainerGap(219, Short.MAX_VALUE))
         );
 
         pack();

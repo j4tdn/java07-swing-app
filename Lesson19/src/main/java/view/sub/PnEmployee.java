@@ -7,7 +7,7 @@ package view.sub;
 
 /**
  *
- * @author USER
+ * @author qphan
  */
 public class PnEmployee extends javax.swing.JPanel {
 
@@ -30,7 +30,7 @@ public class PnEmployee extends javax.swing.JPanel {
         lbEmployee = new javax.swing.JLabel();
 
         lbEmployee.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        lbEmployee.setForeground(new java.awt.Color(255, 0, 0));
+        lbEmployee.setForeground(new java.awt.Color(255, 0, 102));
         lbEmployee.setText("THIS IS EMPLOYEE PAGE");
         add(lbEmployee);
     }// </editor-fold>//GEN-END:initComponents
