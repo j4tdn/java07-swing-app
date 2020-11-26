@@ -9,12 +9,12 @@ package view.sub;
  *
  * @author Asus
  */
-public class pnEmployee extends javax.swing.JPanel {
+public class PanelHomePage extends javax.swing.JPanel {
 
     /**
      * Creates new form pnHomePage
      */
-    public pnEmployee() {
+    public PanelHomePage() {
         initComponents();
     }
 
@@ -27,16 +27,16 @@ public class pnEmployee extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lbEmployee = new javax.swing.JLabel();
+        lbHomePage = new javax.swing.JLabel();
 
-        lbEmployee.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        lbEmployee.setForeground(new java.awt.Color(255, 0, 0));
-        lbEmployee.setText("This Is Employee");
-        add(lbEmployee);
+        lbHomePage.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        lbHomePage.setForeground(new java.awt.Color(255, 0, 0));
+        lbHomePage.setText("This Is Home Page");
+        add(lbHomePage);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lbEmployee;
+    private javax.swing.JLabel lbHomePage;
     // End of variables declaration//GEN-END:variables
 }

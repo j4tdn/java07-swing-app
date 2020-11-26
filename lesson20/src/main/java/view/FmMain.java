@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package layout;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,13 +32,13 @@ import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
 import view.sub.PanelEmployee;
 import view.sub.PanelHomePage;
-import view.sub.PanelStudent;
+import view.sub.Pntudent;
 
 /**
  *
  * @author ADMIN
  */
-public class Ex04Card extends JFrame {
+public class FmMain extends JFrame {
     private JPanel pnTop;
     private JPanel pnLeftTop;
     private JPanel pnLeftBottom;
@@ -56,7 +56,7 @@ public class Ex04Card extends JFrame {
     private final GridLayout gridLayout=new GridLayout(4, 0);
     private final CardLayout cardLayout=new CardLayout();
     
-    public Ex04Card() {
+    public FmMain() {
         //UI
         initComponents();
         //events
@@ -64,13 +64,13 @@ public class Ex04Card extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("JAVA07 - BorderLayout");
+        setTitle("Da Nang UniverSity UI/UX ");
         setResizable(false);
-        setSize(1080, 700);
+        setSize(1320, 700);
 
         setLocationRelativeTo(null);
 
-        Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
+        Image image = new ImageIcon(getClass().getResource("/images/student.png")).getImage();
         setIconImage(image);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -122,7 +122,7 @@ public class Ex04Card extends JFrame {
        
         pnCenter.add(new PanelHomePage(),"HomePage");
         pnCenter.add(new PanelEmployee(),"Employee");
-        pnCenter.add(new PanelStudent(),"Student");
+        pnCenter.add(new Pntudent(),"Student");
         
         
         cardLayout.show(pnCenter, "HomePage");
@@ -168,7 +168,7 @@ public class Ex04Card extends JFrame {
     } 
     
     public static void main(String[] args) {
-        Ex04Card that = new Ex04Card();
+        FmMain that = new FmMain();
         that.setVisible(true);
     }
 

@@ -32,8 +32,8 @@ import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
-import view.sub.pnEmployee;
-import view.sub.pnHomePage;
+import view.sub.PanelEmployee;
+import view.sub.PanelHomePage;
 
 /**
  *
@@ -62,8 +62,8 @@ public class Ex05CardRemoveall extends JFrame {
 
     public Ex05CardRemoveall() {
         cardMap = new EnumMap<>(cardType.class);
-        cardMap.put(cardType.Employee, new pnEmployee());
-        cardMap.put(cardType.HomePage, new pnHomePage());
+        cardMap.put(cardType.Employee, new PanelEmployee());
+        cardMap.put(cardType.HomePage, new PanelHomePage());
         //ui
         initComponent();
         //event
@@ -124,8 +124,8 @@ public class Ex05CardRemoveall extends JFrame {
         pnCenter.setBackground(Color.pink);
         pnCenter.setLayout(borderLayout);
         
-        pnCenter.add(new pnHomePage(),BorderLayout.CENTER);
-        pnCenter.add(new pnEmployee(), "Employee");
+        pnCenter.add(new PanelHomePage(),BorderLayout.CENTER);
+        pnCenter.add(new PanelEmployee(), "Employee");
 
         splitpane = new JSplitPane();
         splitpane.setOneTouchExpandable(true);

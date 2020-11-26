@@ -9,12 +9,12 @@ package view.sub;
  *
  * @author Asus
  */
-public class pnHomePage extends javax.swing.JPanel {
+public class PanelHomePage extends javax.swing.JPanel {
 
     /**
      * Creates new form pnHomePage
      */
-    public pnHomePage() {
+    public PanelHomePage() {
         initComponents();
     }
 
