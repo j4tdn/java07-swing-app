@@ -34,8 +34,8 @@ import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
-import view.sub.pnEmployee;
-import view.sub.pnHomePage;
+import view.sub.*;
+
 
 
 /**
@@ -77,6 +77,7 @@ public class Ex04CardRemoveAll extends JFrame{
         cardMap = new EnumMap<>(cardType.class);
         cardMap.put(cardType.Employee, new pnEmployee());
         cardMap.put(cardType.HomePage, new pnHomePage());
+        cardMap.put(cardType.Student, new pnStundent());
         
         
         //ui

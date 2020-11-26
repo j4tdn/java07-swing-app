@@ -10,7 +10,7 @@ package common;
  * @author Asus
  */
 public enum cardType {
-    HomePage,Employee;
+    HomePage,Employee,Student;
     
     
     public static cardType from(String name){
@@ -20,6 +20,8 @@ public enum cardType {
                 return HomePage;
             case "Employee":
                 return Employee;
+            case "Student":
+                return Student;
             
                    
         }

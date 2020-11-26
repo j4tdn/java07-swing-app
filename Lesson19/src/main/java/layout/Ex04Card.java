@@ -34,6 +34,7 @@ import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
 import view.sub.pnEmployee;
 import view.sub.pnHomePage;
+import view.sub.pnStudent;
 
 
 /**
@@ -106,7 +107,7 @@ public class Ex04Card extends JFrame{
         pnleftTop.setLayout(gridLayout);
         
         
-        List<String> buttons = Arrays.asList("HomePage","Employee");
+        List<String> buttons = Arrays.asList("HomePage","Employee","Student");
         JButton btHomepage = new JButton();
             btHomepage.setText(buttons.get(0));
             
@@ -151,6 +152,7 @@ public class Ex04Card extends JFrame{
         
         pnCenter.add(new pnHomePage(),"HomePage");
         pnCenter.add(new pnEmployee(),"Employee");
+        pnCenter.add(new pnStudent(),"Student");
         
         cardLayout.show(pnCenter, "HomePage");
         
