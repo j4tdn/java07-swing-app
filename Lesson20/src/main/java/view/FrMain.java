@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
+import view.sub.Student;
 import view.sub.panelEmployes;
 import view.sub.panelHomePage;
 
@@ -56,7 +57,7 @@ public class FrMain extends JFrame {
         enumMap = new EnumMap<>(CardType.class);
         enumMap.put(CardType.Homepage, new panelHomePage());
         enumMap.put(CardType.Homepage, new panelEmployes());
-        enumMap.put(CardType.Student, new PnStudent());
+        enumMap.put(CardType.Student, new Student());
 
         initComponents();
         initEvents();
@@ -141,6 +142,7 @@ public class FrMain extends JFrame {
                         pnCenter.add(panel);
 
                         pnCenter.repaint();
+                        spPane.add(pnCenter, RIGHT);
                         previousClickedButton.setBorder(defaulBorder);
                         button.setBorder(border);
                         previousClickedButton = button;

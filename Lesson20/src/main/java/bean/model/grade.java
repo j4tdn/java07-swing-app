@@ -53,9 +53,12 @@ import java.util.Objects;
     //To change body of generated methods, choose Tools | Templates.
         }
 
-        @Override
-        public int hashCode() {
-            return super.hashCode(); //To change body of generated methods, choose Tools | Templates.
-        }
+    @Override
+    public String toString() {
+      return name; //To change body of generated methods, choose Tools | Templates.
+    }
+
+      
+    
 
     }

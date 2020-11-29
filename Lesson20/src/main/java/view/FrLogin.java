@@ -24,9 +24,9 @@ public class FrLogin extends javax.swing.JFrame {
     public FrLogin() {
         setUndecorated(true);
         initComponents();
-
         initCommponentsManually();
         initEvents();
+        btLoginEvents();
     }
 
     /**
@@ -65,16 +65,18 @@ public class FrLogin extends javax.swing.JFrame {
 
         btClose.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btClose.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btClose.setContentAreaFilled(false);
         btClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 76, 48, 48));
+        getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 80, 40, 40));
         btClose.getAccessibleContext().setAccessibleDescription("");
 
         btLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btLogin.setContentAreaFilled(false);
         btLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 377, 250, 33));
+        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 380, 240, 30));
 
-        lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagesss/images/convenient-login-form.jpg"))); // NOI18N
-        getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 850, -1));
+        lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/convenient-login-form.jpg"))); // NOI18N
+        getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -94,7 +96,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -144,5 +146,30 @@ public class FrLogin extends javax.swing.JFrame {
                 }
             }
         });
+    }
+
+    private void btLoginEvents() {
+
+        btLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String username = tfUserName.getName();
+                String password = String.valueOf(tfPassWord.getPassword());
+                boolean isVaild = isValidAccount(username, password);
+                if(isVaild){
+                    FrLogin.this.setVisible(false);
+                    FrMain frmain=new FrMain();
+                    frmain.setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"Login fail");
+                }
+            }
+
+        });
+    }
+    
+    private boolean isValidAccount(String username,String password){
+    return username.equals("admin")&password.equals("1234");
     }
 }
