@@ -6,14 +6,33 @@
 package view.sub;
 
 import bean.model.Grade;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author DangHoang
  */
 public class PanelStudent extends javax.swing.JPanel {
+
+    private File targetFile;
 
     /**
      * Creates new form PanelStudent
@@ -22,6 +41,8 @@ public class PanelStudent extends javax.swing.JPanel {
         initComponents();
 
         initDataModel();
+
+        initEvents();
     }
 
     /**
@@ -33,6 +54,7 @@ public class PanelStudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btgGender = new javax.swing.ButtonGroup();
         pnMainTop = new javax.swing.JPanel();
         lbStudentInfo = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
@@ -111,14 +133,17 @@ public class PanelStudent extends javax.swing.JPanel {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbHobbies.setText("Giới Tính :");
 
+        btgGender.add(rbMale);
         rbMale.setText("Nam");
         rbMale.setContentAreaFilled(false);
         rbMale.setFocusPainted(false);
 
+        btgGender.add(rbFemale);
         rbFemale.setText("Nữ");
         rbFemale.setContentAreaFilled(false);
         rbFemale.setFocusPainted(false);
 
+        btgGender.add(rbOther);
         rbOther.setText("Khác");
         rbOther.setContentAreaFilled(false);
         rbOther.setFocusPainted(false);
@@ -210,7 +235,10 @@ public class PanelStudent extends javax.swing.JPanel {
         lbComment.setText("Nhận Xét :");
 
         taComment.setColumns(20);
+        taComment.setLineWrap(true);
         taComment.setRows(5);
+        taComment.setTabSize(4);
+        taComment.setWrapStyleWord(true);
         spComment.setViewportView(taComment);
 
         lbPicture.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
@@ -243,9 +271,9 @@ public class PanelStudent extends javax.swing.JPanel {
                             .addComponent(spComment)
                             .addGroup(pnDetailRightLayout.createSequentialGroup()
                                 .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(34, 34, 34)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         pnDetailRightLayout.setVerticalGroup(
@@ -286,6 +314,7 @@ public class PanelStudent extends javax.swing.JPanel {
     private javax.swing.JButton btChoose;
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
+    private javax.swing.ButtonGroup btgGender;
     private javax.swing.JCheckBox cbBadminton;
     private javax.swing.JComboBox cbClass;
     private javax.swing.JCheckBox cbSocer;
@@ -328,5 +357,70 @@ public class PanelStudent extends javax.swing.JPanel {
         };
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbClass.setModel(gradeModel);
+    }
+
+    private void initEvents() {
+        btUploadEvents();
+
+        btSubmitEvents();
+    }
+
+    private void btUploadEvents() {
+        btChoose.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+                JFileChooser fc = new JFileChooser(path);
+                int chooser = fc.showDialog(null, "Upload");
+                if (chooser == JFileChooser.APPROVE_OPTION) {
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+
+                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
+                    if (!(fileName.matches(regex))) {
+                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
+                        return;
+                    }
+                    String renameFile = System.currentTimeMillis() + fileName;
+                    targetFile = new File("image_upload" + File.separator + renameFile);
+                    try {
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                    } catch (IOException ex) {
+                        Logger.getLogger(PanelStudent.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+            }
+        });
+    }
+
+    private void btSubmitEvents() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Grade grade = (Grade) cbClass.getSelectedItem();
+                String gender = getGender();
+                String hobbies = getHobbies(cbBadminton, cbSocer, cbVolleyball);
+                String fileName = targetFile != null ? targetFile.getName() : "Unmodifile";
+                System.out.println(grade + ", " + gender + ", " + hobbies + ", " + fileName);
+            }
+        });
+    }
+
+    private String getGender() {
+        Enumeration<AbstractButton> elements = btgGender.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return "";
+    }
+
+    private String getHobbies(JCheckBox... checkBoxs) {
+        return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
     }
 }

@@ -67,7 +67,7 @@ public class FrMain extends JFrame {
     }
 
     private void initComponents() {
-        setSize(1320, 700);
+        setSize(1080, 600);
         con.setLayout(borderLayout);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -94,7 +94,7 @@ public class FrMain extends JFrame {
         pnTop.setBackground(Color.GREEN);
         con.add(pnTop, NORTH);
 
-        pnLeftTop.setPreferredSize(new Dimension(140, 500));
+        pnLeftTop.setPreferredSize(new Dimension(200, 250));
         pnLeftTop.setBackground(Color.BLACK);
         pnLeftTop.setLayout(gridLayout);
 
@@ -115,7 +115,7 @@ public class FrMain extends JFrame {
         }
         spPaneLeft.add(pnLeftTop, TOP);
 
-        pnLeftBottom.setPreferredSize(new Dimension(140, 0));
+        pnLeftBottom.setPreferredSize(new Dimension(200, 0));
         pnLeftBottom.setBackground(Color.YELLOW);
         spPaneLeft.add(pnLeftBottom, BOTTOM);
 
@@ -148,6 +148,7 @@ public class FrMain extends JFrame {
                         pnCenter.add(panel);
 
                         pnCenter.repaint();
+                        spPane.add(pnCenter, RIGHT);
                         previousClickedButton.setBorder(defaulBorder);
                         button.setBorder(border);
                         previousClickedButton = button;

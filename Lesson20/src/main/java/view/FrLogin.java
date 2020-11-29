@@ -8,8 +8,6 @@ package view;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -65,11 +63,13 @@ public class FrLogin extends javax.swing.JFrame {
 
         btClose.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btClose.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btClose.setBorderPainted(false);
         btClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 76, 48, 48));
         btClose.getAccessibleContext().setAccessibleDescription("");
 
         btLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btLogin.setBorderPainted(false);
         btLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 377, 250, 33));
 
@@ -150,5 +150,25 @@ public class FrLogin extends javax.swing.JFrame {
                 }
             }
         });
+
+        btLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String user = tfUserName.getText();
+                String pass = String.valueOf(tfPassWord.getPassword());
+                boolean isValid = isValidAccount(user, pass);
+
+                if (isValid) {
+                    setVisible(isUndecorated());
+                    new FrMain().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Fail");
+                }
+            }
+        });
+    }
+
+    private boolean isValidAccount(String user, String pass) {
+        return user.equals("admin") && pass.equals("ad123");
     }
 }
