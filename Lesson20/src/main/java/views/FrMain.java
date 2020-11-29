@@ -63,7 +63,7 @@ public class FrMain extends JFrame {
     private void initComponents() {
         setTitle("JAVA07 - BorderLayout");
         setResizable(false);
-        setSize(900, 700);
+        setSize(1200, 700);
 
         setLocationRelativeTo(null);
 

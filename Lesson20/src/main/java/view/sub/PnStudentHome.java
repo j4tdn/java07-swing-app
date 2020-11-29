@@ -21,6 +21,7 @@ public class PnStudentHome extends javax.swing.JPanel {
      * Creates new form PanelHomePage
      */
     public PnStudentHome() {
+     
         initComponents();
         initComponentMatually();
         initEvents();
