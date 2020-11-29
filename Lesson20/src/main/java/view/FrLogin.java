@@ -25,32 +25,67 @@ public class FrLogin extends javax.swing.JFrame {
         initComponentsManually();
         initEvents();
     }
-    
-    private void initComponentsManually(){
+
+    private void initComponentsManually() {
         tfUserName.requestFocus();
         setLocationRelativeTo(null);
         btClose.setBackground(new Color(0, 0, 0, 0));
         btLogin.setBackground(new Color(0, 0, 0, 0));
     }
-    
-    private void initEvents(){
+
+    private void initEvents() {
+        btCloseEvent();
+        btLoginEvent();
+    }
+
+    private void btCloseEvent() {
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //Icon icon=new ImageIcon(getClass().getResource("/images/64px_flower.png"));
-                final int option=JOptionPane.showConfirmDialog(null, 
-                                                               "Do you want to close?",
-                                                               "=== From System ===",
-                                                               JOptionPane.YES_NO_OPTION,
-                                                               JOptionPane.INFORMATION_MESSAGE);// bieu tuong warning neu ko co tham so icon
-                                                             //icon);
-                if(option==JOptionPane.YES_OPTION){
+                final int option = JOptionPane.showConfirmDialog(null,
+                        "Do you want to close?",
+                        "=== From System ===",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE);// bieu tuong warning neu ko co tham so icon
+                //icon);
+                if (option == JOptionPane.YES_OPTION) {
                     FrLogin.this.setVisible(false);
                 }
             }
         });
     }
-    
+
+    private void btLoginEvent() {
+        btLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String userName = tfUserName.getText();
+                String password = String.valueOf(pfPassword.getPassword());
+
+                //user service to check
+                boolean isValid = isValidAccount(userName, password);
+                if(isValid){
+                    //success
+                    //step1: Close Login form
+                    FrLogin.this.setVisible(false);
+                    //step2: Show main app
+                    FrMain frMain=new FrMain();
+                    frMain.setVisible(true);
+                    //step3: show current user info
+                } else {
+                    //fail
+                    //inform error message
+                    JOptionPane.showMessageDialog(null, "Login fail!!!");
+                }
+            }
+        });
+    }
+
+    private boolean isValidAccount(String userName, String password) {
+        return userName.equals("admin")&&password.equals("abc123");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,7 +147,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

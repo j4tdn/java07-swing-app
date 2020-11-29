@@ -6,8 +6,23 @@
 package view.sub;
 
 import bean.model.Grade;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,30 +30,112 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class PnStudent extends javax.swing.JPanel {
 
+    private File targetFile;
+
     /**
      * Creates new form PnStudent
      */
     public PnStudent() {
         initComponents();
-        
+
         initDataModel();
+
+        initEvents();
     }
 
-    private void initDataModel(){
+    private void initDataModel() {
         initCbbGradeModel();
     }
-    
-    private void initCbbGradeModel(){
-        Grade[] grades={
-          new Grade(1, "Lớp 11T1"),
-          new Grade(1, "Lớp 12T2"),
-          new Grade(1, "Lớp 13T3"),
-          new Grade(1, "Lớp 14T4")
+
+    private void initEvents() {
+        btUploadEvent();
+        btSubmit();
+    }
+
+    private void btSubmit() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Grade grade = (Grade) cbbGrade.getSelectedItem();
+                String gender = getGender();
+                String hobbies = getHobbies(cbBadminton, cbVolleyball, cbFootball);
+                String fileName = targetFile != null ? targetFile.getName() : "Undefined!";
+                System.out.println(grade);
+                System.out.println(gender);
+                System.out.println(hobbies);
+                System.out.println(fileName);
+            }
+        });
+    }
+
+    private String getGender() {
+        Enumeration<AbstractButton> elements = btgGenger.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return "";
+    }
+
+    private String getHobbies(JCheckBox... checkBoxes) {
+        // Immutable: String literal, object
+        // Mutable: StringBuilder, StringBuffer
+        StringBuilder builder = new StringBuilder();
+        return Arrays.stream(checkBoxes).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
+    }
+
+    private void btUploadEvent() {
+        btUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+
+                JFileChooser fc = new JFileChooser(path);
+
+                if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
+                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+                    if (!fileName.matches(regex)) {
+                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
+                        return;
+                    }
+                    String renamedFile = System.currentTimeMillis() + fileName;
+                    targetFile = new File("images_upload" + File.separator + renamedFile);
+
+                    // Step1: Copy & rename to project's file upload
+                    try {
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    //Step2: Display renamed file on UI
+                    Image image = new ImageIcon(targetFile.toString())
+                            .getImage()
+                            .getScaledInstance(lbAvatar.getWidth(),
+                                    lbAvatar.getHeight(),
+                                    Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+            }
+        });
+    }
+
+    private void initCbbGradeModel() {
+        Grade[] grades = {
+            new Grade(1, "Lớp 11T1"),
+            new Grade(1, "Lớp 12T2"),
+            new Grade(1, "Lớp 13T3"),
+            new Grade(1, "Lớp 14T4")
         };
-        ComboBoxModel<Grade> gradeModel=new DefaultComboBoxModel<>(grades);
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbbGrade.setModel(gradeModel);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,6 +145,7 @@ public class PnStudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btgGenger = new javax.swing.ButtonGroup();
         pnMainTop = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
@@ -131,11 +229,13 @@ public class PnStudent extends javax.swing.JPanel {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích: ");
 
+        btgGenger.add(rbMale);
         rbMale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbMale.setText("Nam");
         rbMale.setContentAreaFilled(false);
         rbMale.setFocusPainted(false);
 
+        btgGenger.add(rbFemale);
         rbFemale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbFemale.setText("Nữ");
         rbFemale.setContentAreaFilled(false);
@@ -146,6 +246,7 @@ public class PnStudent extends javax.swing.JPanel {
             }
         });
 
+        btgGenger.add(rbDifferent);
         rbDifferent.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbDifferent.setText("Khác");
         rbDifferent.setContentAreaFilled(false);
@@ -262,7 +363,11 @@ public class PnStudent extends javax.swing.JPanel {
         });
 
         taComment.setColumns(20);
+        taComment.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        taComment.setLineWrap(true);
         taComment.setRows(5);
+        taComment.setTabSize(4);
+        taComment.setWrapStyleWord(true);
         scpComment.setViewportView(taComment);
 
         lbImage.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -317,7 +422,7 @@ public class PnStudent extends javax.swing.JPanel {
                         .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbImage)
                             .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 163, Short.MAX_VALUE)))
+                        .addGap(0, 123, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -355,6 +460,7 @@ public class PnStudent extends javax.swing.JPanel {
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
     private javax.swing.JButton btUpload;
+    private javax.swing.ButtonGroup btgGenger;
     private javax.swing.JCheckBox cbBadminton;
     private javax.swing.JCheckBox cbFootball;
     private javax.swing.JCheckBox cbVolleyball;
