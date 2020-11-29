@@ -24,18 +24,47 @@ public class FrLogin extends javax.swing.JFrame {
     public FrLogin() {
         setUndecorated(true);
         initComponents();
-
         initComponentsManually();
         initEvents();
     }
 
     private void initComponentsManually() {
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         btClose.setBackground(new Color(0, 0, 0, 0));
         tfUsername.requestFocus();
     }
 
     private void initEvents() {
+        btCloseEvents();
+        btLoginEvents();
+    }
+    
+    private void btLoginEvents() {
+        btLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String username = tfUsername.getText();
+                String password = String.valueOf(pfPassword.getPassword());
+                boolean isValid = isValidAccount(username, password);
+                if (isValid) {
+                    //close login form
+                    FrLogin.this.setVisible(false);
+                    // show main app
+                    FrMain main = new FrMain();
+                    main.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "LOGIN FAIL!!!");
+                }
+            }
+        });
+    }
+    
+    private boolean isValidAccount(String username, String password) {
+        return username.equals("admin") && password.equals("12345");
+    }
+
+    private void btCloseEvents() {
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -54,7 +83,7 @@ public class FrLogin extends javax.swing.JFrame {
             }
         });
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -67,11 +96,13 @@ public class FrLogin extends javax.swing.JFrame {
         btClose = new javax.swing.JButton();
         pfPassword = new javax.swing.JPasswordField();
         tfUsername = new javax.swing.JTextField();
+        btLogin = new javax.swing.JButton();
         lbLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btClose.setContentAreaFilled(false);
         btClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 79, 44, 41));
 
@@ -82,6 +113,13 @@ public class FrLogin extends javax.swing.JFrame {
         tfUsername.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tfUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         getContentPane().add(tfUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(293, 208, 245, 30));
+
+        btLogin.setBackground(new java.awt.Color(255, 51, 51));
+        btLogin.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btLogin.setContentAreaFilled(false);
+        btLogin.setFocusPainted(false);
+        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 379, 250, 30));
 
         lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login.png"))); // NOI18N
         getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(-7, 0, 850, -1));
@@ -100,7 +138,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -129,6 +167,7 @@ public class FrLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClose;
+    private javax.swing.JButton btLogin;
     private javax.swing.JLabel lbLogin;
     private javax.swing.JPasswordField pfPassword;
     private javax.swing.JTextField tfUsername;
