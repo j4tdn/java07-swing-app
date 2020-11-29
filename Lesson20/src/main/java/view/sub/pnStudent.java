@@ -6,27 +6,125 @@
 package view.sub;
 
 import bean.model.Grade;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author khanh
  */
 public class pnStudent extends javax.swing.JPanel {
-
+    private File targetFile;
     /**
      * Creates new form pnStudent
      */
     public pnStudent() {
         initComponents();
         initDataModel();
+        initEvents();
     }
-    
-    private void initDataModel(){
+
+    private void initDataModel() {
         initCbbGradeModel();
     }
-    private void initCbbGradeModel(){
+
+    private void initEvents() {
+        btnUploadEvents();
+        btnSubmitEvents();
+    }
+
+    private void btnSubmitEvents() {
+        btnSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Grade grade = (Grade) cbbGrade.getSelectedItem();
+                String gender = getGender();
+                String hobbies = getHobbies(cbFootball,cbcau,cbvolleyball);
+                String filename =targetFile !=null ?targetFile.getName():"Undefined";
+                System.out.println("=====================");
+                System.out.println("grade: "+grade);
+                System.out.println("gender: "+gender);
+                System.out.println("hobbies: "+hobbies);
+                System.out.println("filename: "+filename);
+            }
+
+        });
+
+    }
+    
+    private String getHobbies(JCheckBox...checkBoxs){
+        StringBuilder builder = new StringBuilder();
+         return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
+    }
+    
+    private String getGender(){
+        Enumeration<AbstractButton> elements =   btngGender.getElements();
+        while(elements.hasMoreElements()){
+            AbstractButton button = elements.nextElement();
+            
+            if(button.isSelected()){
+                return button.getText();
+            }
+        }
+        
+        return "";
+    }
+
+    private void btnUploadEvents() {
+        btnUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+                System.out.println(path);
+                JFileChooser fc = new JFileChooser(path);
+                if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
+                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+
+                    if (!fileName.matches(regex)) {
+                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
+                        return;
+                    }
+                    String renameFile = System.currentTimeMillis() + fileName;
+                    targetFile = new File("image_upload" + File.separator + renameFile);
+                    try {
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                    } catch (IOException ex) {
+                        Logger.getLogger(pnStudent.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(),
+                             Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+
+            }
+
+        });
+    }
+
+    private void initCbbGradeModel() {
         Grade[] grades = {
             new Grade(1, "Lớp 1"),
             new Grade(2, "Lớp 2"),
@@ -35,6 +133,7 @@ public class pnStudent extends javax.swing.JPanel {
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbbGrade.setModel(gradeModel);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,6 +143,7 @@ public class pnStudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btngGender = new javax.swing.ButtonGroup();
         pnMainTop = new javax.swing.JPanel();
         lbStudentInfo = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
@@ -134,6 +234,7 @@ public class pnStudent extends javax.swing.JPanel {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích:");
 
+        btngGender.add(rdMale);
         rdMale.setText("Nam");
         rdMale.setContentAreaFilled(false);
         rdMale.setFocusPainted(false);
@@ -143,6 +244,7 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        btngGender.add(rdFemale);
         rdFemale.setText("Nữ");
         rdFemale.setContentAreaFilled(false);
         rdFemale.setFocusPainted(false);
@@ -152,6 +254,7 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        btngGender.add(rdMiddle);
         rdMiddle.setText("Khác");
         rdMiddle.setContentAreaFilled(false);
         rdMiddle.setFocusPainted(false);
@@ -256,7 +359,11 @@ public class pnStudent extends javax.swing.JPanel {
         lbComment.setText("Nhận xét:");
 
         taComment.setColumns(20);
+        taComment.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        taComment.setLineWrap(true);
         taComment.setRows(5);
+        taComment.setTabSize(4);
+        taComment.setWrapStyleWord(true);
         scrollComment.setViewportView(taComment);
 
         lbImage.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -304,7 +411,7 @@ public class pnStudent extends javax.swing.JPanel {
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbComment)
                     .addComponent(scrollComment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbImage)
                     .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -352,6 +459,7 @@ public class pnStudent extends javax.swing.JPanel {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JButton btnUpload;
+    private javax.swing.ButtonGroup btngGender;
     private javax.swing.JCheckBox cbFootball;
     private javax.swing.JComboBox cbbGrade;
     private javax.swing.JCheckBox cbcau;

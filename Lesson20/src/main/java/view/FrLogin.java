@@ -36,8 +36,36 @@ public class FrLogin extends javax.swing.JFrame {
         btClose.setBackground(new Color(0, 0, 0, 0));
         btnLogin.setBackground(new Color(0, 0, 0, 0));
     }
-
+    
     private void initEvents() {
+        btnCloseEvents();
+        btnLoginEvents();
+    }
+    
+    private void btnLoginEvents() {
+        btnLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String username = tfUserName.getText();
+                String password = String.valueOf(pfPassWord.getPassword());
+                boolean isValid = isValidAccount(username, password);
+                if (isValid) {
+                    FrLogin.this.setVisible(false);
+                    FrMain frMain = new FrMain();
+                    frMain.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "login fail !!!");
+                }
+            }
+            
+        });
+    }
+    
+    private boolean isValidAccount(String username, String password) {        
+        return username.equals("admin") && password.equals("123456");
+    }
+    
+    private void btnCloseEvents() {
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -112,7 +140,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
