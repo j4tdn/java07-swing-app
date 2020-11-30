@@ -31,9 +31,38 @@ public class FrLogin extends javax.swing.JFrame {
         tfUsername.requestFocus();
         setLocationRelativeTo(null);
         btClose.setBackground(new Color(0, 0, 0, 0));
+        btLogin.setBackground(new Color(0, 0, 0, 0));
     }
 
     private void initEvents() {
+        btCloseEvents();
+        btLoginEvents();
+    }
+    
+    private void btLoginEvents() {
+        btLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String username = tfUsername.getText();
+                String password = String.valueOf(pfPassword.getPassword());
+                boolean isValid = isValidAccount(username, password);
+                if (isValid) {
+                    FrLogin.this.setVisible(false);
+                    FrMain frMain = new FrMain();
+                    frMain.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login fail!!!");
+                }
+            }
+            
+        });
+    }
+    
+    private boolean isValidAccount(String username, String password) {
+        return username.equals("admin") && password.equals("admin123");
+    }
+    
+    private void btCloseEvents() {
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -65,6 +94,7 @@ public class FrLogin extends javax.swing.JFrame {
         btClose = new javax.swing.JButton();
         pfPassword = new javax.swing.JPasswordField();
         tfUsername = new javax.swing.JTextField();
+        btLogin = new javax.swing.JButton();
         lbLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -81,11 +111,24 @@ public class FrLogin extends javax.swing.JFrame {
         tfUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         getContentPane().add(tfUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(293, 208, 245, 30));
 
+        btLogin.setContentAreaFilled(false);
+        btLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLoginActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 380, 250, 28));
+
         lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login.png"))); // NOI18N
         getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(-7, 0, 850, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -98,7 +141,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -127,6 +170,7 @@ public class FrLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClose;
+    private javax.swing.JButton btLogin;
     private javax.swing.JLabel lbLogin;
     private javax.swing.JPasswordField pfPassword;
     private javax.swing.JTextField tfUsername;

@@ -6,15 +6,31 @@
 package view.sub;
 
 import bean.model.Grade;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author USER
  */
 public class pnStudent extends javax.swing.JPanel {
+
+    private File targetFile;
 
     /**
      * Creates new form pnStudent
@@ -23,10 +39,91 @@ public class pnStudent extends javax.swing.JPanel {
         initComponents();
 
         initDataModel();
+        initEvents();
     }
 
     private void initDataModel() {
         initCbbGradeModel();
+    }
+
+    private void initEvents() {
+        btUploadEvents();
+        btSubmitEvents();
+    }
+
+    private void btSubmitEvents() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Grade grade = (Grade) cbGrade.getSelectedItem();
+                String gender = getGender();
+                String hobbies = getHobbies(cbBasketball, cbFootball, cbSmileball);
+                String filename = targetFile != null ? targetFile.getName() : "Undefined";
+                System.out.println("===========================");
+                System.out.println("Grade: " + grade);
+                System.out.println("Gender: " + gender);
+                System.out.println("Hobbies: " + hobbies);
+                System.out.println("Filename: " + filename);
+            }
+
+        });
+    }
+
+    private String getHobbies(JCheckBox... checkBoxs) {
+        return Arrays.stream(checkBoxs)
+                .filter(JCheckBox::isSelected)
+                .map(JCheckBox::getText)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getGender() {
+        Enumeration<AbstractButton> elements = btgGender.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return "";
+    }
+
+    private void btUploadEvents() {
+        btUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+                JFileChooser fc = new JFileChooser(path);
+                if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+
+                    String regex = "[\\w-]+[.]{1}(?)(?:png|jpg|jpeg|gif)";
+                    if (!fileName.matches(regex)) {
+                        JOptionPane.showMessageDialog(null, "Invalid image path!");
+                        return;
+                    }
+                    String renamedFile = System.currentTimeMillis() + fileName;
+
+                    targetFile = new File("image_upload" + File.separator + renamedFile);
+                    try {
+                        // Step 1: Copy & rename to project's file upload
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    // Step 2: Display renamed file on UI
+                    Image image = new ImageIcon(targetFile.toString())
+                            .getImage()
+                            .getScaledInstance(lbAvatar.getWidth(),
+                                    lbAvatar.getHeight(),
+                                    Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+            }
+
+        });
     }
 
     private void initCbbGradeModel() {
@@ -48,6 +145,7 @@ public class pnStudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btgGender = new javax.swing.ButtonGroup();
         pnMainTop = new javax.swing.JPanel();
         lbStudentInfo = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
@@ -122,6 +220,7 @@ public class pnStudent extends javax.swing.JPanel {
         lbName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbName.setText("Họ tên:");
 
+        tfName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tfName.setPreferredSize(new java.awt.Dimension(7, 32));
         tfName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,6 +239,8 @@ public class pnStudent extends javax.swing.JPanel {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích:");
 
+        btgGender.add(rdMale);
+        rdMale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdMale.setText("Nam");
         rdMale.setFocusPainted(false);
         rdMale.addActionListener(new java.awt.event.ActionListener() {
@@ -148,6 +249,8 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        btgGender.add(rdFemale);
+        rdFemale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdFemale.setText("Nữ");
         rdFemale.setFocusPainted(false);
         rdFemale.addActionListener(new java.awt.event.ActionListener() {
@@ -156,6 +259,8 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        btgGender.add(rdAnother);
+        rdAnother.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdAnother.setText("Khác");
         rdAnother.setFocusPainted(false);
         rdAnother.addActionListener(new java.awt.event.ActionListener() {
@@ -164,6 +269,7 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        cbFootball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cbFootball.setText("Bóng đá");
         cbFootball.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -171,6 +277,7 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        cbSmileball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cbSmileball.setText("Bóng cười");
         cbSmileball.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -178,6 +285,7 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
 
+        cbBasketball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cbBasketball.setText("Bóng rổ");
         cbBasketball.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,7 +310,7 @@ public class pnStudent extends javax.swing.JPanel {
                         .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdMale)
                             .addComponent(cbFootball))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rdFemale)
                             .addComponent(cbSmileball))
@@ -239,7 +347,7 @@ public class pnStudent extends javax.swing.JPanel {
                     .addComponent(cbFootball)
                     .addComponent(cbSmileball)
                     .addComponent(cbBasketball))
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addContainerGap(196, Short.MAX_VALUE))
         );
 
         pnDetailLeftLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbGrade, tfName});
@@ -274,7 +382,11 @@ public class pnStudent extends javax.swing.JPanel {
         lbComment.setText("Nhận xét:");
 
         taComment.setColumns(20);
+        taComment.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        taComment.setLineWrap(true);
         taComment.setRows(5);
+        taComment.setTabSize(4);
+        taComment.setWrapStyleWord(true);
         scrollComment.setViewportView(taComment);
 
         lbImage.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -283,6 +395,11 @@ public class pnStudent extends javax.swing.JPanel {
         lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 255, 51), 2));
 
         btUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
+        btUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btUploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnDetailRightLayout = new javax.swing.GroupLayout(pnDetailRight);
         pnDetailRight.setLayout(pnDetailRightLayout);
@@ -302,7 +419,7 @@ public class pnStudent extends javax.swing.JPanel {
                     .addComponent(scrollComment)
                     .addGroup(pnDetailRightLayout.createSequentialGroup()
                         .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addGap(33, 33, 33)
                         .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -322,18 +439,11 @@ public class pnStudent extends javax.swing.JPanel {
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbComment)
                     .addComponent(scrollComment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnDetailRightLayout.createSequentialGroup()
-                        .addComponent(lbImage)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnDetailRightLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnDetailRightLayout.createSequentialGroup()
-                                .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 113, Short.MAX_VALUE))
-                            .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbImage)
+                    .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -388,11 +498,16 @@ public class pnStudent extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfLiteratureActionPerformed
 
+    private void btUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUploadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btUploadActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
     private javax.swing.JButton btUpload;
+    private javax.swing.ButtonGroup btgGender;
     private javax.swing.JCheckBox cbBasketball;
     private javax.swing.JCheckBox cbFootball;
     private javax.swing.JComboBox cbGrade;
