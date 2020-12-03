@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.sub;
+package view;
 
-import bean.model.grade;
+import view.sub.*;
+import model.bean.grade;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,20 +25,24 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Trung
  */
-public class Student extends javax.swing.JPanel {
+public class FrStudentForm extends JFrame {
 
     private File targetFile;
 
     /**
      * Creates new form Student
      */
-    public Student() {
+    public FrStudentForm() {
+        setUndecorated(true);
+        setSize(800,500);
+        setLocationRelativeTo(null);
         initComponents();
         initDataModel();
         initEvents();
@@ -69,7 +74,7 @@ public class Student extends javax.swing.JPanel {
                     try {
                         Files.copy(sourceFile.toPath(), targetFile.toPath());
                     } catch (IOException ex) {
-                        Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(FrStudentForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(LB.getWidth(), LB.getHeight(), Image.SCALE_SMOOTH);
                     Icon icon = new ImageIcon(image);
@@ -108,6 +113,7 @@ public class Student extends javax.swing.JPanel {
         pnMainBot = new javax.swing.JPanel();
         btSubmit = new javax.swing.JButton();
         btReset = new javax.swing.JButton();
+        btCancel = new javax.swing.JButton();
         pnMainTop = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -137,8 +143,6 @@ public class Student extends javax.swing.JPanel {
         LB = new javax.swing.JLabel();
         button1 = new java.awt.Button();
 
-        setLayout(new java.awt.BorderLayout());
-
         btSubmit.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btSubmit.setText("SUBMIT");
         btSubmit.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +159,9 @@ public class Student extends javax.swing.JPanel {
             }
         });
 
+        btCancel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btCancel.setText("Cancel");
+
         javax.swing.GroupLayout pnMainBotLayout = new javax.swing.GroupLayout(pnMainBot);
         pnMainBot.setLayout(pnMainBotLayout);
         pnMainBotLayout.setHorizontalGroup(
@@ -164,7 +171,9 @@ public class Student extends javax.swing.JPanel {
                 .addComponent(btSubmit)
                 .addGap(18, 18, 18)
                 .addComponent(btReset)
-                .addContainerGap(687, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btCancel)
+                .addContainerGap(576, Short.MAX_VALUE))
         );
         pnMainBotLayout.setVerticalGroup(
             pnMainBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,11 +181,12 @@ public class Student extends javax.swing.JPanel {
                 .addContainerGap(53, Short.MAX_VALUE)
                 .addGroup(pnMainBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSubmit)
-                    .addComponent(btReset))
+                    .addComponent(btReset)
+                    .addComponent(btCancel))
                 .addGap(24, 24, 24))
         );
 
-        add(pnMainBot, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(pnMainBot, java.awt.BorderLayout.PAGE_END);
 
         pnMainTop.setPreferredSize(new java.awt.Dimension(559, 100));
 
@@ -190,7 +200,7 @@ public class Student extends javax.swing.JPanel {
         jLabel2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         pnMainTop.add(jLabel2);
 
-        add(pnMainTop, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(pnMainTop, java.awt.BorderLayout.PAGE_START);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(204, 0, 204))); // NOI18N
         jPanel1.setLayout(new java.awt.BorderLayout());
@@ -427,7 +437,7 @@ public class Student extends javax.swing.JPanel {
 
         jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
@@ -484,6 +494,7 @@ public class Student extends javax.swing.JPanel {
     private javax.swing.JRadioButton RBother;
     private javax.swing.JTextField TFLite;
     private javax.swing.JTextField TFMath;
+    private javax.swing.JButton btCancel;
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
     private java.awt.Button button1;
@@ -509,6 +520,13 @@ public class Student extends javax.swing.JPanel {
     private void initEvents() {
         pnUploadEvents();
         btSubmitEvents();
+        btCancel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                FrStudentForm.this.setVisible(false);
+            }
+            
+        });
     }
 
     private void btSubmitEvents() {
