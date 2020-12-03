@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import view.sub.pnEmployee;
 import view.sub.pnHomePage;
 import view.sub.pnStudent;
+import view.sub.pnStudentForm;
 
 /**
  *
