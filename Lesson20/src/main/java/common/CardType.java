@@ -10,7 +10,7 @@ package common;
  * @author qphan
  */
 public enum CardType {
-    HomePage, Employee, Student;
+    HomePage, Employee, List;
 
     public static CardType from(String name) {
         switch (name) {
@@ -20,8 +20,8 @@ public enum CardType {
             case "Employee":
                 return Employee;
                 
-            case "Student":
-                return Student;
+            case "List":
+                return List;
         }
         return HomePage;
     }

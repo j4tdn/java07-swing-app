@@ -63,7 +63,7 @@ public class FrMain extends JFrame {
         cardMap = new EnumMap<>(CardType.class);
         cardMap.put(CardType.Employee, new PnEmployee());
         cardMap.put(CardType.HomePage, new PnHomePage());
-        cardMap.put(CardType.Student, new PnStudent());
+        cardMap.put(CardType.List, new PnStudent());
         
         initComponents();
         initEvents();
