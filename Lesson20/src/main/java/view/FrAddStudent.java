@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.sub;
+package view;
 
 import bean.model.Grade;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,30 +20,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 /**
  *
  * @author DangHoang
  */
-public class PanelStudent extends javax.swing.JPanel {
+public class FrAddStudent extends JFrame {
 
     private File targetFile;
+    private final Border outsideBorderCenter = BorderFactory.createLineBorder(new Color(204, 0, 102), 2);
+    private final Border insideBorderCenter = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+            "THÔNG TIN", TitledBorder.CENTER, TitledBorder.TOP, new Font("Tahoma", Font.BOLD, 13),
+            new Color(0, 0, 204));
+    private final Border borderCenter = BorderFactory.createCompoundBorder(outsideBorderCenter, insideBorderCenter);
 
     /**
      * Creates new form PanelStudent
      */
-    public PanelStudent() {
+    public FrAddStudent() {
         initComponents();
-
+        initComponentsManually();
         initDataModel();
-
         initEvents();
     }
 
@@ -60,6 +70,7 @@ public class PanelStudent extends javax.swing.JPanel {
         pnMainBottom = new javax.swing.JPanel();
         btSubmit = new javax.swing.JButton();
         btReset = new javax.swing.JButton();
+        btCancel = new javax.swing.JButton();
         pnMainCenter = new javax.swing.JPanel();
         spMain = new javax.swing.JSplitPane();
         pnDetailLeft = new javax.swing.JPanel();
@@ -87,18 +98,20 @@ public class PanelStudent extends javax.swing.JPanel {
         lbAvatar = new javax.swing.JLabel();
         btChoose = new javax.swing.JButton();
 
-        setLayout(new java.awt.BorderLayout());
+        pnMainTop.setBackground(new java.awt.Color(0, 153, 153));
+        pnMainTop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2));
 
         lbStudentInfo.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
         lbStudentInfo.setForeground(new java.awt.Color(0, 0, 204));
         lbStudentInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/student.png"))); // NOI18N
         lbStudentInfo.setText("THÔNG TIN HỌC VIÊN");
-        lbStudentInfo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lbStudentInfo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lbStudentInfo.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         pnMainTop.add(lbStudentInfo);
 
-        add(pnMainTop, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(pnMainTop, java.awt.BorderLayout.PAGE_START);
 
+        pnMainBottom.setBackground(new java.awt.Color(0, 153, 153));
+        pnMainBottom.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2));
         pnMainBottom.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 10));
 
         btSubmit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -109,9 +122,13 @@ public class PanelStudent extends javax.swing.JPanel {
         btReset.setText("Reset");
         pnMainBottom.add(btReset);
 
-        add(pnMainBottom, java.awt.BorderLayout.PAGE_END);
+        btCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btCancel.setText("Cancel");
+        pnMainBottom.add(btCancel);
 
-        pnMainCenter.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "THÔNG TIN", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 204))); // NOI18N
+        getContentPane().add(pnMainBottom, java.awt.BorderLayout.PAGE_END);
+
+        pnMainCenter.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         pnMainCenter.setLayout(new java.awt.BorderLayout());
 
         pnDetailLeft.setBackground(new java.awt.Color(0, 255, 255));
@@ -212,7 +229,7 @@ public class PanelStudent extends javax.swing.JPanel {
                     .addComponent(cbSocer)
                     .addComponent(cbBadminton)
                     .addComponent(cbVolleyball))
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap(195, Short.MAX_VALUE))
         );
 
         spMain.setLeftComponent(pnDetailLeft);
@@ -273,7 +290,7 @@ public class PanelStudent extends javax.swing.JPanel {
                                 .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         pnDetailRightLayout.setVerticalGroup(
@@ -298,7 +315,7 @@ public class PanelStudent extends javax.swing.JPanel {
                         .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPicture)
                             .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 82, Short.MAX_VALUE)))
+                        .addGap(0, 135, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -306,11 +323,12 @@ public class PanelStudent extends javax.swing.JPanel {
 
         pnMainCenter.add(spMain, java.awt.BorderLayout.CENTER);
 
-        add(pnMainCenter, java.awt.BorderLayout.CENTER);
+        getContentPane().add(pnMainCenter, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btCancel;
     private javax.swing.JButton btChoose;
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
@@ -363,6 +381,13 @@ public class PanelStudent extends javax.swing.JPanel {
         btUploadEvents();
 
         btSubmitEvents();
+
+        btCancel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                FrAddStudent.this.setVisible(false);
+            }
+        });
     }
 
     private void btUploadEvents() {
@@ -386,7 +411,7 @@ public class PanelStudent extends javax.swing.JPanel {
                     try {
                         Files.copy(sourceFile.toPath(), targetFile.toPath());
                     } catch (IOException ex) {
-                        Logger.getLogger(PanelStudent.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(FrAddStudent.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
                     Icon icon = new ImageIcon(image);
@@ -422,5 +447,13 @@ public class PanelStudent extends javax.swing.JPanel {
 
     private String getHobbies(JCheckBox... checkBoxs) {
         return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
+    }
+
+    private void initComponentsManually() {
+        setUndecorated(true);
+        setSize(800, 500);
+        setLocationRelativeTo(null);
+
+        pnMainCenter.setBorder(borderCenter);
     }
 }

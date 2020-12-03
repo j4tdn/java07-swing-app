@@ -5,26 +5,12 @@
  */
 package view.sub;
 
-import bean.model.Grade;
-import java.awt.Image;
+import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.swing.AbstractButton;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import model.StudentTableModel;
+import view.FrAddStudent;
 
 /**
  *
@@ -32,16 +18,14 @@ import javax.swing.JOptionPane;
  */
 public class PanelStudent extends javax.swing.JPanel {
 
-    private File targetFile;
+    private final Font font = new Font("Tahoma", Font.PLAIN, 13);
 
     /**
      * Creates new form PanelStudent
      */
     public PanelStudent() {
         initComponents();
-
-        initDataModel();
-
+        initComponentsManually();
         initEvents();
     }
 
@@ -54,373 +38,246 @@ public class PanelStudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btgGender = new javax.swing.ButtonGroup();
-        pnMainTop = new javax.swing.JPanel();
-        lbStudentInfo = new javax.swing.JLabel();
-        pnMainBottom = new javax.swing.JPanel();
-        btSubmit = new javax.swing.JButton();
-        btReset = new javax.swing.JButton();
-        pnMainCenter = new javax.swing.JPanel();
-        spMain = new javax.swing.JSplitPane();
-        pnDetailLeft = new javax.swing.JPanel();
+        pnTop = new javax.swing.JPanel();
+        lbSearch = new javax.swing.JLabel();
+        tfSearch = new javax.swing.JTextField();
+        btAdd = new javax.swing.JButton();
+        pnBot = new javax.swing.JPanel();
         lbName = new javax.swing.JLabel();
-        tfName = new javax.swing.JTextField();
         lbClass = new javax.swing.JLabel();
-        cbClass = new javax.swing.JComboBox();
         lbGender = new javax.swing.JLabel();
+        lbFullName = new javax.swing.JLabel();
+        lbClassName = new javax.swing.JLabel();
+        lbIsGender = new javax.swing.JLabel();
         lbHobbies = new javax.swing.JLabel();
-        rbMale = new javax.swing.JRadioButton();
-        rbFemale = new javax.swing.JRadioButton();
-        rbOther = new javax.swing.JRadioButton();
-        cbSocer = new javax.swing.JCheckBox();
-        cbVolleyball = new javax.swing.JCheckBox();
-        cbBadminton = new javax.swing.JCheckBox();
-        pnDetailRight = new javax.swing.JPanel();
         lbMath = new javax.swing.JLabel();
-        tfMath = new javax.swing.JTextField();
         lbLiterature = new javax.swing.JLabel();
-        tfLiterature = new javax.swing.JTextField();
-        lbComment = new javax.swing.JLabel();
-        spComment = new javax.swing.JScrollPane();
-        taComment = new javax.swing.JTextArea();
-        lbPicture = new javax.swing.JLabel();
+        lbLiteratureScore = new javax.swing.JLabel();
+        lbMathScore = new javax.swing.JLabel();
+        lbHobbiesName = new javax.swing.JLabel();
         lbAvatar = new javax.swing.JLabel();
-        btChoose = new javax.swing.JButton();
+        btEdit = new javax.swing.JButton();
+        pnMainCenter = new javax.swing.JPanel();
+        spStudent = new javax.swing.JScrollPane();
+        tbStudent = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
-        lbStudentInfo.setFont(new java.awt.Font("Tahoma", 1, 30)); // NOI18N
-        lbStudentInfo.setForeground(new java.awt.Color(0, 0, 204));
-        lbStudentInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/student.png"))); // NOI18N
-        lbStudentInfo.setText("THÔNG TIN HỌC VIÊN");
-        lbStudentInfo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lbStudentInfo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        pnMainTop.add(lbStudentInfo);
+        pnTop.setBackground(new java.awt.Color(0, 153, 204));
+        pnTop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2));
 
-        add(pnMainTop, java.awt.BorderLayout.PAGE_START);
+        lbSearch.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbSearch.setText("Tìm kiếm :");
 
-        pnMainBottom.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 10));
+        tfSearch.setPreferredSize(new java.awt.Dimension(7, 30));
 
-        btSubmit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btSubmit.setText("Submit");
-        pnMainBottom.add(btSubmit);
+        btAdd.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        btAdd.setText("THÊM");
 
-        btReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btReset.setText("Reset");
-        pnMainBottom.add(btReset);
+        javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
+        pnTop.setLayout(pnTopLayout);
+        pnTopLayout.setHorizontalGroup(
+            pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnTopLayout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addComponent(lbSearch)
+                .addGap(18, 18, 18)
+                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 352, Short.MAX_VALUE)
+                .addComponent(btAdd)
+                .addGap(50, 50, 50))
+        );
+        pnTopLayout.setVerticalGroup(
+            pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnTopLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbSearch)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAdd))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        add(pnMainBottom, java.awt.BorderLayout.PAGE_END);
+        add(pnTop, java.awt.BorderLayout.PAGE_START);
 
-        pnMainCenter.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "THÔNG TIN", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 204))); // NOI18N
-        pnMainCenter.setLayout(new java.awt.BorderLayout());
-
-        pnDetailLeft.setBackground(new java.awt.Color(0, 255, 255));
+        pnBot.setBackground(new java.awt.Color(255, 102, 255));
+        pnBot.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2), " THÔNG TIN SINH VIÊN", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Tahoma", 1, 13), new java.awt.Color(0, 0, 204))); // NOI18N
+        pnBot.setPreferredSize(new java.awt.Dimension(800, 150));
 
         lbName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbName.setText("Họ Tên :");
-
-        tfName.setPreferredSize(new java.awt.Dimension(7, 30));
+        lbName.setText("Họ tên :");
 
         lbClass.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbClass.setText("Lớp :");
 
-        cbClass.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        cbClass.setPreferredSize(new java.awt.Dimension(57, 30));
-
         lbGender.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbGender.setText("Giới Tính :");
+        lbGender.setText("Giới tính :");
+
+        lbFullName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbFullName.setText(".....................");
+
+        lbClassName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbClassName.setText(".....................");
+
+        lbIsGender.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbIsGender.setText(".....................");
 
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbHobbies.setText("Giới Tính :");
-
-        btgGender.add(rbMale);
-        rbMale.setText("Nam");
-        rbMale.setContentAreaFilled(false);
-        rbMale.setFocusPainted(false);
-
-        btgGender.add(rbFemale);
-        rbFemale.setText("Nữ");
-        rbFemale.setContentAreaFilled(false);
-        rbFemale.setFocusPainted(false);
-
-        btgGender.add(rbOther);
-        rbOther.setText("Khác");
-        rbOther.setContentAreaFilled(false);
-        rbOther.setFocusPainted(false);
-
-        cbSocer.setText("Đá bóng");
-        cbSocer.setContentAreaFilled(false);
-        cbSocer.setFocusPainted(false);
-
-        cbVolleyball.setText("Cầu lông");
-        cbVolleyball.setContentAreaFilled(false);
-        cbVolleyball.setFocusPainted(false);
-
-        cbBadminton.setText("Bóng chuyền");
-        cbBadminton.setContentAreaFilled(false);
-        cbBadminton.setFocusPainted(false);
-
-        javax.swing.GroupLayout pnDetailLeftLayout = new javax.swing.GroupLayout(pnDetailLeft);
-        pnDetailLeft.setLayout(pnDetailLeftLayout);
-        pnDetailLeftLayout.setHorizontalGroup(
-            pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbName)
-                    .addComponent(lbClass)
-                    .addComponent(lbGender)
-                    .addComponent(lbHobbies))
-                .addGap(18, 18, 18)
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbClass, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbMale)
-                            .addComponent(cbSocer))
-                        .addGap(20, 20, 20)
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbFemale)
-                            .addComponent(cbBadminton))
-                        .addGap(11, 11, 11)
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbOther)
-                            .addComponent(cbVolleyball))))
-                .addContainerGap())
-        );
-        pnDetailLeftLayout.setVerticalGroup(
-            pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbName)
-                    .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbClass)
-                    .addComponent(cbClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbOther)
-                    .addComponent(lbGender)
-                    .addComponent(rbMale)
-                    .addComponent(rbFemale))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbHobbies)
-                    .addComponent(cbSocer)
-                    .addComponent(cbBadminton)
-                    .addComponent(cbVolleyball))
-                .addContainerGap(142, Short.MAX_VALUE))
-        );
-
-        spMain.setLeftComponent(pnDetailLeft);
-
-        pnDetailRight.setBackground(new java.awt.Color(255, 204, 51));
+        lbHobbies.setText("Sở thích :");
 
         lbMath.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbMath.setText("Điểm Toán :");
-
-        tfMath.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        tfMath.setPreferredSize(new java.awt.Dimension(7, 30));
+        lbMath.setText("Toán :");
 
         lbLiterature.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbLiterature.setText("Điểm Văn :");
+        lbLiterature.setText("Văn :");
 
-        tfLiterature.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        tfLiterature.setPreferredSize(new java.awt.Dimension(7, 30));
+        lbLiteratureScore.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbLiteratureScore.setText(".....................");
 
-        lbComment.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbComment.setText("Nhận Xét :");
+        lbMathScore.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbMathScore.setText(".....................");
 
-        taComment.setColumns(20);
-        taComment.setLineWrap(true);
-        taComment.setRows(5);
-        taComment.setTabSize(4);
-        taComment.setWrapStyleWord(true);
-        spComment.setViewportView(taComment);
+        lbHobbiesName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lbHobbiesName.setText(".....................");
 
-        lbPicture.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbPicture.setText("Hình Ảnh :");
+        lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 204), 2));
 
-        lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 203, 0), 2));
+        btEdit.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editor.png"))); // NOI18N
+        btEdit.setText("SỬA");
 
-        btChoose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
-        btChoose.setFocusPainted(false);
-
-        javax.swing.GroupLayout pnDetailRightLayout = new javax.swing.GroupLayout(pnDetailRight);
-        pnDetailRight.setLayout(pnDetailRightLayout);
-        pnDetailRightLayout.setHorizontalGroup(
-            pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnDetailRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnDetailRightLayout.createSequentialGroup()
-                        .addComponent(lbMath)
-                        .addGap(18, 18, 18)
-                        .addComponent(tfMath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnDetailRightLayout.createSequentialGroup()
-                        .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbLiterature)
-                            .addComponent(lbComment)
-                            .addComponent(lbPicture))
-                        .addGap(25, 25, 25)
-                        .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfLiterature, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spComment)
-                            .addGroup(pnDetailRightLayout.createSequentialGroup()
-                                .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)))))
-                .addContainerGap())
-        );
-        pnDetailRightLayout.setVerticalGroup(
-            pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnDetailRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+        javax.swing.GroupLayout pnBotLayout = new javax.swing.GroupLayout(pnBot);
+        pnBot.setLayout(pnBotLayout);
+        pnBotLayout.setHorizontalGroup(
+            pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnBotLayout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbName)
+                    .addComponent(lbClass)
+                    .addComponent(lbGender))
+                .addGap(26, 26, 26)
+                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbIsGender)
+                    .addComponent(lbClassName)
+                    .addComponent(lbFullName))
+                .addGap(58, 58, 58)
+                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbHobbies)
                     .addComponent(lbMath)
-                    .addComponent(tfMath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbLiterature)
-                    .addComponent(tfLiterature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spComment, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbComment))
-                .addGap(25, 25, 25)
-                .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnDetailRightLayout.createSequentialGroup()
-                        .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbPicture)
-                            .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 82, Short.MAX_VALUE)))
+                    .addComponent(lbLiterature))
+                .addGap(26, 26, 26)
+                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbLiteratureScore)
+                    .addComponent(lbMathScore)
+                    .addComponent(lbHobbiesName))
+                .addGap(79, 79, 79)
+                .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(btEdit)
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        pnBotLayout.setVerticalGroup(
+            pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnBotLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnBotLayout.createSequentialGroup()
+                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbHobbiesName)
+                            .addComponent(lbName)
+                            .addComponent(lbFullName)
+                            .addComponent(lbHobbies))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbClass)
+                            .addComponent(lbClassName)
+                            .addComponent(lbMath)
+                            .addComponent(lbMathScore))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbGender)
+                            .addComponent(lbIsGender)
+                            .addComponent(lbLiterature)
+                            .addComponent(lbLiteratureScore))
+                        .addGap(0, 18, Short.MAX_VALUE))
+                    .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(pnBotLayout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(btEdit)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        spMain.setRightComponent(pnDetailRight);
+        add(pnBot, java.awt.BorderLayout.PAGE_END);
 
-        pnMainCenter.add(spMain, java.awt.BorderLayout.CENTER);
+        pnMainCenter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2));
+        pnMainCenter.setLayout(new java.awt.BorderLayout());
+
+        tbStudent.setAutoCreateRowSorter(true);
+        tbStudent.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spStudent.setViewportView(tbStudent);
+
+        pnMainCenter.add(spStudent, java.awt.BorderLayout.CENTER);
 
         add(pnMainCenter, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btChoose;
-    private javax.swing.JButton btReset;
-    private javax.swing.JButton btSubmit;
-    private javax.swing.ButtonGroup btgGender;
-    private javax.swing.JCheckBox cbBadminton;
-    private javax.swing.JComboBox cbClass;
-    private javax.swing.JCheckBox cbSocer;
-    private javax.swing.JCheckBox cbVolleyball;
+    private javax.swing.JButton btAdd;
+    private javax.swing.JButton btEdit;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbClass;
-    private javax.swing.JLabel lbComment;
+    private javax.swing.JLabel lbClassName;
+    private javax.swing.JLabel lbFullName;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbHobbies;
+    private javax.swing.JLabel lbHobbiesName;
+    private javax.swing.JLabel lbIsGender;
     private javax.swing.JLabel lbLiterature;
+    private javax.swing.JLabel lbLiteratureScore;
     private javax.swing.JLabel lbMath;
+    private javax.swing.JLabel lbMathScore;
     private javax.swing.JLabel lbName;
-    private javax.swing.JLabel lbPicture;
-    private javax.swing.JLabel lbStudentInfo;
-    private javax.swing.JPanel pnDetailLeft;
-    private javax.swing.JPanel pnDetailRight;
-    private javax.swing.JPanel pnMainBottom;
+    private javax.swing.JLabel lbSearch;
+    private javax.swing.JPanel pnBot;
     private javax.swing.JPanel pnMainCenter;
-    private javax.swing.JPanel pnMainTop;
-    private javax.swing.JRadioButton rbFemale;
-    private javax.swing.JRadioButton rbMale;
-    private javax.swing.JRadioButton rbOther;
-    private javax.swing.JScrollPane spComment;
-    private javax.swing.JSplitPane spMain;
-    private javax.swing.JTextArea taComment;
-    private javax.swing.JTextField tfLiterature;
-    private javax.swing.JTextField tfMath;
-    private javax.swing.JTextField tfName;
+    private javax.swing.JPanel pnTop;
+    private javax.swing.JScrollPane spStudent;
+    private javax.swing.JTable tbStudent;
+    private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
 
-    private void initDataModel() {
-        initCbbGradeModel();
-    }
-
-    private void initCbbGradeModel() {
-        Grade[] grades = {
-            new Grade(1, "16T1"),
-            new Grade(2, "16T2"),
-            new Grade(3, "16T3")
-        };
-        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
-        cbClass.setModel(gradeModel);
+    private void initComponentsManually() {
+        tbStudent.setFont(font);
+        tbStudent.setRowHeight(20);
+        tbStudent.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        tbStudent.setModel(new StudentTableModel());
     }
 
     private void initEvents() {
-        btUploadEvents();
-
-        btSubmitEvents();
-    }
-
-    private void btUploadEvents() {
-        btChoose.addMouseListener(new MouseAdapter() {
+        btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                String path = getClass().getResource("/images.ghost").getFile();
-                JFileChooser fc = new JFileChooser(path);
-                int chooser = fc.showDialog(null, "Upload");
-                if (chooser == JFileChooser.APPROVE_OPTION) {
-                    File sourceFile = fc.getSelectedFile();
-                    String fileName = sourceFile.getName();
-
-                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
-                    if (!(fileName.matches(regex))) {
-                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
-                        return;
-                    }
-                    String renameFile = System.currentTimeMillis() + fileName;
-                    targetFile = new File("image_upload" + File.separator + renameFile);
-                    try {
-                        Files.copy(sourceFile.toPath(), targetFile.toPath());
-                    } catch (IOException ex) {
-                        Logger.getLogger(PanelStudent.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
-                    Icon icon = new ImageIcon(image);
-                    lbAvatar.setIcon(icon);
-                }
+                new FrAddStudent().setVisible(true);
             }
         });
-    }
-
-    private void btSubmitEvents() {
-        btSubmit.addMouseListener(new MouseAdapter() {
+        
+        btEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Grade grade = (Grade) cbClass.getSelectedItem();
-                String gender = getGender();
-                String hobbies = getHobbies(cbBadminton, cbSocer, cbVolleyball);
-                String fileName = targetFile != null ? targetFile.getName() : "Unmodifile";
-                System.out.println(grade + ", " + gender + ", " + hobbies + ", " + fileName);
             }
         });
-    }
-
-    private String getGender() {
-        Enumeration<AbstractButton> elements = btgGender.getElements();
-        while (elements.hasMoreElements()) {
-            AbstractButton button = elements.nextElement();
-            if (button.isSelected()) {
-                return button.getText();
-            }
-        }
-        return "";
-    }
-
-    private String getHobbies(JCheckBox... checkBoxs) {
-        return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
     }
 }

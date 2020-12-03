@@ -6,6 +6,8 @@
 package view;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -140,6 +142,33 @@ public class FrLogin extends javax.swing.JFrame {
     }
 
     private void initEvents() {
+        tfUserName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    tfPassWord.requestFocus();
+                }
+            }
+        });
+
+        tfPassWord.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String user = tfUserName.getText();
+                    String pass = String.valueOf(tfPassWord.getPassword());
+                    boolean isValid = isValidAccount(user, pass);
+
+                    if (isValid) {
+                        FrLogin.this.setVisible(false);
+                        new FrMain().setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Login Fail");
+                    }
+                }
+            }
+        });
+
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -159,7 +188,7 @@ public class FrLogin extends javax.swing.JFrame {
                 boolean isValid = isValidAccount(user, pass);
 
                 if (isValid) {
-                    setVisible(isUndecorated());
+                    FrLogin.this.setVisible(false);
                     new FrMain().setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Login Fail");
