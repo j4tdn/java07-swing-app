@@ -5,37 +5,23 @@
  */
 package view.sub;
 
-import been.model.Grade;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-
 /**
  *
  * @author Admin
  */
-public class Pntudent extends javax.swing.JPanel {
+public class FrStudentForm extends javax.swing.JFrame {
 
     /**
-     * Creates new form PanelStudent
+     * Creates new form FrStudentForm
      */
-    public Pntudent() {
+    public FrStudentForm() {
         initComponents();
-        initDataModel();
+        initComponentsManually();
     }
-    private void initDataModel(){
-        initCbbGradeModel();
+    private void initComponentsManually(){
+        setLocationRelativeTo(null); // set cho nó nằm giữa
+        
     }
-    private void initCbbGradeModel(){
-        Grade[] grades = {
-            new Grade(1,"Lớp 11 T1"),
-            new Grade(2,"Lớp 12 T2"),
-            new Grade(3,"Lớp 13 T3"),
-            new Grade(4,"Lớp 14 T5"),
-        };
-        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
-        cbbcgrand.setModel(gradeModel);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,12 +31,7 @@ public class Pntudent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        pnMainTop = new javax.swing.JPanel();
-        lbthongtinsv = new javax.swing.JLabel();
-        pnMainButton = new javax.swing.JPanel();
-        btsubmit = new javax.swing.JButton();
-        btreset = new javax.swing.JButton();
+        btGenDer = new javax.swing.ButtonGroup();
         pnMain = new javax.swing.JPanel();
         sppDetailInfo = new javax.swing.JSplitPane();
         pnDetailLeft = new javax.swing.JPanel();
@@ -76,33 +57,14 @@ public class Pntudent extends javax.swing.JPanel {
         tacomment = new javax.swing.JTextArea();
         lbimage = new javax.swing.JLabel();
         lbavatar = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btUpload = new javax.swing.JButton();
+        pnMainButton = new javax.swing.JPanel();
+        btsubmit = new javax.swing.JButton();
+        btreset = new javax.swing.JButton();
+        pnMainTop = new javax.swing.JPanel();
+        lbthongtinsv = new javax.swing.JLabel();
 
-        jLabel1.setText("jLabel1");
-
-        setLayout(new java.awt.BorderLayout());
-
-        lbthongtinsv.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        lbthongtinsv.setForeground(new java.awt.Color(0, 0, 255));
-        lbthongtinsv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/student.png"))); // NOI18N
-        lbthongtinsv.setText("THÔNG TIN SINH VIÊN");
-        lbthongtinsv.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lbthongtinsv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        pnMainTop.add(lbthongtinsv);
-
-        add(pnMainTop, java.awt.BorderLayout.PAGE_START);
-
-        pnMainButton.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 10));
-
-        btsubmit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btsubmit.setText("Submit");
-        pnMainButton.add(btsubmit);
-
-        btreset.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btreset.setText("Submit");
-        pnMainButton.add(btreset);
-
-        add(pnMainButton, java.awt.BorderLayout.PAGE_END);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         pnMain.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Thông  tin chi tiết", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
         pnMain.setLayout(new java.awt.BorderLayout());
@@ -112,6 +74,7 @@ public class Pntudent extends javax.swing.JPanel {
         lbName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbName.setText("Họ Tên: ");
 
+        tfName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tfName.setPreferredSize(new java.awt.Dimension(6, 32));
 
         lbClass.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -164,19 +127,15 @@ public class Pntudent extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(rbmen)
-                            .addComponent(cbfootball))
                         .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                                .addComponent(rbwoman)
-                                .addGap(65, 65, 65))
-                            .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(cbvolleyball)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(cbfootball)
+                            .addComponent(rbmen))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbvolleyball)
+                            .addComponent(rbwoman))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbdiff)
                             .addComponent(cbbadminton)))
                     .addComponent(cbbcgrand, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -209,10 +168,8 @@ public class Pntudent extends javax.swing.JPanel {
                     .addComponent(cbfootball)
                     .addComponent(cbvolleyball)
                     .addComponent(cbbadminton))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
-
-        pnDetailLeftLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbbcgrand, tfName});
 
         sppDetailInfo.setLeftComponent(pnDetailLeft);
 
@@ -235,7 +192,11 @@ public class Pntudent extends javax.swing.JPanel {
         lbcomment.setText("Nhận Xét:");
 
         tacomment.setColumns(20);
+        tacomment.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tacomment.setLineWrap(true);
         tacomment.setRows(5);
+        tacomment.setTabSize(4);
+        tacomment.setWrapStyleWord(true);
         scrollCommet.setViewportView(tacomment);
 
         lbimage.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -243,7 +204,7 @@ public class Pntudent extends javax.swing.JPanel {
 
         lbavatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 51), 3));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
+        btUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
 
         javax.swing.GroupLayout pnDetailRightLayout = new javax.swing.GroupLayout(pnDetailRight);
         pnDetailRight.setLayout(pnDetailRightLayout);
@@ -267,13 +228,13 @@ public class Pntudent extends javax.swing.JPanel {
                                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfMath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(tfLiterature, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(scrollCommet)))
+                                    .addComponent(scrollCommet, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                             .addGroup(pnDetailRightLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(lbavatar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 144, Short.MAX_VALUE)))))
+                                .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         pnDetailRightLayout.setVerticalGroup(
@@ -297,34 +258,90 @@ public class Pntudent extends javax.swing.JPanel {
                         .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnDetailRightLayout.createSequentialGroup()
                                 .addComponent(lbimage)
-                                .addGap(0, 96, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(lbavatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(pnDetailRightLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(107, Short.MAX_VALUE))))
         );
-
-        pnDetailRightLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {tfLiterature, tfMath});
 
         sppDetailInfo.setRightComponent(pnDetailRight);
 
         pnMain.add(sppDetailInfo, java.awt.BorderLayout.CENTER);
 
-        add(pnMain, java.awt.BorderLayout.CENTER);
+        getContentPane().add(pnMain, java.awt.BorderLayout.CENTER);
+
+        pnMainButton.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 10));
+
+        btsubmit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btsubmit.setText("Submit");
+        pnMainButton.add(btsubmit);
+
+        btreset.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btreset.setText("Submit");
+        pnMainButton.add(btreset);
+
+        getContentPane().add(pnMainButton, java.awt.BorderLayout.PAGE_END);
+
+        lbthongtinsv.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        lbthongtinsv.setForeground(new java.awt.Color(0, 0, 255));
+        lbthongtinsv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/student.png"))); // NOI18N
+        lbthongtinsv.setText("THÔNG TIN SINH VIÊN");
+        lbthongtinsv.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lbthongtinsv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pnMainTop.add(lbthongtinsv);
+
+        getContentPane().add(pnMainTop, java.awt.BorderLayout.PAGE_START);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FrStudentForm().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btGenDer;
+    private javax.swing.JButton btUpload;
     private javax.swing.JButton btreset;
     private javax.swing.JButton btsubmit;
     private javax.swing.JCheckBox cbbadminton;
     private javax.swing.JComboBox cbbcgrand;
     private javax.swing.JCheckBox cbfootball;
     private javax.swing.JCheckBox cbvolleyball;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbClass;
     private javax.swing.JLabel lbLike;
     private javax.swing.JLabel lbLiterature;

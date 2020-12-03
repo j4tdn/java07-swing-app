@@ -32,7 +32,7 @@ import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
 import view.sub.PanelEmployee;
 import view.sub.PanelHomePage;
-import view.sub.Pntudent;
+import view.sub.PnStudent;
 
 /**
  *
@@ -122,7 +122,7 @@ public class FmMain extends JFrame {
        
         pnCenter.add(new PanelHomePage(),"HomePage");
         pnCenter.add(new PanelEmployee(),"Employee");
-        pnCenter.add(new Pntudent(),"Student");
+        pnCenter.add(new PnStudent(),"Student");
         
         
         cardLayout.show(pnCenter, "HomePage");

@@ -36,6 +36,33 @@ public class frLogin extends javax.swing.JFrame {
          tfuserName.requestFocus();
     }
     private void initEvents(){
+        btcloseEvent();
+        btloginEvent();
+    }
+    private void btloginEvent(){
+         btlogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String username = tfuserName.getText();
+                String password = String.valueOf(tfpassword.getText());
+                boolean isValid = isValidAccount(username, password);
+                if (isValid) {
+                    frLogin.this.setVisible(false);
+                    FmMain frMain = new FmMain();
+                    frMain.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login fail!!!");
+                }
+            }
+            
+        });
+       
+    }
+    private boolean isValidAccount(String username , String pass){
+        return username.equals("admin") && pass.equals("123123");
+        
+    }
+    private void btcloseEvent(){
         btclose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -48,9 +75,7 @@ public class frLogin extends javax.swing.JFrame {
             }
             
         });
-        
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,7 +86,7 @@ public class frLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         tfuserName = new javax.swing.JTextField();
-        tfpassword = new javax.swing.JPasswordField();
+        tfpassword = new javax.swing.JTextField();
         btclose = new javax.swing.JToggleButton();
         btlogin = new javax.swing.JButton();
         lblogin = new javax.swing.JLabel();
@@ -76,16 +101,16 @@ public class frLogin extends javax.swing.JFrame {
                 tfuserNameActionPerformed(evt);
             }
         });
-        getContentPane().add(tfuserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 205, 250, 35));
+        getContentPane().add(tfuserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 250, 35));
 
+        tfpassword.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tfpassword.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        tfpassword.setRequestFocusEnabled(false);
         tfpassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfpasswordActionPerformed(evt);
             }
         });
-        getContentPane().add(tfpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 274, 250, 38));
+        getContentPane().add(tfpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, 250, 35));
 
         btclose.setBackground(new java.awt.Color(255, 0, 0));
         btclose.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -103,13 +128,13 @@ public class frLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfpasswordActionPerformed
-
     private void tfuserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfuserNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfuserNameActionPerformed
+
+    private void tfpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfpasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -154,7 +179,7 @@ public class frLogin extends javax.swing.JFrame {
     private javax.swing.JToggleButton btclose;
     private javax.swing.JButton btlogin;
     private javax.swing.JLabel lblogin;
-    private javax.swing.JPasswordField tfpassword;
+    private javax.swing.JTextField tfpassword;
     private javax.swing.JTextField tfuserName;
     // End of variables declaration//GEN-END:variables
 }
