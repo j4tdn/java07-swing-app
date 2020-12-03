@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean.model;
+package model.bean;
+
+import java.util.Objects;
 
 /**
  *
- * @author Asus
+ * @author DangHoang
  */
 public class Grade {
+
     private Integer id;
     private String name;
 
@@ -25,12 +28,12 @@ public class Grade {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
@@ -39,23 +42,18 @@ public class Grade {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if (!(obj instanceof Grade)){
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Grade)) {
             return false;
         }
-        Grade that = (Grade)obj;
-        return getId().equals(that.getId());
-                
+        Grade that = (Grade) obj;
+        return Objects.equals(that.getId(), getId());
     }
 
     @Override
     public String toString() {
         return name;
     }
-
-    
-    
-    
-    
-    
 }

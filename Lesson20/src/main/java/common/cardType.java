@@ -7,25 +7,20 @@ package common;
 
 /**
  *
- * @author Asus
+ * @author DangHoang
  */
-public enum cardType {
-    HomePage,Employee,Student;
-    
-    
-    public static cardType from(String name){
-        switch(name){
-            
-            case "HomePage":
-                return HomePage;
+public enum CardType {
+    Homepage, Employee, Student;
+
+    public static CardType from(String name) {
+        switch (name) {
+            case "Homepage":
+                return Homepage;
             case "Employee":
                 return Employee;
             case "Student":
                 return Student;
-            
-                   
         }
-        return Employee;
+        return Homepage;
     }
-    
 }
