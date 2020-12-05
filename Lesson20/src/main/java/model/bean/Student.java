@@ -10,6 +10,7 @@ package model.bean;
  * @author khanh
  */
 public class Student {
+
     private String id;
     private String fullname;
     private Boolean gender;
@@ -106,6 +107,10 @@ public class Student {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", fullname=" + fullname + ", gender=" + gender + ", hobbies=" + hobbies + ", math=" + math + ", literature=" + literature + ", grade=" + grade + ", avatarPath=" + avatarPath + ", comment=" + comment + '}';
+    }
     
-   
 }

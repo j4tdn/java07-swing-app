@@ -6,6 +6,7 @@
 package dao;
 
 import java.util.List;
+import model.bean.Grade;
 import model.bean.Student;
 
 /**
@@ -14,4 +15,5 @@ import model.bean.Student;
  */
 public interface StudentDao {
     List<Student> getAll();
+    List<Grade> getAllGrade();
 }
