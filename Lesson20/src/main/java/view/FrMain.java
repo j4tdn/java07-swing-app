@@ -157,8 +157,6 @@ public class FrMain extends JFrame {
                         
                         // show correct card panel
                         JPanel panel = cardMap.get(CardType.from(button.getText()));
-                        System.out.println("Key: " + button.getText());
-                        System.out.println("Val: " + panel);
                         pnCenter.add(panel);
                         
                         // validate

@@ -5,6 +5,7 @@
  */
 package model.bean;
 
+
 /**
  *
  * @author OS
@@ -107,6 +108,10 @@ public class Student {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", fullname=" + fullname + ", gender=" + gender + ", hobbies=" + hobbies + ", math=" + math + ", literature=" + literature + ", grade=" + grade + ", avartarPath=" + avartarPath + ", comment=" + comment + '}';
+    }
+
 }

@@ -10,7 +10,7 @@ package common;
  * @author OS
  */
 public enum StudentTableCulumn {
-    
+    ID("Id"),
     FULLNAME("Họ Tên"),
     GRADE("Lớp"),
     MATH("Điểm Toán"),

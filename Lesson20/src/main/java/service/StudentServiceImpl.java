@@ -8,6 +8,7 @@ package service;
 import dao.StudentDao;
 import dao.StudentDaoImpl;
 import java.util.List;
+import model.bean.Grade;
 import model.bean.Student;
 
 /**
@@ -25,6 +26,21 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public List<Student> getAll() {
         return studentDao.getAll();
+    }
+
+    @Override
+    public int insert(String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment) {
+        return studentDao.insert(fullname, gender, hobbies, math, literature, grade, avartarPath, comment);
+    }
+
+    @Override
+    public int update(int id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment) {
+        return studentDao.insert(fullname, gender, hobbies, math, literature, grade, avartarPath, comment);
+    }
+
+    @Override
+    public Student get(int id) {
+        return studentDao.get(id);
     }
     
 }

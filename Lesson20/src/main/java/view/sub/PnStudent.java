@@ -5,10 +5,18 @@
  */
 package view.sub;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.StudentTableModel;
+import model.bean.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
 import view.FrStudent;
 
 /**
@@ -20,15 +28,65 @@ public class PnStudent extends javax.swing.JPanel {
     /**
      * Creates new form pnList
      */
+    private final StudentService service;
+    
     public PnStudent() {
+        service = new StudentServiceImpl();
         initComponents();
         initEvents();
+        initDataModel();
     }
     
     private void initEvents() {
         btAddEvents();
         btEditEvents();
-        initDataModel();
+        tfSearchEvents();
+        tbStudentEvents();
+    }
+    
+    private void tbStudentEvents() {
+        tbStudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                tableRowSelectionTrigger();
+            }
+        });
+        
+        tbStudent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                tableRowSelectionTrigger();
+            } 
+        });
+    }
+    
+    private void tableRowSelectionTrigger() {
+        int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
+        String studentId = (String)tbStudent.getModel().getValueAt(row, 0);
+        Student student = service.get(Integer.parseInt(studentId));
+        setText(student);
+    }
+    
+    private void setText(Student student) {
+        lbNameStudent.setText(student.getFullname());
+    }
+    
+    private void tfSearchEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfSearch.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(tbStudent.getModel());
+                tbStudent.setRowSorter(sorter);
+                RowFilter<TableModel, Object> rowFilter;
+                if(text.isEmpty()) {
+                   rowFilter = RowFilter.regexFilter(text);
+                } else {
+                    rowFilter = RowFilter.regexFilter("^(?i)" + text + "$");
+                }
+                sorter.setRowFilter(rowFilter);
+            }
+        });
     }
     
     private void initDataModel() {
@@ -36,8 +94,9 @@ public class PnStudent extends javax.swing.JPanel {
     }
     
     private void initTableStudentModel() {
-        StudentTableModel tableModel = new StudentTableModel();
-        tbStudent.setModel(tableModel);
+        StudentTableModel tableModel = new StudentTableModel(tbStudent);
+        tableModel.loadData();
+        tableModel.cssForTable();
     }
     
     private void btAddEvents() {
@@ -276,6 +335,7 @@ public class PnStudent extends javax.swing.JPanel {
             }
         ));
         tbStudent.setRowHeight(20);
+        tbStudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tbStudent);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
