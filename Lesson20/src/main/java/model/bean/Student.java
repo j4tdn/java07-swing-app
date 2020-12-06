@@ -10,7 +10,8 @@ package model.bean;
  * @author USER
  */
 public class Student {
-    private String id;
+
+    private Integer id;
     private String fullname;
     private Boolean gender;
     private String Hobbies;
@@ -23,7 +24,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String fullname, Boolean gender, String Hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment) {
+    public Student(Integer id, String fullname, Boolean gender, String Hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment) {
         this.id = id;
         this.fullname = fullname;
         this.gender = gender;
@@ -35,11 +36,11 @@ public class Student {
         this.comment = comment;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -106,6 +107,10 @@ public class Student {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Student{" + "id=" + id + ", fullname=" + fullname + ", gender=" + gender + ", Hobbies=" + Hobbies + ", math=" + math + ", literature=" + literature + ", grade=" + grade + ", avatarPath=" + avatarPath + ", comment=" + comment + '}';
+    }
+
 }

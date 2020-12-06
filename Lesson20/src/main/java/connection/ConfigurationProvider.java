@@ -3,17 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package service;
-
-import java.util.List;
-import model.bean.Student;
+package connection;
+        
+import java.util.Properties;
 
 /**
  *
  * @author USER
  */
-public interface StudentService {
-    List<Student> getAll();
-    
-    Student getStudent(int id);
+public interface ConfigurationProvider {
+    Properties getProperties();
 }

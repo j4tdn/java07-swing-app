@@ -6,14 +6,12 @@
 package service;
 
 import java.util.List;
-import model.bean.Student;
+import model.bean.Grade;
 
 /**
  *
  * @author USER
  */
-public interface StudentService {
-    List<Student> getAll();
-    
-    Student getStudent(int id);
+public interface GradeService {
+    List<Grade> getAll();
 }

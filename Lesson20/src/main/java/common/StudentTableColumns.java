@@ -10,6 +10,7 @@ package common;
  * @author USER
  */
 public enum StudentTableColumns {
+    ID("MSSV"),
     FULLNAME("Họ tên"),
     GRADE("Lớp"),
     MATH("Điểm toán"),

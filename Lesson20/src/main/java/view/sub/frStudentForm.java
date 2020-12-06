@@ -5,11 +5,20 @@
  */
 package view.sub;
 
+import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import model.bean.Grade;
+import service.GradeService;
+import service.GradeServiceImpl;
+
 /**
  *
  * @author USER
  */
 public class frStudentForm extends javax.swing.JFrame {
+    
+    private GradeService gradeService;
 
     /**
      * Creates new form frStudentForm
@@ -17,6 +26,20 @@ public class frStudentForm extends javax.swing.JFrame {
     public frStudentForm() {
         initComponents();
         initComponentManually();
+        initDataModel();
+//        initEvents();
+    }
+    
+    private void initDataModel() {
+        initCbbGradeModel();
+    }
+    
+    private void initCbbGradeModel() {
+        gradeService = new GradeServiceImpl();
+        List<Grade> grades = gradeService.getAll();
+        Grade[] gradesArray = grades.stream().toArray(Grade[]::new);
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(gradesArray);
+        cbGrade.setModel(gradeModel);
     }
     
     private void initComponentManually() {
@@ -199,7 +222,7 @@ public class frStudentForm extends javax.swing.JFrame {
                     .addComponent(cbFootball)
                     .addComponent(cbSmileball)
                     .addComponent(cbBasketball))
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         sppDetailInfo.setLeftComponent(pnDetailLeft);
@@ -265,8 +288,8 @@ public class frStudentForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfMath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tfLiterature, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                    .addComponent(scrollComment, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(tfLiterature, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollComment, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                     .addGroup(pnDetailRightLayout.createSequentialGroup()
                         .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
@@ -289,7 +312,7 @@ public class frStudentForm extends javax.swing.JFrame {
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbComment)
                     .addComponent(scrollComment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbImage)

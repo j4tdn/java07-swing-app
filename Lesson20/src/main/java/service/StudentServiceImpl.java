@@ -14,8 +14,8 @@ import model.bean.Student;
  *
  * @author USER
  */
-public class StudentServiceImpl implements StudentService{
-    
+public class StudentServiceImpl implements StudentService {
+
     private final StudentDao studentDao;
 
     public StudentServiceImpl() {
@@ -26,5 +26,10 @@ public class StudentServiceImpl implements StudentService{
     public List<Student> getAll() {
         return studentDao.getAll();
     }
-    
+
+    @Override
+    public Student getStudent(int id) {
+        return studentDao.getStudent(id);
+    }
+
 }

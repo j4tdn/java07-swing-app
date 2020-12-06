@@ -6,20 +6,13 @@
 package dao;
 
 import java.util.List;
-import model.bean.Student;
+import model.bean.Grade;
 
 /**
  *
  * @author USER
  */
-public interface StudentDao {
-    List<Student> getAll();
-    
-    boolean save(Student student);
-    
-    Student getStudent(int id);
-    
-    boolean update(Student student);
-    
-    boolean delete(int id);
+public interface GradeDao {
+
+    List<Grade> getAll();
 }

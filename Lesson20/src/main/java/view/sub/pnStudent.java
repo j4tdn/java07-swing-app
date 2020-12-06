@@ -5,10 +5,18 @@
  */
 package view.sub;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.StudentTableModel;
+import model.bean.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
 
 /**
  *
@@ -16,28 +24,82 @@ import model.StudentTableModel;
  */
 public class pnStudent extends javax.swing.JPanel {
 
+    private final StudentService studentService;
+
     /**
      * Creates new form pnStudent
      */
     public pnStudent() {
+        studentService = new StudentServiceImpl();
         initComponents();
         initDataModel();
         initEvents();
     }
-    
+
     private void initDataModel() {
         initTableStudentModel();
     }
-    
+
     private void initTableStudentModel() {
-        tbStudent.setModel(new StudentTableModel());
+        StudentTableModel studentModel = new StudentTableModel(tbStudent);
+        studentModel.loadData();
+        studentModel.cssForTable();
     }
-    
+
     private void initEvents() {
+        tfSearchEvents();
+        tbStudentEvents();
         btAddEvents();
         btEditEvents();
     }
-    
+
+    private void tbStudentEvents() {
+        tbStudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                tableRowSelectionTrigger();
+            }
+
+        });
+        tbStudent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                tableRowSelectionTrigger();
+            }
+
+        });
+    }
+
+    private void tableRowSelectionTrigger() {
+        int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
+        int studentId = (int) tbStudent.getModel().getValueAt(row, 0);
+        Student student = studentService.getStudent(studentId);
+        setText(student);
+    }
+
+    private void setText(Student student) {
+        lbFullname.setText(student.getFullname());
+    }
+
+    private void tfSearchEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfSearch.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(tbStudent.getModel());
+                tbStudent.setRowSorter(sorter);
+                RowFilter<TableModel, Object> filter = null;
+                if (text.isEmpty()) {
+                    filter = RowFilter.regexFilter(text);
+                } else {
+                    filter = RowFilter.regexFilter("^(?i)" + text + "$");
+                    sorter.setRowFilter(filter);
+                }
+            }
+
+        });
+    }
+
     private void btAddEvents() {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
@@ -48,12 +110,12 @@ public class pnStudent extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void btEditEvents() {
         btEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                
+
             }
         });
     }
@@ -250,6 +312,7 @@ public class pnStudent extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbStudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(tbStudent);
 
         pnCenter.add(jScrollPane2, java.awt.BorderLayout.CENTER);
