@@ -21,6 +21,7 @@ import model.beans.StudentRaw;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentDao dao;
+    private List<Grade> grade;
 
     public StudentServiceImpl() {
         dao = new StudentDaoImpl();
@@ -29,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> getAll() {
         List<StudentRaw> studentsRaw = dao.getAll();
-        List<Grade> grade = getGrade();
+        grade = getGrade();
         List<Student> students = new ArrayList<>();
         studentsRaw.forEach(s -> {
             students.add(new Student(s, grade.stream().filter(g -> g.getId().equals(s.getGrade()))
@@ -52,4 +53,11 @@ public class StudentServiceImpl implements StudentService {
     public boolean updateStudent(Student student) {
         return dao.updateStudent(student);
     }
+
+//    @Override
+//    public Student getStudent(String id) {
+//        StudentRaw studentRaw = dao.getStudent(id);
+//        return new Student(studentRaw, grade.stream().filter(g -> g.getId().equals(studentRaw.getGrade()))
+//                    .collect(Collectors.toList()).get(0));
+//    }
 }

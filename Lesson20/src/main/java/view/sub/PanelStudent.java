@@ -41,7 +41,7 @@ public class PanelStudent extends javax.swing.JPanel {
         students = service.getAll();
 
         initComponents();
-        initComponentsManually();
+        setTableModel();
         initEvents();
     }
 
@@ -119,111 +119,80 @@ public class PanelStudent extends javax.swing.JPanel {
         pnBot.setBackground(new java.awt.Color(255, 102, 255));
         pnBot.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2), " THÔNG TIN SINH VIÊN", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Tahoma", 1, 13), new java.awt.Color(0, 0, 204))); // NOI18N
         pnBot.setPreferredSize(new java.awt.Dimension(800, 150));
+        pnBot.setLayout(null);
 
         lbName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbName.setText("Họ tên :");
+        pnBot.add(lbName);
+        lbName.setBounds(64, 31, 46, 16);
 
         lbClass.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbClass.setText("Lớp :");
+        pnBot.add(lbClass);
+        lbClass.setBounds(64, 65, 29, 16);
 
         lbGender.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbGender.setText("Giới tính :");
+        pnBot.add(lbGender);
+        lbGender.setBounds(64, 99, 55, 16);
 
         lbFullName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbFullName.setText(".....................");
+        pnBot.add(lbFullName);
+        lbFullName.setBounds(145, 31, 84, 16);
 
         lbClassName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbClassName.setText(".....................");
+        pnBot.add(lbClassName);
+        lbClassName.setBounds(145, 65, 84, 16);
 
         lbIsGender.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbIsGender.setText(".....................");
+        pnBot.add(lbIsGender);
+        lbIsGender.setBounds(145, 99, 84, 16);
 
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbHobbies.setText("Sở thích :");
+        pnBot.add(lbHobbies);
+        lbHobbies.setBounds(287, 31, 55, 16);
 
         lbMath.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbMath.setText("Toán :");
+        pnBot.add(lbMath);
+        lbMath.setBounds(287, 65, 38, 16);
 
         lbLiterature.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbLiterature.setText("Văn :");
+        pnBot.add(lbLiterature);
+        lbLiterature.setBounds(287, 99, 31, 16);
 
         lbLiteratureScore.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbLiteratureScore.setText(".....................");
+        pnBot.add(lbLiteratureScore);
+        lbLiteratureScore.setBounds(368, 99, 84, 16);
 
         lbMathScore.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbMathScore.setText(".....................");
+        pnBot.add(lbMathScore);
+        lbMathScore.setBounds(368, 65, 84, 16);
 
         lbHobbiesName.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         lbHobbiesName.setText(".....................");
+        pnBot.add(lbHobbiesName);
+        lbHobbiesName.setBounds(368, 31, 84, 16);
 
         lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 204), 2));
+        pnBot.add(lbAvatar);
+        lbAvatar.setBounds(531, 31, 113, 102);
 
         btEdit.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editor.png"))); // NOI18N
         btEdit.setText("SỬA");
-
-        javax.swing.GroupLayout pnBotLayout = new javax.swing.GroupLayout(pnBot);
-        pnBot.setLayout(pnBotLayout);
-        pnBotLayout.setHorizontalGroup(
-            pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnBotLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbName)
-                    .addComponent(lbClass)
-                    .addComponent(lbGender))
-                .addGap(26, 26, 26)
-                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbIsGender)
-                    .addComponent(lbClassName)
-                    .addComponent(lbFullName))
-                .addGap(58, 58, 58)
-                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbHobbies)
-                    .addComponent(lbMath)
-                    .addComponent(lbLiterature))
-                .addGap(26, 26, 26)
-                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbLiteratureScore)
-                    .addComponent(lbMathScore)
-                    .addComponent(lbHobbiesName))
-                .addGap(79, 79, 79)
-                .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(btEdit)
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        pnBotLayout.setVerticalGroup(
-            pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnBotLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnBotLayout.createSequentialGroup()
-                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbHobbiesName)
-                            .addComponent(lbName)
-                            .addComponent(lbFullName)
-                            .addComponent(lbHobbies))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbClass)
-                            .addComponent(lbClassName)
-                            .addComponent(lbMath)
-                            .addComponent(lbMathScore))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbGender)
-                            .addComponent(lbIsGender)
-                            .addComponent(lbLiterature)
-                            .addComponent(lbLiteratureScore))
-                        .addGap(0, 18, Short.MAX_VALUE))
-                    .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(pnBotLayout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(btEdit)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        btEdit.setMaximumSize(new java.awt.Dimension(75, 25));
+        btEdit.setMinimumSize(new java.awt.Dimension(75, 25));
+        btEdit.setPreferredSize(new java.awt.Dimension(75, 25));
+        pnBot.add(btEdit);
+        btEdit.setBounds(683, 68, 75, 25);
 
         add(pnBot, java.awt.BorderLayout.PAGE_END);
 
@@ -276,7 +245,7 @@ public class PanelStudent extends javax.swing.JPanel {
     private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
 
-    private void initComponentsManually() {
+    private void setTableModel() {
         StudentTableModel studentTableModel = new StudentTableModel(tbStudent);
         studentTableModel.loadData();
         studentTableModel.cssForTable();

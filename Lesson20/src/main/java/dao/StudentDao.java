@@ -23,4 +23,6 @@ public interface StudentDao {
     boolean addStudent(Student student);
 
     boolean updateStudent(Student student);
+
+//    StudentRaw getStudent(String id);
 }

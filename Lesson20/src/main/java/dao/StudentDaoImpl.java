@@ -133,4 +133,26 @@ public class StudentDaoImpl implements StudentDao {
         }
         return affectedRows != 0;
     }
+
+//    @Override
+//    public StudentRaw getStudent(String id) {
+//        StudentRaw student = null;
+//        Connection con = connection.getConnection();
+//        String query = "SELECT * FROM `sinhvien` WHERE Id = " + id;
+//
+//        try {
+//            st = con.createStatement();
+//            rs = st.executeQuery(query);
+//            while (rs.next()) {
+//                student = new StudentRaw(rs.getString("Id"), rs.getString("Name"), rs.getString("IdGrade"), rs.getBoolean("Gender"),
+//                        rs.getString("Hobbies"), rs.getFloat("Math"), rs.getFloat("Literature"),
+//                        rs.getString("Comment"), rs.getString("Avatar"));
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(StudentDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            SqlUtils.close(pst, con);
+//        }
+//        return student;
+//    }
 }

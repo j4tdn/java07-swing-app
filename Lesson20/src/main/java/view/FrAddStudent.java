@@ -12,13 +12,9 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
@@ -46,7 +42,7 @@ import service.StudentServiceImpl;
  */
 public class FrAddStudent extends JFrame {
 
-    private File targetFile;
+//    private File targetFile;
     private final Border outsideBorderCenter = BorderFactory.createLineBorder(new Color(204, 0, 102), 2);
     private final Border insideBorderCenter = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
             "THÔNG TIN", TitledBorder.CENTER, TitledBorder.TOP, new Font("Tahoma", Font.BOLD, 13),
@@ -54,9 +50,10 @@ public class FrAddStudent extends JFrame {
     private final Border borderCenter = BorderFactory.createCompoundBorder(outsideBorderCenter, insideBorderCenter);
     private final StudentService service;
     private final Student student;
-    private List<Student> students;
+    private final List<Student> students;
     private final List<Grade> listGrades;
     private final JTable tbStudent;
+    private String imagePath;
 
     /**
      * Creates new form PanelStudent
@@ -428,15 +425,17 @@ public class FrAddStudent extends JFrame {
                         JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
                         return;
                     }
-                    String renameFile = System.currentTimeMillis() + fileName;
-                    targetFile = new File("image_upload" + File.separator + renameFile);
-                    try {
-                        Files.copy(sourceFile.toPath(), targetFile.toPath());
-                    } catch (IOException ex) {
-                        Logger.getLogger(FrAddStudent.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    Image image = new ImageIcon(targetFile.getPath())
-                            .getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
+//                    String renameFile = System.currentTimeMillis() + fileName;
+//                    targetFile = new File("image_upload" + File.separator + renameFile);
+//                    try {
+//                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(FrAddStudent.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                    Image image = new ImageIcon(targetFile.getPath())
+                    imagePath = path + File.separator + fileName;
+                    Image image = new ImageIcon(imagePath).getImage()
+                            .getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
                     Icon icon = new ImageIcon(image);
                     lbAvatar.setIcon(icon);
                 }
@@ -456,31 +455,37 @@ public class FrAddStudent extends JFrame {
                 String literature = tfLiterature.getText();
 
                 if (checkInfo(name, gender, hobbies, math, literature)) {
-                    String id = "sv" + students.size() + 1;
+                    String id = setId();
                     Float mathScore = Float.parseFloat(math);
                     Float literatureScore = Float.parseFloat(literature);
                     Boolean isGender = gender.equals("Nam");
+                    String image = (imagePath != null) ? imagePath : student.getImagePath();
 
                     if (student.getId() != null) {
                         setInfoStudent(name, grade, isGender, hobbies, mathScore, literatureScore,
-                                taComment.getText(), student.getImagePath());
+                                taComment.getText(), image);
                         System.out.println(service.updateStudent(student));
-                        students = service.getAll();
-                        tbStudent.setModel(new StudentTableModel(tbStudent));
-                    } else if (targetFile != null) {
-                        StudentRaw studentRaw = new StudentRaw(id, name, grade.getName(), isGender, hobbies, mathScore,
-                                literatureScore, taComment.getText(), targetFile.getPath());
-                        Student std = new Student(studentRaw, grade);
-                        System.out.println(service.addStudent(std));
-                        students = service.getAll();
-                        tbStudent.setModel(new StudentTableModel(tbStudent));
+                        setTableData();
+                        showMessage("Successfully updated!", "Updated", JOptionPane.INFORMATION_MESSAGE);
+                        FrAddStudent.this.setVisible(false);
+                    } else {
+                        if (lbAvatar.getIcon() != null) {
+                            StudentRaw studentRaw = new StudentRaw(id, name, grade.getName(), isGender, hobbies, mathScore,
+                                    literatureScore, taComment.getText(), imagePath);
+                            Student std = new Student(studentRaw, grade);
+                            System.out.println(service.addStudent(std));
+                            students.add(std);
+                            setTableData();
+                            showMessage("Add students successfully!", "Added", JOptionPane.INFORMATION_MESSAGE);
+                            FrAddStudent.this.setVisible(false);
+                        } else {
+                            showMessage("Please enter your complete information!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 } else {
-                    JOptionPane.showConfirmDialog(null, "Please enter your complete information!", "Error",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                    showMessage("Please enter your complete information!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
         });
     }
 
@@ -497,7 +502,12 @@ public class FrAddStudent extends JFrame {
     }
 
     private boolean checkInfo(String... ts) {
-        return ts != null;
+        for (String t : ts) {
+            if (t.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getGender() {
@@ -566,5 +576,24 @@ public class FrAddStudent extends JFrame {
                 rbFemale.setSelected(true);
             }
         }
+    }
+
+    private void setTableData() {
+        StudentTableModel studentTableModel = new StudentTableModel(tbStudent);
+        studentTableModel.loadData();
+        studentTableModel.cssForTable();
+    }
+
+    private void showMessage(String message, String title, int icon) {
+        JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION, icon);
+    }
+
+    private String setId() {
+        int numZeros = 10 / students.size();
+        String zero = "sv";
+        for (int i = 0; i < numZeros; i++) {
+            zero += 0;
+        }
+        return zero + (students.size() + 1);
     }
 }
