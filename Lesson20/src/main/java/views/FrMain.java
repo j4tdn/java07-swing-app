@@ -28,7 +28,7 @@ import javax.swing.JButton;
 import javax.swing.border.Border;
 import view.sub.PnEmployee;
 import view.sub.PnHomePage;
-import view.sub.PnStudent;
+import view.sub.PnStudent1;
 
 /**
  *
@@ -53,7 +53,7 @@ public class FrMain extends JFrame {
         cardMap = new EnumMap<>(CardType.class);
         cardMap.put(CardType.HomePage, new PnHomePage());
         cardMap.put(CardType.Employee, new PnEmployee());
-        cardMap.put(CardType.Student, new PnStudent());
+        cardMap.put(CardType.Student, new PnStudent1());
         //UI
         initComponents();
         //events
