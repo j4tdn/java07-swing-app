@@ -8,7 +8,7 @@ package service;
 import Dao.StudentDao;
 import Dao.StudentDaoImpl;
 import java.util.List;
-import model.Student;
+import model.been.Student;
 
 /**
  *
@@ -22,6 +22,11 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public List<Student> getAll() {
         return studentDao.getAll();
+    }
+
+    @Override
+    public List<Student> get(String id) {
+        return studentDao.get(id);
     }
     
 }

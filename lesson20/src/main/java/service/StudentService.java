@@ -6,7 +6,7 @@
 package service;
 
 import java.util.List;
-import model.Student;
+import model.been.Student;
 
 /**
  *
@@ -14,4 +14,5 @@ import model.Student;
  */
 public interface StudentService {
     List<Student> getAll();
+    List<Student> get(String id);
 }

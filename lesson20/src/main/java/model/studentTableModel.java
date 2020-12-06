@@ -7,7 +7,9 @@ package model;
 
 import common.StudentTableColum;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import model.been.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
 
@@ -15,15 +17,22 @@ import service.StudentServiceImpl;
  *
  * @author Admin
  */
-public class studentTableModel extends AbstractTableModel{
+public class studentTableModel extends AbstractTableModel {
+
     private final List<Student> student;
     private final StudentService studentService;
     private final StudentTableColum[] colums;
-    public studentTableModel(){
+
+    public studentTableModel() {
         colums = StudentTableColum.values();
         studentService = new StudentServiceImpl();
         student = studentService.getAll();
     }
+
+    public studentTableModel(JTable tbstudent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public int getRowCount() {
         return student.size();
@@ -33,31 +42,40 @@ public class studentTableModel extends AbstractTableModel{
     public int getColumnCount() {
         return colums.length;
     }
+
     @Override
-    public String getColumnName(int column){
+    public String getColumnName(int column) {
         return colums[column].getColumnName();
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object value = null;
         Student student = this.student.get(rowIndex);
-        switch(colums[columnIndex]){
-            case FULLNAME:value = student.getFullname();
-            case GRADE:value = student.getGrade().getName();
-             case MATH:value = student.getMathl();
-             case LITERATURE:value = student.getLiterature();
-             case COMENT:value = student.getComment();
-      
+        switch (colums[columnIndex]) {
+            case ID:
+                value = student.getId();
+            case FULLNAME:
+                value = student.getFullname();
+            case GRADE:
+                value = student.getGrade().getName();
+            case MATH:
+                value = student.getMathl();
+            case LITERATURE:
+                value = student.getLiterature();
+            case COMENT:
+                value = student.getComment();
+
         }
         return value;
     }
+
     @Override
-    public Class<?> getColumnClass(int columnIndex){
-        if(colums[columnIndex] == StudentTableColum.MATH ||colums[columnIndex] == StudentTableColum.LITERATURE ){
+    public Class<?> getColumnClass(int columnIndex) {
+        if (colums[columnIndex] == StudentTableColum.MATH || colums[columnIndex] == StudentTableColum.LITERATURE) {
             return Double.class;
         }
         return super.getColumnClass(columnIndex);
-    }      
-    
+    }
+
 }

@@ -5,11 +5,18 @@
  */
 package view.sub;
 
-import java.awt.Window;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import model.been.Student;
 import model.studentTableModel;
+import service.StudentService;
+import service.StudentServiceImpl;
 
 /**
  *
@@ -17,49 +24,98 @@ import model.studentTableModel;
  */
 public class PnStudent extends javax.swing.JPanel {
 
+    //private final StudentService studentService;
     /**
      * Creates new form PnStudent
      */
     public PnStudent() {
+
         initComponents();
         initEvent();
         initDataModel();
     }
-    private void initDataModel(){
+
+    private void initDataModel() {
         initTablleStudentModel();
     }
-    private void  initTablleStudentModel(){
-        tbstudent.setModel(new studentTableModel());
+
+    private void initTablleStudentModel() {
+        studentTableModel studentModel = new studentTableModel(tbstudent);
+        //studentModel.loadData();
+        //studentModel.cssFortable();
     }
-    
-    
-    
-    private void initEvent(){
+
+    private void initEvent() {
         btaddEvent();
         bteditEvent();
-        
+        tfSearchEvent();
+        tableStudentEvent();
     }
-    
-    
-    private void btaddEvent(){
+
+    private void tableStudentEvent() {
+        tbstudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+               tableSelectTrigger();
+            }
+        });
+        tbstudent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                tableSelectTrigger();
+            }
+        });
+    }
+
+    private void tableSelectTrigger() {
+        int rowIndex = tbstudent.getSelectedRow();
+        int rowModel = tbstudent.convertColumnIndexToModel(rowIndex);
+        System.out.println("ri-rm" + rowIndex + " - " + rowModel);
+        String studentID = (String) tbstudent.getModel().getValueAt(rowModel, 0);
+        System.out.println("student ID" + studentID);
+    }
+
+    private void setText(Student students) {
+
+    }
+
+    ;
+    private void tfSearchEvent() {
+        tfsearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfsearch.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(tbstudent.getModel());
+                tbstudent.setRowSorter(sorter);
+                RowFilter<TableModel, Object> rowFilter;
+
+                if (text.isEmpty()) {
+                    rowFilter = RowFilter.regexFilter(text);
+                } else {
+                    rowFilter = RowFilter.regexFilter("^?i" + text + "$", 0); //xoas 0 là sreach toàn bộ table  dữ liệu 
+                }
+                sorter.setRowFilter(rowFilter);
+            }
+
+        });
+    }
+
+    private void btaddEvent() {
         btadd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 FrStudentForm form = new FrStudentForm();
                 form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);//moi quan he moi.
                 form.setVisible(true);
-                
             }
-            
         });
     }
-    private void bteditEvent(){
-         btedit.addMouseListener(new MouseAdapter() {
+
+    private void bteditEvent() {
+        btedit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-              
             }
-            
         });
     }
 
@@ -115,7 +171,7 @@ public class PnStudent extends javax.swing.JPanel {
                 .addComponent(lbsearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
                 .addComponent(btadd, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pntopLayout.setVerticalGroup(
@@ -187,7 +243,7 @@ public class PnStudent extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PNBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PNBotLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGap(0, 56, Short.MAX_VALUE)
                                 .addComponent(lbclass))
                             .addGroup(PNBotLayout.createSequentialGroup()
                                 .addComponent(lbgrand)
@@ -196,7 +252,7 @@ public class PnStudent extends javax.swing.JPanel {
                         .addComponent(lbname)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbfullname)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addGroup(PNBotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbdiemvan)
                     .addComponent(lbdiemtoan)
@@ -206,7 +262,7 @@ public class PnStudent extends javax.swing.JPanel {
                     .addComponent(lbvan)
                     .addComponent(lbmath)
                     .addComponent(lblike))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addComponent(lbavatar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(btedit))
@@ -256,6 +312,7 @@ public class PnStudent extends javax.swing.JPanel {
                 "Lớp", "Họ Tên", "Toán", "Văn", "Sở Thích"
             }
         ));
+        tbstudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scrol.setViewportView(tbstudent);
 
         PNMid.add(scrol, java.awt.BorderLayout.CENTER);
