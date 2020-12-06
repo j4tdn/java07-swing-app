@@ -7,8 +7,12 @@ package service;
 
 import dao.StudentDao;
 import dao.StudentDaoImpl;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import model.beans.Grade;
 import model.beans.Student;
+import model.beans.StudentRaw;
 
 /**
  *
@@ -24,6 +28,28 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAll() {
-        return dao.getAll();
+        List<StudentRaw> studentsRaw = dao.getAll();
+        List<Grade> grade = getGrade();
+        List<Student> students = new ArrayList<>();
+        studentsRaw.forEach(s -> {
+            students.add(new Student(s, grade.stream().filter(g -> g.getId().equals(s.getGrade()))
+                    .collect(Collectors.toList()).get(0)));
+        });
+        return students;
+    }
+
+    @Override
+    public List<Grade> getGrade() {
+        return dao.getGrade();
+    }
+
+    @Override
+    public boolean addStudent(Student student) {
+        return dao.addStudent(student);
+    }
+
+    @Override
+    public boolean updateStudent(Student student) {
+        return dao.updateStudent(student);
     }
 }

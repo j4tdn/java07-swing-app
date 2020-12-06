@@ -10,6 +10,7 @@ package common;
  * @author DangHoang
  */
 public enum StudentTableColumn {
+    ID("Id"),
     FULLNAME("Họ tên"),
     GRADE("Lớp"),
     MATH("Toán"),

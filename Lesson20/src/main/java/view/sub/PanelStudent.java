@@ -5,11 +5,22 @@
  */
 package view.sub;
 
-import java.awt.Cursor;
-import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.StudentTableModel;
+import model.beans.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
 import view.FrAddStudent;
 
 /**
@@ -18,12 +29,17 @@ import view.FrAddStudent;
  */
 public class PanelStudent extends javax.swing.JPanel {
 
-    private final Font font = new Font("Tahoma", Font.PLAIN, 13);
+    private final StudentService service;
+    private final List<Student> students;
+    private Student student;
 
     /**
      * Creates new form PanelStudent
      */
     public PanelStudent() {
+        service = new StudentServiceImpl();
+        students = service.getAll();
+
         initComponents();
         initComponentsManually();
         initEvents();
@@ -226,6 +242,7 @@ public class PanelStudent extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbStudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         spStudent.setViewportView(tbStudent);
 
         pnMainCenter.add(spStudent, java.awt.BorderLayout.CENTER);
@@ -260,24 +277,80 @@ public class PanelStudent extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void initComponentsManually() {
-        tbStudent.setFont(font);
-        tbStudent.setRowHeight(20);
-        tbStudent.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        tbStudent.setModel(new StudentTableModel());
+        StudentTableModel studentTableModel = new StudentTableModel(tbStudent);
+        studentTableModel.loadData();
+        studentTableModel.cssForTable();
     }
 
     private void initEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfSearch.getText();
+                TableRowSorter<TableModel> tableRowSorter = new TableRowSorter<>(tbStudent.getModel());
+                tbStudent.setRowSorter(tableRowSorter);
+                RowFilter<TableModel, Object> rowFilter;
+                if (text.isEmpty()) {
+                    rowFilter = RowFilter.regexFilter(text);
+                } else {
+                    rowFilter = RowFilter.regexFilter("^(?i)" + text + "$");
+                }
+                tableRowSorter.setRowFilter(rowFilter);
+            }
+        });
+
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                new FrAddStudent().setVisible(true);
+                new FrAddStudent(students, new Student(), tbStudent).setVisible(true);
             }
         });
-        
+
         btEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (student != null) {
+                    new FrAddStudent(students, student, tbStudent).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Please choose a student!", "Error", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
+        tbStudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selection();
+            }
+        });
+
+        tbStudent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                selection();
+            }
+        });
+    }
+
+    private void selection() {
+        int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
+        student = students.get(row);
+        showInfo();
+    }
+
+    private void showInfo() {
+        lbFullName.setText(student.getName());
+        lbClassName.setText(student.getGrade().getName());
+        lbHobbiesName.setText(student.getBobbies());
+        lbIsGender.setText(student.getGender() ? "Nam" : "Nữ");
+        lbMathScore.setText(String.valueOf(student.getMath()));
+        lbLiteratureScore.setText(String.valueOf(student.getLiterature()));
+        if (student.getImagePath() != null) {
+            Image image = new ImageIcon(student.getImagePath()).getImage()
+                    .getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+            Icon icon = new ImageIcon(image);
+            lbAvatar.setIcon(icon);
+        }
     }
 }

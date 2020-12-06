@@ -98,7 +98,7 @@ public class FrMain extends JFrame {
         pnLeftTop.setLayout(gridLayout);
 
         JButton btHome = new JButton();
-        btHome.setFont(new Font("Tahoma", Font.BOLD, 16));
+        btHome.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btHome.setText(cardTypes[0].name());
         defaulBorder = btHome.getBorder();
         btHome.setBorder(border);

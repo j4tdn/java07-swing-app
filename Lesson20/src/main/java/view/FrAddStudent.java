@@ -5,7 +5,7 @@
  */
 package view;
 
-import bean.model.Grade;
+import model.beans.Grade;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -29,8 +31,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import model.StudentTableModel;
+import model.beans.Student;
+import model.beans.StudentRaw;
+import service.StudentService;
+import service.StudentServiceImpl;
 
 /**
  *
@@ -44,11 +52,26 @@ public class FrAddStudent extends JFrame {
             "THÔNG TIN", TitledBorder.CENTER, TitledBorder.TOP, new Font("Tahoma", Font.BOLD, 13),
             new Color(0, 0, 204));
     private final Border borderCenter = BorderFactory.createCompoundBorder(outsideBorderCenter, insideBorderCenter);
+    private final StudentService service;
+    private final Student student;
+    private List<Student> students;
+    private final List<Grade> listGrades;
+    private final JTable tbStudent;
 
     /**
      * Creates new form PanelStudent
+     *
+     * @param students
+     * @param student
+     * @param tbStudent
      */
-    public FrAddStudent() {
+    public FrAddStudent(List<Student> students, Student student, JTable tbStudent) {
+        service = new StudentServiceImpl();
+        listGrades = service.getGrade();
+        this.students = students;
+        this.student = student;
+        this.tbStudent = tbStudent;
+
         initComponents();
         initComponentsManually();
         initDataModel();
@@ -148,7 +171,7 @@ public class FrAddStudent extends JFrame {
         lbGender.setText("Giới Tính :");
 
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        lbHobbies.setText("Giới Tính :");
+        lbHobbies.setText("Sở Thích :");
 
         btgGender.add(rbMale);
         rbMale.setText("Nam");
@@ -368,11 +391,10 @@ public class FrAddStudent extends JFrame {
     }
 
     private void initCbbGradeModel() {
-        Grade[] grades = {
-            new Grade(1, "16T1"),
-            new Grade(2, "16T2"),
-            new Grade(3, "16T3")
-        };
+        Grade[] grades = new Grade[listGrades.size()];
+        for (int i = 0; i < listGrades.size(); i++) {
+            grades[i] = listGrades.get(i);
+        }
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbClass.setModel(gradeModel);
     }
@@ -413,7 +435,8 @@ public class FrAddStudent extends JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(FrAddStudent.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Image image = new ImageIcon(targetFile.getPath()).getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
+                    Image image = new ImageIcon(targetFile.getPath())
+                            .getImage().getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
                     Icon icon = new ImageIcon(image);
                     lbAvatar.setIcon(icon);
                 }
@@ -425,13 +448,56 @@ public class FrAddStudent extends JFrame {
         btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                String name = tfName.getText();
                 Grade grade = (Grade) cbClass.getSelectedItem();
                 String gender = getGender();
                 String hobbies = getHobbies(cbBadminton, cbSocer, cbVolleyball);
-                String fileName = targetFile != null ? targetFile.getName() : "Unmodifile";
-                System.out.println(grade + ", " + gender + ", " + hobbies + ", " + fileName);
+                String math = tfMath.getText();
+                String literature = tfLiterature.getText();
+
+                if (checkInfo(name, gender, hobbies, math, literature)) {
+                    String id = "sv" + students.size() + 1;
+                    Float mathScore = Float.parseFloat(math);
+                    Float literatureScore = Float.parseFloat(literature);
+                    Boolean isGender = gender.equals("Nam");
+
+                    if (student.getId() != null) {
+                        setInfoStudent(name, grade, isGender, hobbies, mathScore, literatureScore,
+                                taComment.getText(), student.getImagePath());
+                        System.out.println(service.updateStudent(student));
+                        students = service.getAll();
+                        tbStudent.setModel(new StudentTableModel(tbStudent));
+                    } else if (targetFile != null) {
+                        StudentRaw studentRaw = new StudentRaw(id, name, grade.getName(), isGender, hobbies, mathScore,
+                                literatureScore, taComment.getText(), targetFile.getPath());
+                        Student std = new Student(studentRaw, grade);
+                        System.out.println(service.addStudent(std));
+                        students = service.getAll();
+                        tbStudent.setModel(new StudentTableModel(tbStudent));
+                    }
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Please enter your complete information!", "Error",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                }
             }
+
         });
+    }
+
+    private void setInfoStudent(String name, Grade grade, boolean gender, String hobbies, Float mathScore, Float literatureScore,
+            String text, String fileName) {
+        student.setName(name);
+        student.setGrade(grade);
+        student.setGender(gender);
+        student.setBobbies(hobbies);
+        student.setMath(mathScore);
+        student.setLiterature(literatureScore);
+        student.setComment(text);
+        student.setImagePath(fileName);
+    }
+
+    private boolean checkInfo(String... ts) {
+        return ts != null;
     }
 
     private String getGender() {
@@ -455,5 +521,50 @@ public class FrAddStudent extends JFrame {
         setLocationRelativeTo(null);
 
         pnMainCenter.setBorder(borderCenter);
+        tfName.setText(student.getName());
+        if (student.getGrade() != null) {
+            cbClass.setSelectedItem(student.getGrade());
+        } else {
+            cbClass.setSelectedItem(listGrades.get(0));
+        }
+        setGender();
+        setHobbies();
+        if (student.getMath() != null) {
+            tfMath.setText(String.valueOf(student.getMath()));
+        }
+        if (student.getLiterature() != null) {
+            tfLiterature.setText(String.valueOf(student.getLiterature()));
+        }
+        taComment.setText(student.getComment());
+        if (student.getImagePath() != null) {
+            Image image = new ImageIcon(student.getImagePath()).getImage()
+                    .getScaledInstance(160, 140, Image.SCALE_SMOOTH);
+            Icon icon = new ImageIcon(image);
+            lbAvatar.setIcon(icon);
+        }
+    }
+
+    private void setHobbies() {
+        if (student.getBobbies() != null) {
+            Pattern.compile(", ").splitAsStream(student.getBobbies()).forEach(h -> {
+                if (h.equals(cbBadminton.getText())) {
+                    cbBadminton.setSelected(true);
+                } else if (h.equals(cbSocer.getText())) {
+                    cbSocer.setSelected(true);
+                } else if (h.equals(cbVolleyball.getText())) {
+                    cbVolleyball.setSelected(true);
+                }
+            });
+        }
+    }
+
+    private void setGender() {
+        if (student.getGender() != null) {
+            if (student.getGender()) {
+                rbMale.setSelected(true);
+            } else {
+                rbFemale.setSelected(true);
+            }
+        }
     }
 }

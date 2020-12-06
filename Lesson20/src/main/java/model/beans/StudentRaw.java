@@ -4,16 +4,15 @@
  * and open the template in the editor.
  */
 package model.beans;
-
 /**
  *
  * @author DangHoang
  */
-public class Student {
+public class StudentRaw {
 
     private String id;
     private String name;
-    private Grade grade;
+    private String grade;
     private Boolean gender;
     private String bobbies;
     private Float math;
@@ -21,19 +20,19 @@ public class Student {
     private String comment;
     private String imagePath;
 
-    public Student() {
+    public StudentRaw() {
     }
 
-    public Student(StudentRaw studentRaw, Grade grade) {
-        this.id = studentRaw.getId();
-        this.name = studentRaw.getName();
+    public StudentRaw(String id, String name, String grade, Boolean gender, String bobbies, Float math, Float literature, String comment, String imagePath) {
+        this.id = id;
+        this.name = name;
         this.grade = grade;
-        this.gender = studentRaw.getGender();
-        this.bobbies = studentRaw.getBobbies();
-        this.math = studentRaw.getMath();
-        this.literature = studentRaw.getLiterature();
-        this.comment = studentRaw.getComment();
-        this.imagePath = studentRaw.getImagePath();
+        this.gender = gender;
+        this.bobbies = bobbies;
+        this.math = math;
+        this.literature = literature;
+        this.comment = comment;
+        this.imagePath = imagePath;
     }
 
     public String getId() {
@@ -52,11 +51,11 @@ public class Student {
         this.name = name;
     }
 
-    public Grade getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(Grade grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 

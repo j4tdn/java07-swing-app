@@ -5,6 +5,8 @@
  */
 package view;
 
+import connection.ConnectionManager;
+import connection.ConnectionManagerImpl;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -17,6 +19,12 @@ import javax.swing.JOptionPane;
  * @author DangHoang
  */
 public class FrLogin extends javax.swing.JFrame {
+
+    private static final ConnectionManager con;
+
+    static {
+        con = new ConnectionManagerImpl();
+    }
 
     /**
      * Creates new form Ex05Absolute
@@ -116,6 +124,8 @@ public class FrLogin extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+
+        con.getConnection();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

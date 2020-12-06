@@ -6,11 +6,17 @@
 package model;
 
 import common.StudentTableColumn;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import model.beans.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import static table.render.TableRender.setHorizontalAlignment;
 
 /**
  *
@@ -18,11 +24,14 @@ import service.StudentServiceImpl;
  */
 public class StudentTableModel extends AbstractTableModel {
 
-    private List<Student> students;
+    private final Font font = new Font("Tahoma", Font.PLAIN, 13);
+    private final List<Student> students;
     private final StudentService service;
     private final StudentTableColumn[] columns;
+    private final JTable tbStudent;
 
-    public StudentTableModel() {
+    public StudentTableModel(JTable tbStudent) {
+        this.tbStudent = tbStudent;
         columns = StudentTableColumn.values();
         service = new StudentServiceImpl();
         students = service.getAll();
@@ -55,6 +64,8 @@ public class StudentTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Student student = students.get(rowIndex);
         Object value = switch (columns[columnIndex]) {
+            case ID ->
+                student.getId();
             case FULLNAME ->
                 student.getName();
             case GRADE ->
@@ -67,5 +78,19 @@ public class StudentTableModel extends AbstractTableModel {
                 student.getComment();
         };
         return value;
+    }
+
+    public void loadData() {
+        tbStudent.setModel(this);
+    }
+
+    public void cssForTable() {
+        tbStudent.setFont(font);
+        tbStudent.setRowHeight(20);
+        tbStudent.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        tbStudent.getTableHeader().setReorderingAllowed(false);
+        tbStudent.getTableHeader().setPreferredSize(new Dimension(0, 35));
+        tbStudent.getTableHeader().setFont(font);
+        setHorizontalAlignment(tbStudent, SwingConstants.CENTER);
     }
 }
