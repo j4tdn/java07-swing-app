@@ -20,6 +20,7 @@ import model.StudentTableModel;
 import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
@@ -28,6 +29,7 @@ import service.StudentServiceImpl;
 public class pnStudent extends javax.swing.JPanel {
 
     private final StudentService studentService;
+    private Student SelectStudent;
 
     /**
      * Creates new form pnStudent
@@ -59,7 +61,8 @@ public class pnStudent extends javax.swing.JPanel {
                 if (text.isEmpty()) {
                     filter = RowFilter.regexFilter(text);
                 } else {
-                    filter = RowFilter.regexFilter("^(?i)" + text + "$");
+                    //"^(?i)" + text + "$" =>equals filter
+                    filter = RowFilter.regexFilter("(?i)" + text);
                 }
                 sorter.setRowFilter(filter);
             }
@@ -90,22 +93,20 @@ public class pnStudent extends javax.swing.JPanel {
         int rowIndex = tbStudent.getSelectedRow();
         int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
         String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
-        Student student = studentService.get(studentId);
-        setText(student);
+        SelectStudent = studentService.get(studentId);
+        showStudentInfo(SelectStudent);
+        btnEdit.setEnabled(true);
     }
 
-    private void setText(Student student) {
+    private void showStudentInfo(Student student) {
+        if(student!=null){
         lbName2.setText(student.getFullname());
         lbGender2.setText(student.getGender() ? "Nữ" : "Nam");
         lbHobbies2.setText(student.getHobbies());
         lbLiter2.setText(student.getLiterature().toString());
         lbMath2.setText(student.getMath().toString());
         lbGrade2.setText(student.getGrade().getName());
-        if (student.getAvatarPath() != null) {
-            Image image = new ImageIcon(student.getAvatarPath()).getImage()
-                    .getScaledInstance(110, 110, Image.SCALE_SMOOTH);
-            Icon icon = new ImageIcon(image);
-            lbAvatar.setIcon(icon);
+        lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), 110, 110));
         }
     }
 
@@ -117,7 +118,7 @@ public class pnStudent extends javax.swing.JPanel {
         StudentTableModel studentModel = new StudentTableModel(tbStudent);
         studentModel.loadData();
         studentModel.cssForTable();
-        
+
     }
 
     private void btnAddEvents() {
@@ -134,17 +135,16 @@ public class pnStudent extends javax.swing.JPanel {
     }
 
     private void btnEditEvents() {
+
         btnEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int rowIndex = tbStudent.getSelectedRow();
-                int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
-                String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
-                Student student = studentService.get(studentId);
+                if (btnEdit.isEnabled()) {
+                    FrStudentForm form = new FrStudentForm(SelectStudent, tbStudent.getRowCount());
+                    form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    form.setVisible(true);
+                }
 
-                FrStudentForm form = new FrStudentForm(student, tbStudent.getRowCount());
-                form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                form.setVisible(true);
             }
 
         });
@@ -199,6 +199,7 @@ public class pnStudent extends javax.swing.JPanel {
 
         btnAdd.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnAdd.setText("Thêm");
+        btnAdd.setFocusPainted(false);
 
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
@@ -249,6 +250,8 @@ public class pnStudent extends javax.swing.JPanel {
         lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 204, 0)));
 
         btnEdit.setText("Sửa");
+        btnEdit.setEnabled(false);
+        btnEdit.setFocusPainted(false);
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditActionPerformed(evt);

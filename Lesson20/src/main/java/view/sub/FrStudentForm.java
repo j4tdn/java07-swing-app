@@ -5,25 +5,31 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import model.bean.Grade;
 import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
  * @author khanh
  */
 public class FrStudentForm extends javax.swing.JFrame {
+    private File targetFile;
     private final StudentService service;
     private Student student;
     private int size;
@@ -65,7 +71,9 @@ public class FrStudentForm extends javax.swing.JFrame {
         btnSubmitEvents();
         btUploadEvents();
     }
-    
+    private void initDataModel() {
+        initCbbGradeModel();
+    }
     private String getGender(){
         Enumeration<AbstractButton> elements =   btngGender.getElements();
         while(elements.hasMoreElements()){
@@ -143,19 +151,44 @@ public class FrStudentForm extends javax.swing.JFrame {
         });
     }
     private void initComponentsManually(){
-        initCbbGradeModel();
+        initDataModel();
         setLocationRelativeTo(null);
     }
-    private void initComponentsManually(Student student){
-        setGender();
-        initCbbGradeModel();
-        setLocationRelativeTo(null);
+    
+    private void showStudentInfo(Student student) {
+        if(student!=null){
         tfName.setText(student.getFullname());
         tfMath.setText(student.getMath().toString());
         tfLiterature.setText(student.getLiterature().toString());
         cbbGrade.setSelectedItem(student.getGrade());
+        taComment.setText(student.getComment());
+        setGender();
+        setHobbies();
+        lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(),lbAvatar.getWidth(),lbAvatar.getHeight()));
+        }
+    }
+    private void initComponentsManually(Student student){
+       
+        initDataModel();
+        setLocationRelativeTo(null);
+        showStudentInfo(student);
         
         
+    }
+    private void setHobbies(){
+        List hobbies = Pattern.compile(", ")
+                .splitAsStream(student.getHobbies())
+                .collect(Collectors.toList());
+        JCheckBox[] cbHobbies ={cbFootball,cbcau,cbvolleyball};
+        for(JCheckBox checkBox:cbHobbies){
+            if(hobbies.contains(checkBox.getText())){
+            checkBox.setSelected(true);
+            }
+        }
+    }
+    private String getHobbies(JCheckBox...checkBoxs){
+        StringBuilder builder = new StringBuilder();
+         return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
     }
 
     /**
