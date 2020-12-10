@@ -6,6 +6,7 @@
 package service;
 
 import java.util.List;
+import model.bean.Grade;
 import model.bean.Student;
 
 /**
@@ -14,5 +15,7 @@ import model.bean.Student;
  */
 public interface StudentService {
     List<Student> getAll();
-    
+    Student get(String id);
+    boolean addStudent(Student student);
+    List<Grade> getAllGrade();
 }

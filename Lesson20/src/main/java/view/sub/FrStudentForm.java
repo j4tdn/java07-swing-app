@@ -1,26 +1,161 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.sub;
+
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.List;
+import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import model.bean.Grade;
+import model.bean.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
 
 /**
  *
  * @author khanh
  */
 public class FrStudentForm extends javax.swing.JFrame {
-
+    private final StudentService service;
+    private Student student;
+    private int size;
+    private String imagePath;
     /**
      * Creates new form FrStudentForm
+     * @param size
      */
+    
     public FrStudentForm() {
+        service = new StudentServiceImpl();
         initComponents();
         initComponentsManually();
+        initEvents();
      
     }
+    public FrStudentForm(int size) {
+        this.size=size;
+        service = new StudentServiceImpl();
+        initComponents();
+        initComponentsManually();
+        initEvents();
+     
+    }
+    
+    public FrStudentForm(Student student,int size) {
+        this.student = student;
+        this.size=size;
+        service = new StudentServiceImpl();
+        initComponents();
+        initComponentsManually(student);
+        initEvents();
+       
+     
+    }
+    
+    
+    private void initEvents(){
+        btnSubmitEvents();
+        btUploadEvents();
+    }
+    
+    private String getGender(){
+        Enumeration<AbstractButton> elements =   btngGender.getElements();
+        while(elements.hasMoreElements()){
+            AbstractButton button = elements.nextElement();
+            
+            if(button.isSelected()){
+                return button.getText();
+            }
+        }
+        
+        return "";
+    }
+    
+     private void setGender() {
+        if (student.getGender() != null) {
+            if (student.getGender()) {
+                rdFemale.setSelected(true);
+            } else {
+                rdMale.setSelected(true);
+            }
+        }
+    }
+    
+     private void btUploadEvents() {
+        btnUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+                JFileChooser fc = new JFileChooser(path);
+                int chooser = fc.showDialog(null, "Upload");
+                if (chooser == JFileChooser.APPROVE_OPTION) {
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+
+                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
+                    if (!(fileName.matches(regex))) {
+                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
+                        return;
+                    }
+                    imagePath = path + File.separator + fileName;
+                    Image image = new ImageIcon(imagePath).getImage()
+                            .getScaledInstance(lbAvatar.getWidth(), lbAvatar.getHeight(), Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+            }
+        });
+    }
+    
+    private void initCbbGradeModel() {
+        List<Grade> list = service.getAllGrade();
+        Grade[] grades = new Grade[list.size()];
+        list.toArray(grades);
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
+        cbbGrade.setModel(gradeModel);
+    }
+    
+    private void btnSubmitEvents(){
+        btnSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(student==null){
+                    student = new Student(String.valueOf(size+1)
+                            , tfName.getText()
+                            , getGender().equals("Nữ"),"a"
+                            ,Double.parseDouble(tfMath.getText())
+                            , Double.parseDouble(tfLiterature.getText())
+                            ,(Grade) cbbGrade.getSelectedItem()
+                            , imagePath
+                            ,taComment.getText());
+                    service.addStudent(student);
+                }
+            }
+            
+        });
+    }
     private void initComponentsManually(){
+        initCbbGradeModel();
         setLocationRelativeTo(null);
+    }
+    private void initComponentsManually(Student student){
+        setGender();
+        initCbbGradeModel();
+        setLocationRelativeTo(null);
+        tfName.setText(student.getFullname());
+        tfMath.setText(student.getMath().toString());
+        tfLiterature.setText(student.getLiterature().toString());
+        cbbGrade.setSelectedItem(student.getGrade());
+        
+        
     }
 
     /**

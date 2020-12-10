@@ -12,9 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.bean.Grade;
 import model.bean.Student;
 import static utils.SqlUtils.*;
@@ -58,6 +58,7 @@ public class StudentDaoImpl implements StudentDao {
                    
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         
         return students;
@@ -87,4 +88,33 @@ public class StudentDaoImpl implements StudentDao {
         return grades;
     }
 
+    @Override
+    public boolean addStudent(Student student) {
+        Connection conn = connection.getConnection();
+        String sql  = "insert into student values(?, ?, ?, ?, ?, ?, ?,?, ?)";
+        int check = 0;
+        try {
+            pst =conn.prepareStatement(sql);
+            pst.setString(1, student.getId());
+            pst.setString(2, student.getFullname());
+            pst.setBoolean(3, student.getGender());
+            pst.setString(4, student.getHobbies());
+            pst.setDouble(5, student.getMath());
+            pst.setDouble(6, student.getLiterature());
+            pst.setInt(7, student.getGrade().getId());
+            pst.setString(8, student.getAvatarPath());
+            pst.setString(9, student.getComment());
+            check= pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return check!=0;
+    }
+
+    @Override
+    public Student get(String id) {
+        List<Student> students = getAll();
+        return students.stream().filter(s->s.getId().equals(id)).findFirst().get();
+    }
 }

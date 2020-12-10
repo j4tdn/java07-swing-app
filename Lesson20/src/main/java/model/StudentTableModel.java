@@ -6,11 +6,17 @@
 package model;
 
 import common.StudentTableColumns;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+
+import tabble.render.TableRender;
 
 /**
  *
@@ -18,12 +24,14 @@ import service.StudentServiceImpl;
  */
 public class StudentTableModel extends AbstractTableModel{
     
-    private List<Student> students;
+    private final List<Student> students;
     private final StudentService studentService; 
     
     private final StudentTableColumns[] columns;
+    private final JTable table;
     
-    public StudentTableModel(){
+    public StudentTableModel(JTable table){
+        this.table = table;
         columns = StudentTableColumns.values();
         studentService = new StudentServiceImpl();
         students = studentService.getAll();
@@ -61,6 +69,9 @@ public class StudentTableModel extends AbstractTableModel{
         Object value =null;
         Student student = students.get(rowIndex);
         switch(columns[columnIndex]){
+            case ID:
+                value =student.getId();
+                break;
             case FULLNAME:
                 value = student.getFullname();
                 break;
@@ -82,5 +93,22 @@ public class StudentTableModel extends AbstractTableModel{
         return value;
     }
     
+    public  void loadData(){
+        table.setModel(this);
+        
+    }
+    
+    public void cssForTable(){
+        Font font = new Font("Tahoma",Font.PLAIN,18);
+        table.setFont(font);
+        table.getTableHeader().setFont(font);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setPreferredSize(new Dimension(0,32));
+        
+        
+        table.setRowHeight(26);
+        
+        TableRender.setHorizontalAligment(table, SwingConstants.CENTER);
+    }
     
 }

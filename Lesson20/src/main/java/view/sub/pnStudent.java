@@ -5,10 +5,21 @@
  */
 package view.sub;
 
+import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.StudentTableModel;
+import model.bean.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
 
 /**
  *
@@ -16,51 +27,130 @@ import model.StudentTableModel;
  */
 public class pnStudent extends javax.swing.JPanel {
 
+    private final StudentService studentService;
+
     /**
      * Creates new form pnStudent
      */
     public pnStudent() {
+        studentService = new StudentServiceImpl();
         initComponents();
         initEvents();
+
     }
-    
-    private void initEvents(){
+
+    private void initEvents() {
+        tfSearchEvents();
         btnAddEvents();
         initDataModel();
         btnEditEvents();
+        tbStudentEvents();
     }
-    
-    private void initDataModel(){
+
+    private void tfSearchEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfSearch.getText();
+                TableRowSorter<TableModel> sorter = new TableRowSorter<>(tbStudent.getModel());
+                RowFilter<TableModel, Object> filter = null;
+
+                tbStudent.setRowSorter(sorter);
+                if (text.isEmpty()) {
+                    filter = RowFilter.regexFilter(text);
+                } else {
+                    filter = RowFilter.regexFilter("^(?i)" + text + "$");
+                }
+                sorter.setRowFilter(filter);
+            }
+
+        });
+    }
+
+    private void tbStudentEvents() {
+        tbStudent.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                tableRowSelectionTrigger();
+
+            }
+        });
+        tbStudent.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                tableRowSelectionTrigger();
+            }
+
+        });
+    }
+
+    private void tableRowSelectionTrigger() {
+        int rowIndex = tbStudent.getSelectedRow();
+        int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
+        String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
+        Student student = studentService.get(studentId);
+        setText(student);
+    }
+
+    private void setText(Student student) {
+        lbName2.setText(student.getFullname());
+        lbGender2.setText(student.getGender() ? "Nữ" : "Nam");
+        lbHobbies2.setText(student.getHobbies());
+        lbLiter2.setText(student.getLiterature().toString());
+        lbMath2.setText(student.getMath().toString());
+        lbGrade2.setText(student.getGrade().getName());
+        if (student.getAvatarPath() != null) {
+            Image image = new ImageIcon(student.getAvatarPath()).getImage()
+                    .getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+            Icon icon = new ImageIcon(image);
+            lbAvatar.setIcon(icon);
+        }
+    }
+
+    private void initDataModel() {
         initTableStudentModel();
     }
-    private void initTableStudentModel(){
-        tbStudent.setModel(new StudentTableModel());
+
+    private void initTableStudentModel() {
+        StudentTableModel studentModel = new StudentTableModel(tbStudent);
+        studentModel.loadData();
+        studentModel.cssForTable();
+        
     }
-    
-    private void btnAddEvents(){
+
+    private void btnAddEvents() {
         btnAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                FrStudentForm form = new FrStudentForm();
+                FrStudentForm form = new FrStudentForm(tbStudent.getRowCount());
                 form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 form.setVisible(true);
             }
-            
-            
+
         });
-        
+
     }
-    private void btnEditEvents(){
+
+    private void btnEditEvents() {
         btnEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                super.mousePressed(e); //To change body of generated methods, choose Tools | Templates.
+                int rowIndex = tbStudent.getSelectedRow();
+                int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
+                String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
+                Student student = studentService.get(studentId);
+
+                FrStudentForm form = new FrStudentForm(student, tbStudent.getRowCount());
+                form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                form.setVisible(true);
             }
-            
-            
+
         });
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -257,6 +347,7 @@ public class pnStudent extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbStudent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tbStudent);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -297,4 +388,5 @@ public class pnStudent extends javax.swing.JPanel {
     private javax.swing.JTable tbStudent;
     private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
+
 }
