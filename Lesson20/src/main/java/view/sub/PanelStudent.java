@@ -5,14 +5,11 @@
  */
 package view.sub;
 
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
@@ -21,6 +18,7 @@ import model.StudentTableModel;
 import model.beans.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import static utils.ImageUtils.getIcon;
 import view.FrAddStudent;
 
 /**
@@ -262,7 +260,8 @@ public class PanelStudent extends javax.swing.JPanel {
                 if (text.isEmpty()) {
                     rowFilter = RowFilter.regexFilter(text);
                 } else {
-                    rowFilter = RowFilter.regexFilter("^(?i)" + text + "$");
+//                    "^(?i)" + text + "$"
+                    rowFilter = RowFilter.regexFilter("(?i)" + text);
                 }
                 tableRowSorter.setRowFilter(rowFilter);
             }
@@ -315,11 +314,6 @@ public class PanelStudent extends javax.swing.JPanel {
         lbIsGender.setText(student.getGender() ? "Nam" : "Nữ");
         lbMathScore.setText(String.valueOf(student.getMath()));
         lbLiteratureScore.setText(String.valueOf(student.getLiterature()));
-        if (student.getImagePath() != null) {
-            Image image = new ImageIcon(student.getImagePath()).getImage()
-                    .getScaledInstance(110, 110, Image.SCALE_SMOOTH);
-            Icon icon = new ImageIcon(image);
-            lbAvatar.setIcon(icon);
-        }
+        lbAvatar.setIcon(getIcon(student.getImagePath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
     }
 }

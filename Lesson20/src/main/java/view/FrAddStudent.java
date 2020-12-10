@@ -70,8 +70,8 @@ public class FrAddStudent extends JFrame {
         this.tbStudent = tbStudent;
 
         initComponents();
-        initComponentsManually();
         initDataModel();
+        initComponentsManually();
         initEvents();
     }
 

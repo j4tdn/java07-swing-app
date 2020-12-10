@@ -91,6 +91,10 @@ public class StudentTableModel extends AbstractTableModel {
         tbStudent.getTableHeader().setReorderingAllowed(false);
         tbStudent.getTableHeader().setPreferredSize(new Dimension(0, 35));
         tbStudent.getTableHeader().setFont(font);
+
+        tbStudent.getColumnModel().getColumn(0).setMaxWidth(0);
+        tbStudent.getColumnModel().getColumn(0).setMinWidth(0);
+
         setHorizontalAlignment(tbStudent, SwingConstants.CENTER);
     }
 }
