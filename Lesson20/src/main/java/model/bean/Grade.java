@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean.model;
+package model.bean;
 
 import java.util.Objects;
-import java.util.Set;
 
 /**
  *

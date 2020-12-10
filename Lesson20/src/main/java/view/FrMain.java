@@ -23,11 +23,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import javax.smartcardio.CardTerminal;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
@@ -35,6 +31,7 @@ import javax.swing.border.Border;
 import view.sub.PnEmployee;
 import view.sub.PnHomePage;
 import view.sub.PnStudent;
+import view.sub.PnStudentForm;
 
 /**
  *
@@ -64,7 +61,6 @@ public class FrMain extends JFrame {
     private final EnumMap<CardType, JPanel> cardMap;
     
     public FrMain() {
-        
         cardMap = new EnumMap<>(CardType.class);
         cardMap.put(CardType.Employee, new PnEmployee());
         cardMap.put(CardType.HomePage, new PnHomePage());
