@@ -69,7 +69,7 @@ public class FrMain extends JFrame {
     private void initComponents() {
         setTitle("Da Nang University UI/UX");
         // setResizable(false);
-        setSize(1200, 700);
+        setSize(1300, 700);
 
         setLocationRelativeTo(null);
 
