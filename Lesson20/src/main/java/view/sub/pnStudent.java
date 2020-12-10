@@ -17,6 +17,7 @@ import model.StudentTableModel;
 import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
@@ -25,6 +26,8 @@ import service.StudentServiceImpl;
 public class pnStudent extends javax.swing.JPanel {
 
     private final StudentService studentService;
+
+    private Student selectedStudent;
 
     /**
      * Creates new form pnStudent
@@ -73,12 +76,21 @@ public class pnStudent extends javax.swing.JPanel {
     private void tableRowSelectionTrigger() {
         int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
         int studentId = (int) tbStudent.getModel().getValueAt(row, 0);
-        Student student = studentService.getStudent(studentId);
-        setText(student);
+        selectedStudent = studentService.getStudent(studentId);
+        showStudentInfo(selectedStudent);
+        btEdit.setEnabled(true);
     }
 
-    private void setText(Student student) {
-        lbFullname.setText(student.getFullname());
+    private void showStudentInfo(Student student) {
+        if (student != null) {
+            lbFullname.setText(student.getFullname());
+            lbGrade.setText(student.getGrade().getName());
+            lbGender.setText(student.getGender() ? "Male" : "Female");
+            lbHobbies.setText(student.getHobbies());
+            lbMath.setText(student.getMath().toString());
+            lbLiterature.setText(student.getLiterature().toString());
+            lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
+        }
     }
 
     private void tfSearchEvents() {
@@ -92,7 +104,8 @@ public class pnStudent extends javax.swing.JPanel {
                 if (text.isEmpty()) {
                     filter = RowFilter.regexFilter(text);
                 } else {
-                    filter = RowFilter.regexFilter("^(?i)" + text + "$");
+                    // "^(?i)" + text + "$" => equal filter
+                    filter = RowFilter.regexFilter("(?i)" + text);
                     sorter.setRowFilter(filter);
                 }
             }
@@ -115,7 +128,11 @@ public class pnStudent extends javax.swing.JPanel {
         btEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-
+                if (btEdit.isEnabled()) {
+                    frStudentForm form = new frStudentForm(selectedStudent);
+                    form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    form.setVisible(true);
+                }
             }
         });
     }
@@ -161,6 +178,7 @@ public class pnStudent extends javax.swing.JPanel {
 
         btAdd.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btAdd.setText("Thêm");
+        btAdd.setFocusPainted(false);
 
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
@@ -171,7 +189,7 @@ public class pnStudent extends javax.swing.JPanel {
                 .addComponent(lbSearch)
                 .addGap(18, 18, 18)
                 .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 573, Short.MAX_VALUE)
                 .addComponent(btAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54))
         );
@@ -231,6 +249,8 @@ public class pnStudent extends javax.swing.JPanel {
         btEdit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-icon.gif"))); // NOI18N
         btEdit.setText("Sửa");
+        btEdit.setEnabled(false);
+        btEdit.setFocusPainted(false);
 
         javax.swing.GroupLayout pnBottomLayout = new javax.swing.GroupLayout(pnBottom);
         pnBottom.setLayout(pnBottomLayout);
@@ -258,14 +278,14 @@ public class pnStudent extends javax.swing.JPanel {
                         .addComponent(jLabel12)))
                 .addGap(43, 43, 43)
                 .addGroup(pnBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbHobbies, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbHobbies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbLiterature, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbMath, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(50, 50, 50)
                 .addComponent(btEdit)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(231, 231, 231))
         );
         pnBottomLayout.setVerticalGroup(
             pnBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

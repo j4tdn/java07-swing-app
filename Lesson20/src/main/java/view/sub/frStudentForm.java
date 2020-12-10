@@ -5,12 +5,30 @@
  */
 package view.sub;
 
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import model.bean.Grade;
+import model.bean.Student;
 import service.GradeService;
 import service.GradeServiceImpl;
+import service.StudentService;
+import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
@@ -18,16 +36,141 @@ import service.GradeServiceImpl;
  */
 public class frStudentForm extends javax.swing.JFrame {
     
-    private GradeService gradeService;
+    private final GradeService gradeService;
+    
+    private final StudentService studentService;
+    
+    private File targetFile;
+    
+    private Student student;
+    
+    private boolean isEditForm;
 
     /**
      * Creates new form frStudentForm
      */
     public frStudentForm() {
+        this(null);
+    }
+    
+    public frStudentForm(Student student) {
+        this.student = student;
+        isEditForm = student != null;
+        gradeService = new GradeServiceImpl();
+        studentService = new StudentServiceImpl();
+        
         initComponents();
-        initComponentManually();
         initDataModel();
-//        initEvents();
+        initComponentManually();
+        initEvents();
+    }
+    
+    private void initEvents() {
+        btUploadEvents();
+        btSubmitEvents();
+        btResetEvent();
+    }
+    
+    private void btSubmitEvents() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Student newStudent = new Student();
+                
+                String fullname = tfName.getText();
+                Grade grade = (Grade) cbGrade.getSelectedItem();
+                Boolean gender = rdMale.isSelected();
+                String hobbies = getHobbies(cbBasketball, cbFootball, cbSmileball);
+                Double math = Double.parseDouble(tfMath.getText());
+                Double literature = Double.parseDouble(tfLiterature.getText());
+                String comment = taComment.getText();
+                String filename = targetFile != null ? targetFile.getName() : "Undefined";
+                
+                newStudent.setFullname(fullname);
+                newStudent.setGrade(grade);
+                newStudent.setGender(gender);
+                newStudent.setHobbies(hobbies);
+                newStudent.setMath(math);
+                newStudent.setLiterature(literature);
+                newStudent.setComment(comment);
+                newStudent.setAvatarPath(filename);
+                
+                boolean isSuccess = studentService.save(newStudent);
+                
+                if (isSuccess) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
+                    setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Thêm thất bại!!!");
+                }
+            }
+            
+        });
+    }
+    
+    private String getHobbies(JCheckBox... checkBoxs) {
+        return Arrays.stream(checkBoxs)
+                .filter(JCheckBox::isSelected)
+                .map(JCheckBox::getText)
+                .collect(Collectors.joining(", "));
+    }
+    
+    private void btResetEvent() {
+        btReset.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                tfName.setText("");
+                cbGrade.setSelectedIndex(-1);
+                btgGender.clearSelection();
+                cbFootball.setSelected(false);
+                cbSmileball.setSelected(false);
+                cbBasketball.setSelected(false);
+                tfMath.setText("");
+                tfLiterature.setText("");
+                taComment.setText("");
+                lbAvatar.setIcon(new ImageIcon());
+            }
+            
+        });
+    }
+    
+    private void btUploadEvents() {
+        btUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String path = getClass().getResource("/images.ghost").getFile();
+                JFileChooser fc = new JFileChooser(path);
+                if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+                    
+                    String regex = "[\\w-]+[.]{1}(?)(?:png|jpg|jpeg|gif)";
+                    if (!fileName.matches(regex)) {
+                        JOptionPane.showMessageDialog(null, "Invalid image path!");
+                        return;
+                    }
+                    String renamedFile = System.currentTimeMillis() + fileName;
+                    
+                    targetFile = new File("image_upload" + File.separator + renamedFile);
+                    try {
+                        // Step 1: Copy & rename to project's file upload
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    // Step 2: Display renamed file on UI
+                    Image image = new ImageIcon(targetFile.toString())
+                            .getImage()
+                            .getScaledInstance(lbAvatar.getWidth(),
+                                    lbAvatar.getHeight(),
+                                    Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
+            }
+            
+        });
     }
     
     private void initDataModel() {
@@ -35,15 +178,48 @@ public class frStudentForm extends javax.swing.JFrame {
     }
     
     private void initCbbGradeModel() {
-        gradeService = new GradeServiceImpl();
         List<Grade> grades = gradeService.getAll();
         Grade[] gradesArray = grades.stream().toArray(Grade[]::new);
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(gradesArray);
         cbGrade.setModel(gradeModel);
+        cbGrade.setSelectedIndex(-1);
     }
     
     private void initComponentManually() {
         setLocationRelativeTo(null);
+        
+        showStudentInfo();
+    }
+    
+    private void showStudentInfo() {
+        if (student != null) {
+            tfName.setText(student.getFullname());
+            cbGrade.setSelectedItem(student.getGrade());
+            setGender();
+            setHobbies();
+            tfMath.setText(student.getMath().toString());
+            tfLiterature.setText(student.getLiterature().toString());
+            taComment.setText(student.getComment());
+            lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
+        }
+    }
+    
+    private void setGender() {
+        if (student.getGender()) {
+            rdMale.setSelected(true);
+        } else {
+            rdFemale.setSelected(true);
+        }
+    }
+    
+    private void setHobbies() {
+        List<String> hobbies = Pattern.compile(", ").splitAsStream(student.getHobbies()).collect(Collectors.toList());
+        JCheckBox[] cbHobbies = {cbBasketball, cbFootball, cbSmileball};
+        for (JCheckBox checkbox : cbHobbies) {
+            if (hobbies.contains(checkbox.getText())) {
+                checkbox.setSelected(true);
+            }
+        }
     }
 
     /**
@@ -117,6 +293,7 @@ public class frStudentForm extends javax.swing.JFrame {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích:");
 
+        btgGender.add(rdMale);
         rdMale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdMale.setText("Nam");
         rdMale.setFocusPainted(false);
@@ -126,6 +303,7 @@ public class frStudentForm extends javax.swing.JFrame {
             }
         });
 
+        btgGender.add(rdFemale);
         rdFemale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdFemale.setText("Nữ");
         rdFemale.setFocusPainted(false);
@@ -135,6 +313,7 @@ public class frStudentForm extends javax.swing.JFrame {
             }
         });
 
+        btgGender.add(rdAnother);
         rdAnother.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rdAnother.setText("Khác");
         rdAnother.setFocusPainted(false);

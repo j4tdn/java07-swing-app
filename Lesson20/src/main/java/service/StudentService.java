@@ -16,4 +16,6 @@ public interface StudentService {
     List<Student> getAll();
     
     Student getStudent(int id);
+    
+    boolean save(Student student);
 }

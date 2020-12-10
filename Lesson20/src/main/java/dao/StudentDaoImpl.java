@@ -61,9 +61,11 @@ public class StudentDaoImpl implements StudentDao {
     public boolean save(Student student) {
         boolean flag = false;
         Connection conn = connection.getConnection();
+        boolean gender = student.getGender();
+        int grade = student.getGrade().getId();
         String query = "insert into student(fullname, gender, hobbies, math, literature, avatarPath, comment, gradeID)values('" + student.getFullname() + "', "
-                + "'" + student.getGender() + "', '" + student.getHobbies() + "', '" + student.getMath() + "', '" + student.getLiterature() + "', '" + student.getAvatarPath() + "', "
-                + "'" + student.getComment() + "', '" + student.getGrade() + "')";
+                + "'" + gender + "', '" + student.getHobbies() + "', '" + student.getMath() + "', '" + student.getLiterature() + "', '" + student.getAvatarPath() + "', "
+                + "'" + student.getComment() + "', '" + grade + "')";
         try {
             pst = conn.prepareStatement(query);
             pst.executeUpdate();

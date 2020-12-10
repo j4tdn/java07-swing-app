@@ -99,6 +99,9 @@ public class StudentTableModel extends AbstractTableModel {
         table.getTableHeader().setPreferredSize(new Dimension(0, 40));
         table.getTableHeader().setFont(font);
         table.setRowHeight(26);
+        
+        table.getColumnModel().getColumn(0).setMinWidth(0);
+        table.getColumnModel().getColumn(0).setMaxWidth(0);
 
         TableRender.setHorizontalAlignment(table, SwingConstants.CENTER);
     }

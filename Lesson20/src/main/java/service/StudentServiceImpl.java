@@ -32,4 +32,9 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.getStudent(id);
     }
 
+    @Override
+    public boolean save(Student student) {
+        return studentDao.save(student);
+    }
+
 }
