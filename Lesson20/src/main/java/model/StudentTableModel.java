@@ -5,28 +5,35 @@
  */
 package model;
 
-import common.StudentTableColumns;
+import common.StudentTableColumn;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
-import model.bean.Student;
+import model.beans.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import static table.render.TableRender.setHorizontalAlignment;
 
 /**
  *
  * @author Asus
  */
 public class StudentTableModel extends AbstractTableModel{
-    private List<Student> students;
-    private StudentService studentService;
-    private final StudentTableColumns[] colums ;
-        
-    
-    public StudentTableModel(){
-        colums = StudentTableColumns.values();
-        studentService = new StudentServiceImpl();
-        students = studentService.getAll();
-        
+    private final Font font = new Font("Tahoma", Font.PLAIN, 13);
+    private final List<Student> students;
+    private final StudentService service;
+    private final StudentTableColumn[] columns;
+    private final JTable tbStudent;
+
+    public StudentTableModel(JTable tbStudent) {
+        this.tbStudent = tbStudent;
+        columns = StudentTableColumn.values();
+        service = new StudentServiceImpl();
+        students = service.getAll();
     }
 
     @Override
@@ -36,48 +43,56 @@ public class StudentTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return colums.length;
+        return columns.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return colums[column].getColumnName();
+        return columns[column].getColumnName();
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if(colums[columnIndex]  ==    StudentTableColumns.MATH||colums[columnIndex]==StudentTableColumns.LITERATURE){
-            return Double.class;
+        if (columns[columnIndex] == StudentTableColumn.MATH || columns[columnIndex] == StudentTableColumn.LITERATURE) {
+            return Float.class;
         }
-        return super.getColumnClass(columnIndex); //To change body of generated methods, choose Tools | Templates.
+        return super.getColumnClass(columnIndex);
     }
-    
-    
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object value = null;
         Student student = students.get(rowIndex);
-        switch(colums[columnIndex]){
-            case FULLNAME:
-                value =student.getFullname();
-                break;
-            case GRADE:
-                value =student.getGrade().getName();
-                break;
-            case MATH:
-                value =student.getMatch();
-                break;
-            case LITERATURE:
-                value =student.getLiterature();
-                break;
-            case COMMENT:
-                value =student.getComment();
-                break;    
-        }
-        
-        
+        Object value = switch (columns[columnIndex]) {
+            case ID ->
+                student.getId();
+            case FULLNAME ->
+                student.getName();
+            case GRADE ->
+                student.getGrade().getName();
+            case MATH ->
+                student.getMath();
+            case LITERATURE ->
+                student.getLiterature();
+            default ->
+                student.getComment();
+        };
         return value;
+    }
+
+    public void loadData() {
+        tbStudent.setModel(this);
+    }
+
+    public void cssForTable() {
+        tbStudent.setFont(font);
+        tbStudent.setRowHeight(20);
+        tbStudent.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        tbStudent.getTableHeader().setReorderingAllowed(false);
+        tbStudent.getTableHeader().setPreferredSize(new Dimension(0, 35));
+        tbStudent.getTableHeader().setFont(font);
+        setHorizontalAlignment(tbStudent, SwingConstants.CENTER);
+        tbStudent.getColumnModel().getColumn(0).setMinWidth(0);
+        tbStudent.getColumnModel().getColumn(0).setMaxWidth(0);
     }
     
     

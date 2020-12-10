@@ -9,16 +9,17 @@ package common;
  *
  * @author Asus
  */
-public enum StudentTableColumns {
+public enum StudentTableColumn {
+    ID("Id"),
     FULLNAME("Họ Tên"),
     GRADE("Lớp"),
     MATH("Điểm Toán"),
     LITERATURE("Điểm Văn"),
     COMMENT("Nhận Xét");
     
-    private String columnName;
+    private final String columnName;
 
-    private StudentTableColumns(String columnName) {
+    private StudentTableColumn(String columnName) {
         this.columnName = columnName;
     }
     

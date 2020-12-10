@@ -22,16 +22,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EnumMap;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
-import view.sub.PanelStudent;
 import view.sub.panelEmployes;
 import view.sub.panelHomePage;
-import view.sub.PanelStudentForm;
+import view.sub.PanelStudent;
 
 /**
  *
@@ -100,7 +98,7 @@ public class FrMain extends JFrame {
         pnLeftTop.setLayout(gridLayout);
 
         JButton btHome = new JButton();
-        btHome.setFont(new Font("Tahoma", Font.BOLD, 16));
+        btHome.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btHome.setText(cardTypes[0].name());
         defaulBorder = btHome.getBorder();
         btHome.setBorder(border);

@@ -5,56 +5,134 @@
  */
 package view.sub;
 
+
+import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.WindowConstants;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.StudentTableModel;
+import model.beans.Student;
+import service.StudentService;
+import service.StudentServiceImpl;
+import utils.ImageUtils;
+import view.FrAddStudent;
+
+
+
 
 /**
  *
  * @author Asus
  */
 public class PanelStudent extends javax.swing.JPanel {
+    private final StudentService service;
+    private final List<Student> students;
+    private Student student;
+    
 
     /**
      * Creates new form PanelStudent
      */
     public PanelStudent() {
+      service = new StudentServiceImpl();
+        students = service.getAll();
+
         initComponents();
-        initEvent();
-        initDataModel();
+        setTableModel();
+        initEvents();
     }
-    private void initDataModel(){
-        initTableStudentModel();
+      private void setTableModel() {
+        StudentTableModel studentTableModel = new StudentTableModel(tbStudent);
+        studentTableModel.loadData();
+        studentTableModel.cssForTable();
     }
-    private void initTableStudentModel(){
-        tbStudent.setModel(new StudentTableModel());
-    }
-    private void initEvent(){
-        btAddEvents();
-        btEditEvents();
-    }
-    private void btAddEvents(){
+      private void initEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfSearch.getText();
+                TableRowSorter<TableModel> tableRowSorter = new TableRowSorter<>(tbStudent.getModel());
+                tbStudent.setRowSorter(tableRowSorter);
+                RowFilter<TableModel, Object> rowFilter;
+                if (text.isEmpty()) {
+                    rowFilter = RowFilter.regexFilter(text);
+                } else {
+                    rowFilter = RowFilter.regexFilter("(?i)" + text );
+                }
+                tableRowSorter.setRowFilter(rowFilter);
+            }
+        });
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                FrStudentForm form = new FrStudentForm();
-                form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                form.setVisible(true);
-                
+                new FrAddStudent(students, new Student(), tbStudent).setVisible(true);
             }
-            
         });
-    }
-    private void btEditEvents(){
         btEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                super.mousePressed(e); //To change body of generated methods, choose Tools | Templates.
+                if (student != null) {
+                    new FrAddStudent(students, student, tbStudent).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Please choose a student!", "Error", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
-            
+        });
+
+        tbStudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selection();
+            }
+        });
+
+        tbStudent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                selection();
+            }
         });
     }
+
+    private void selection() {
+        int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
+        student = students.get(row);
+       
+        showInfo();
+        btEdit.setEnabled(true);
+    }
+    
+
+    private void showInfo() {
+        
+        if(student !=null){
+        lbFullname.setText(student.getName());
+        lbGrade.setText(student.getGrade().getName());
+        lbInterests.setText(student.getBobbies());
+        lbGender.setText(student.getGender() ? "Nam" : "Nữ");
+        lbMatch.setText(String.valueOf(student.getMath()));
+        lbliterature.setText(String.valueOf(student.getLiterature()));
+//        if (student.getImagePath() != null) {
+//            Image image = new ImageIcon(student.getImagePath()).getImage()
+//                    .getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+//            Icon icon = new ImageIcon(image);
+//            lbAvatar.setIcon(icon);
+//        }
+        lbAvatar.setIcon(ImageUtils.getIcon(student.getImagePath(), 110, 132));
+        }
+    }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -168,6 +246,7 @@ public class PanelStudent extends javax.swing.JPanel {
 
         btEdit.setText("Sửa");
         btEdit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btEdit.setEnabled(false);
         btEdit.setFocusPainted(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -196,8 +275,8 @@ public class PanelStudent extends javax.swing.JPanel {
                     .addComponent(lbMatch)
                     .addComponent(lbliterature))
                 .addGap(40, 40, 40)
-                .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
                 .addComponent(btEdit)
                 .addContainerGap())
         );
@@ -228,10 +307,10 @@ public class PanelStudent extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btEdit)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lbAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 

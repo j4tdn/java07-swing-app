@@ -5,26 +5,37 @@
  */
 package view.sub;
 
-import model.bean.Grade;
+import model.beans.Grade;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import model.StudentTableModel;
+import model.beans.Student;
+import model.beans.StudentRaw;
+import service.StudentService;
+import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
@@ -33,18 +44,52 @@ import javax.swing.JOptionPane;
 public class PanelStudentForm extends javax.swing.JPanel {
 
     private File targetFile;
+    private final Student student;
+    
 
     /**
      * Creates new form PanelStudent
      */
-    public PanelStudentForm() {
+    public PanelStudentForm(Student student) {
         initComponents();
 
         initDataModel();
 
         initEvents();
+        this.student = student;
+        
+        initComponentsManually();
     }
+    private void initDataModel() {
+        initCbbGradeModel();
+    }
+    private void initCbbGradeModel() {
+        Grade[] grades = new Grade[listGrades.size()];
+        for (int i = 0; i < listGrades.size(); i++) {
+            grades[i] = listGrades.get(i);
+        }
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
+        cbClass.setModel(gradeModel);
+    }
+    private void setGender(){
+        if(student.getGender()){
+            
+        }
+    }
+        
+    }
+    
+    
+    private void initComponentsManually(){
+        setGender();
+    }
+private  void add(Student student){
+int studentid= studentService.add(student);
+student.setid(studentid);
+students.add(student);
 
+fireTableDataChanged();
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -348,16 +393,11 @@ public class PanelStudentForm extends javax.swing.JPanel {
     private void initDataModel() {
         initCbbGradeModel();
     }
+    
 
     private void initCbbGradeModel() {
-        Grade[] grades = {
-            new Grade(1, "16T1"),
-            new Grade(2, "16T2"),
-            new Grade(3, "16T3")
-        };
-        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
-        cbClass.setModel(gradeModel);
-    }
+        
+        
 
     private void initEvents() {
         btUploadEvents();

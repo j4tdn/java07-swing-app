@@ -114,7 +114,7 @@
     <Component class="javax.swing.JLabel" name="lbLogin">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="H:\java07\java07-repository-app\Lesson19\target\classes\images\login.png"/>
+          <Image iconType="3" name="/images/convenient-login-form.jpg"/>
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
         <Property name="displayedMnemonicIndex" type="int" value="0"/>

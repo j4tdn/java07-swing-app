@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.bean;
+package model.beans;
 
 import java.util.Objects;
 
@@ -13,22 +13,22 @@ import java.util.Objects;
  */
 public class Grade {
 
-    private Integer id;
+     private String id;
     private String name;
 
     public Grade() {
     }
 
-    public Grade(Integer id, String name) {
+    public Grade(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

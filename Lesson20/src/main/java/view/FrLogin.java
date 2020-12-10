@@ -5,7 +5,11 @@
  */
 package view;
 
+import connection.ConnectionManager;
+import connection.ConnectionManagerImpl;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -15,7 +19,11 @@ import javax.swing.JOptionPane;
  * @author DangHoang
  */
 public class FrLogin extends javax.swing.JFrame {
+private static final ConnectionManager con;
 
+    static {
+        con = new ConnectionManagerImpl();
+    }
     /**
      * Creates new form Ex05Absolute
      */
@@ -73,7 +81,7 @@ public class FrLogin extends javax.swing.JFrame {
         btLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 377, 250, 33));
 
-        lbLogin.setIcon(new javax.swing.ImageIcon("H:\\java07\\java07-repository-app\\Lesson19\\target\\classes\\images\\login.png")); // NOI18N
+        lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/convenient-login-form.jpg"))); // NOI18N
         lbLogin.setText("jLabel1");
         lbLogin.setDisplayedMnemonicIndex(0);
         getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 850, -1));
@@ -89,6 +97,7 @@ public class FrLogin extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -116,6 +125,23 @@ public class FrLogin extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        con.getConnection();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrLogin().setVisible(true);
@@ -140,7 +166,33 @@ public class FrLogin extends javax.swing.JFrame {
     }
 
     private void initEvents() {
-        btClose.addMouseListener(new MouseAdapter() {
+         tfUserName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    tfPassWord.requestFocus();
+                }
+            }
+        });
+
+       tfPassWord.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String user = tfUserName.getText();
+                    String pass = String.valueOf(tfPassWord.getPassword());
+                    boolean isValid = isValidAccount(user, pass);
+
+                    if (isValid) {
+                        FrLogin.this.setVisible(false);
+                        new FrMain().setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Login Fail");
+                    }
+                }
+            }
+        });
+       btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
 //                Icon image = new ImageIcon(getClass().getResource("/images/48.jpg"));
@@ -150,8 +202,7 @@ public class FrLogin extends javax.swing.JFrame {
                 }
             }
         });
-
-        btLogin.addMouseListener(new MouseAdapter() {
+       btLogin.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 String user = tfUserName.getText();
@@ -159,13 +210,15 @@ public class FrLogin extends javax.swing.JFrame {
                 boolean isValid = isValidAccount(user, pass);
 
                 if (isValid) {
-                    setVisible(isUndecorated());
+                    FrLogin.this.setVisible(false);
                     new FrMain().setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Login Fail");
                 }
             }
         });
+       
+
     }
 
     private boolean isValidAccount(String user, String pass) {
