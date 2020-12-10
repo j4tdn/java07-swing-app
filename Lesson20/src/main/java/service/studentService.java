@@ -6,14 +6,22 @@
 package service;
 
 import java.util.List;
-import model.bean.Student;
+import model.beans.Grade;
+import model.beans.Student;
 
 /**
  *
- * @author Trung
+ * @author DangHoang
  */
-public interface studentService {
+public interface StudentService {
 
-    public List<Student> getAll();
+    List<Student> getAll();
     
+    List<Grade> getGrade();
+
+    boolean addStudent(Student student);
+
+    boolean updateStudent(Student student);
+
+//    Student getStudent(String id);
 }

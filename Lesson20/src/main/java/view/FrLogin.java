@@ -5,11 +5,13 @@
  */
 package view;
 
+import connection.ConnectionManager;
+import connection.ConnectionManagerImpl;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,15 +20,21 @@ import javax.swing.JOptionPane;
  */
 public class FrLogin extends javax.swing.JFrame {
 
+    private static final ConnectionManager con;
+
+    static {
+        con = new ConnectionManagerImpl();
+    }
+
     /**
      * Creates new form Ex05Absolute
      */
     public FrLogin() {
         setUndecorated(true);
         initComponents();
+
         initCommponentsManually();
         initEvents();
-        btLoginEvents();
     }
 
     /**
@@ -65,18 +73,21 @@ public class FrLogin extends javax.swing.JFrame {
 
         btClose.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btClose.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btClose.setContentAreaFilled(false);
+        btClose.setBorderPainted(false);
         btClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 80, 40, 40));
+        btClose.setFocusPainted(false);
+        getContentPane().add(btClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(549, 76, 48, 48));
         btClose.getAccessibleContext().setAccessibleDescription("");
 
         btLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btLogin.setContentAreaFilled(false);
+        btLogin.setBorderPainted(false);
         btLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 380, 240, 30));
+        getContentPane().add(btLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 377, 250, 33));
 
         lbLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/convenient-login-form.jpg"))); // NOI18N
-        getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, -1));
+        lbLogin.setText("jLabel1");
+        lbLogin.setDisplayedMnemonicIndex(0);
+        getContentPane().add(lbLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 850, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -96,7 +107,7 @@ public class FrLogin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -111,6 +122,11 @@ public class FrLogin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        con.getConnection();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -129,6 +145,7 @@ public class FrLogin extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void initCommponentsManually() {
+        tfUserName.requestFocus();
         setLocationRelativeTo(null);
         btClose.setBackground(new Color(0, 0, 0, 0));
 
@@ -136,6 +153,33 @@ public class FrLogin extends javax.swing.JFrame {
     }
 
     private void initEvents() {
+        tfUserName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    tfPassWord.requestFocus();
+                }
+            }
+        });
+
+        tfPassWord.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String user = tfUserName.getText();
+                    String pass = String.valueOf(tfPassWord.getPassword());
+                    boolean isValid = isValidAccount(user, pass);
+
+                    if (isValid) {
+                        FrLogin.this.setVisible(false);
+                        new FrMain().setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Login Fail");
+                    }
+                }
+            }
+        });
+
         btClose.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -146,30 +190,25 @@ public class FrLogin extends javax.swing.JFrame {
                 }
             }
         });
-    }
-
-    private void btLoginEvents() {
 
         btLogin.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                String username = tfUserName.getName();
-                String password = String.valueOf(tfPassWord.getPassword());
-                boolean isVaild = isValidAccount(username, password);
-                if(isVaild){
+                String user = tfUserName.getText();
+                String pass = String.valueOf(tfPassWord.getPassword());
+                boolean isValid = isValidAccount(user, pass);
+
+                if (isValid) {
                     FrLogin.this.setVisible(false);
-                    FrMain frmain=new FrMain();
-                    frmain.setVisible(true);
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"Login fail");
+                    new FrMain().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Fail");
                 }
             }
-
         });
     }
-    
-    private boolean isValidAccount(String username,String password){
-    return username.equals("admin")&password.equals("1234");
+
+    private boolean isValidAccount(String user, String pass) {
+        return user.equals("admin") && pass.equals("ad123");
     }
 }

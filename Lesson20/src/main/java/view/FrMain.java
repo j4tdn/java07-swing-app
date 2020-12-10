@@ -17,17 +17,19 @@ import javax.swing.WindowConstants;
 import static java.awt.BorderLayout.*;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EnumMap;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
-import view.sub.PnStudent;
 import view.sub.panelEmployes;
 import view.sub.panelHomePage;
+import view.sub.PanelStudent;
 
 /**
  *
@@ -56,19 +58,22 @@ public class FrMain extends JFrame {
     public FrMain() {
         enumMap = new EnumMap<>(CardType.class);
         enumMap.put(CardType.Homepage, new panelHomePage());
-        enumMap.put(CardType.Homepage, new panelEmployes());
-        enumMap.put(CardType.Student, new PnStudent());
+        enumMap.put(CardType.Employee, new panelEmployes());
+        enumMap.put(CardType.Student, new PanelStudent());
 
         initComponents();
         initEvents();
     }
 
     private void initComponents() {
-        setTitle("Da Nang University UI/UX");
         setSize(1080, 600);
         con.setLayout(borderLayout);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setTitle("DUT");
+
+        Image image = new ImageIcon(getClass().getResource("/images/student.png")).getImage();
+        setIconImage(image);
 
         addPanels();
     }
@@ -88,12 +93,12 @@ public class FrMain extends JFrame {
         pnTop.setBackground(Color.GREEN);
         con.add(pnTop, NORTH);
 
-        pnLeftTop.setPreferredSize(new Dimension(140, 500));
+        pnLeftTop.setPreferredSize(new Dimension(200, 250));
         pnLeftTop.setBackground(Color.BLACK);
         pnLeftTop.setLayout(gridLayout);
 
         JButton btHome = new JButton();
-        btHome.setFont(new Font("Tahoma", Font.BOLD, 16));
+        btHome.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btHome.setText(cardTypes[0].name());
         defaulBorder = btHome.getBorder();
         btHome.setBorder(border);
@@ -109,7 +114,7 @@ public class FrMain extends JFrame {
         }
         spPaneLeft.add(pnLeftTop, TOP);
 
-        pnLeftBottom.setPreferredSize(new Dimension(140, 0));
+        pnLeftBottom.setPreferredSize(new Dimension(200, 0));
         pnLeftBottom.setBackground(Color.YELLOW);
         spPaneLeft.add(pnLeftBottom, BOTTOM);
 
@@ -133,7 +138,7 @@ public class FrMain extends JFrame {
         Component[] components = pnLeftTop.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
-             final   JButton button = (JButton) component;
+                JButton button = (JButton) component;
                 button.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {

@@ -10,7 +10,7 @@ package common;
  * @author DangHoang
  */
 public enum CardType {
-    Homepage, Employee,Student;
+    Homepage, Employee, Student;
 
     public static CardType from(String name) {
         switch (name) {

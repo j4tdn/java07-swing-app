@@ -6,12 +6,23 @@
 package dao;
 
 import java.util.List;
-import model.bean.Student;
+import model.beans.Grade;
+import model.beans.Student;
+import model.beans.StudentRaw;
 
 /**
  *
- * @author Trung
+ * @author DangHoang
  */
 public interface StudentDao {
-    List<Student> getAll();
+    
+    List<StudentRaw> getAll();
+    
+    List<Grade> getGrade();
+
+    boolean addStudent(Student student);
+
+    boolean updateStudent(Student student);
+
+//    StudentRaw getStudent(String id);
 }
