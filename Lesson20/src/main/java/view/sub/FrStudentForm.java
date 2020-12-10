@@ -7,65 +7,291 @@ package view.sub;
 
 import dao.StudentDao;
 import dao.StudentDaoImpl;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import model.bean.Grade;
+import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import utils.ImageUtils;
 
 /**
  *
  * @author ADMIN
  */
 public class FrStudentForm extends javax.swing.JFrame {
-    StudentService studentService=new StudentServiceImpl();
+
+    StudentService studentService = new StudentServiceImpl();
+    private Student student;
+    private File targetFile;
+    private boolean isEditform;
+
     /**
      * Creates new form FrStudentForm
      */
     public FrStudentForm() {
+        this(null);
+
+    }
+
+    public FrStudentForm(Student student) {
+        this.student = student;
+        isEditform = student != null;
         initComponents();
         initComponentManually();
-        initData();
-    }
-    
-    private void initData(){
-        String id="a";
-        String fullname=tfName.getText();
-        Boolean gender=btgGender.equals("Nam");
-                String hobbies="";
+        //initData();
+        initEvent();
+        initDataModel();
+        initEvents();
+        showStudentInfo(student);
 
-        if(cbBadminton.isEnabled()){
-            hobbies+=cbBadminton.toString();
-        } if(cbFootball.isEnabled()){
-            hobbies+=cbFootball.toString();
-        } if(cbVolleyball.isEnabled()){
-            hobbies+=cbVolleyball.toString();
-        }
-        Double math=Double.parseDouble(tfMath.getText());
-        Double literature=Double.parseDouble(tfLiterature.getText());
-        studentService.getListGrade();
-       // Grade grade=cbbGrade.getName().;
-        
-        StudentDao addStudent=new StudentDaoImpl();
-        //addStudent.addStudent(id,fullname,gender,hobbies,math,literature,gradeID,avatarPath,comments);
-    }
-    private void initComponentManually(){
-        setLocationRelativeTo(null);
-        submit();
     }
 
-    private void submit(){
-        btSubmit.addMouseListener(new MouseAdapter(){
+    public void initDataModel() {
+        initCbbGradeModel();
+    }
+
+    public void initEvents() {
+        btUploadEvent();
+        btSubmitEvent();
+    }
+
+    public void btSubmitEvent() {
+        btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                
-                
+                Grade grade = (Grade) cbbGrade.getSelectedItem();
+                String gender = getGender();
+                String hobbies = getHobies(cbBadminton, cbFootball, cbVolleyball);
+                String fileName = targetFile != null ? targetFile.getName() : "Undefined!";
+                System.out.println("=================");
+                System.out.println("grade : " + grade);
+                System.out.println("gender : " + gender);
+                System.out.println("hobbies : " + hobbies);
+                System.out.println("fileName: " + fileName);
+            }
+
+        });
+    }
+
+    private String getHobies(JCheckBox... checkBoxs) {
+        //Immutable :String literal,object  công chuỗi thì trên head tạo ô nhớ mới
+        //Mutable :StringBulder,Stirng Buffer ko tạo ô nhwos mới mà cộng thêm vào ô nhwos cũ
+
+        StringBuilder buider = new StringBuilder();
+        return Arrays.stream(checkBoxs)
+                .filter(JCheckBox::isSelected)
+                .map(JCheckBox::getText)
+                .collect(Collectors.joining(","));
+    }
+
+    private String getGender() {
+
+        Enumeration<AbstractButton> elements = btgGender.getElements();
+
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return "";
+    }
+
+    public void btUploadEvent() {
+        btUpload.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                String path = getClass().getResource("/images.ghost").getFile();
+
+                System.out.println("path" + path);
+                JFileChooser fc = new JFileChooser(path);
+
+                if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
+                    String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg)";
+
+                    File sourceFile = fc.getSelectedFile();
+                    String fileName = sourceFile.getName();
+
+                    if (!fileName.matches(regex)) {
+                        JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
+                        return;
+
+                    }
+                    String renameFile = System.currentTimeMillis() + fileName;
+
+                    targetFile = new File("image_upload" + File.separator + renameFile);
+
+                    //Step1:  copy & rename to project's file upload
+                    try {
+                        Files.copy(sourceFile.toPath(), targetFile.toPath());
+                        //Step2:  display  rename file on UI
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    Image image = new ImageIcon(targetFile.toString())
+                            .getImage()
+                            .getScaledInstance(lbAvatar.getWidth(),
+                                    lbAvatar.getHeight(),
+                                    Image.SCALE_SMOOTH);
+                    Icon icon = new ImageIcon(image);
+                    lbAvatar.setIcon(icon);
+                }
 
             }
-            
+
         });
-        
     }
+
+    private void initCbbGradeModel() {
+
+        Grade[] grades = {
+            new Grade(1, "Lớp 12T1"),
+            new Grade(2, "Lớp 12T2"),
+            new Grade(3, "Lớp 12T3"),
+            new Grade(4, "Lớp 12T4"),};
+
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
+        cbbGrade.setModel(gradeModel);
+    }
+
+    private void initEvent() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addStudent();
+            }
+
+        });
+    }
+
+    private void addStudent() {
+        List<Student> students = studentService.getAll();
+        Student student = new Student();
+        student.setId("5");
+        student.setFullname(tfName.getText());
+        student.setMath(Double.parseDouble(tfMath.getText()));
+        student.setLiterature(Double.parseDouble(tfLiterature.getText()));
+        student.setComment(taComment.getText());
+        student.setGender(btgGender.getSelection().equals(rdFemale) ? TRUE : FALSE);
+        // student.setGrade(cbbGrade.getSelectedIndex());
+        String hobbies = "";
+        if (cbBadminton.isSelected()) {
+            hobbies += cbBadminton.getName();
+        }
+        if (cbFootball.isSelected()) {
+            hobbies += cbFootball.getName();
+        }
+        if (cbVolleyball.isSelected()) {
+            hobbies += cbVolleyball.getName();
+        }
+
+        student.setHobbies(hobbies);
+        students.add(student);
+
+    }
+
+    private void edit() {
+        PnStudent pnStudent = new PnStudent();
+
+    }
+
+    private void initData() {
+        String id = "a";
+        String fullname = tfName.getText();
+        Boolean gender = btgGender.equals("Nam");
+        String hobbies = "";
+
+        if (cbBadminton.isEnabled()) {
+            hobbies += cbBadminton.toString();
+        }
+        if (cbFootball.isEnabled()) {
+            hobbies += cbFootball.toString();
+        }
+        if (cbVolleyball.isEnabled()) {
+            hobbies += cbVolleyball.toString();
+        }
+        Double math = Double.parseDouble(tfMath.getText());
+        Double literature = Double.parseDouble(tfLiterature.getText());
+        studentService.getListGrade();
+        // Grade grade=cbbGrade.getName().;
+
+        StudentDao addStudent = new StudentDaoImpl();
+        //addStudent.addStudent(id,fullname,gender,hobbies,math,literature,gradeID,avatarPath,comments);
+    }
+    //9h 31 p
+
+    private void initComponentManually() {
+        setLocationRelativeTo(null);
+        showStudentInfo(student);
+        //submit();
+    }
+
+    private void showStudentInfo(Student student) {
+        if (student != null) {
+            tfName.setText(student.getFullname());
+            cbbGrade.setSelectedItem(student.getGrade());
+            setGender();
+            setHobbies();
+            taComment.setText(student.getComment());
+            tfLiterature.setText(student.getLiterature().toString());
+            tfMath.setText(student.getMath().toString());
+            lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
+
+        }
+    }
+
+    private void setGender() {
+        if (student.getGender()) {
+            rdFemale.setSelected(true);
+        } else {
+            rdMale.setSelected(true);
+        }
+    }
+
+    private void setHobbies() {
+        //List hobbies = Pattern.compile(" ,").splitAsStream(student.getHobbies()).collect(Collectors.toList());
+        String hobbies = student.getHobbies();
+        JCheckBox[] cbHobbies = {cbBadminton, cbFootball, cbVolleyball};
+        for (JCheckBox checkbox : cbHobbies) {
+            if (hobbies.contains(checkbox.getText())) {
+                checkbox.setSelected(true);
+            }
+        }
+    }
+
+    private void submit() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+        });
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,7 +316,6 @@ public class FrStudentForm extends javax.swing.JFrame {
         lbHobby = new javax.swing.JLabel();
         rdMale = new javax.swing.JRadioButton();
         rdFemale = new javax.swing.JRadioButton();
-        rdDiff = new javax.swing.JRadioButton();
         cbFootball = new javax.swing.JCheckBox();
         cbBadminton = new javax.swing.JCheckBox();
         cbVolleyball = new javax.swing.JCheckBox();
@@ -172,17 +397,6 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         });
 
-        btgGender.add(rdDiff);
-        rdDiff.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        rdDiff.setText("Khác");
-        rdDiff.setContentAreaFilled(false);
-        rdDiff.setFocusPainted(false);
-        rdDiff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdDiffActionPerformed(evt);
-            }
-        });
-
         cbFootball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cbFootball.setText("Đá bóng");
         cbFootball.setContentAreaFilled(false);
@@ -225,9 +439,7 @@ public class FrStudentForm extends javax.swing.JFrame {
                             .addGroup(pnDetailLeftLayout.createSequentialGroup()
                                 .addComponent(cbbGrade, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbBadminton)
-                            .addComponent(rdDiff)))
+                        .addComponent(cbBadminton))
                     .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -246,8 +458,7 @@ public class FrStudentForm extends javax.swing.JFrame {
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbGender)
                     .addComponent(rdMale)
-                    .addComponent(rdFemale)
-                    .addComponent(rdDiff))
+                    .addComponent(rdFemale))
                 .addGap(30, 30, 30)
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbHobby)
@@ -367,10 +578,6 @@ public class FrStudentForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rdFemaleActionPerformed
 
-    private void rdDiffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdDiffActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdDiffActionPerformed
-
     private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btSubmitActionPerformed
@@ -435,7 +642,6 @@ public class FrStudentForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnMainCenter;
     private javax.swing.JPanel pnMainTop;
     private javax.swing.JPanel pnMainTop1;
-    private javax.swing.JRadioButton rdDiff;
     private javax.swing.JRadioButton rdFemale;
     private javax.swing.JRadioButton rdMale;
     private javax.swing.JScrollPane scrollComment;

@@ -21,6 +21,8 @@ public class ConnectionManagerImpl implements ConnectionManager {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost:3306/java07_student";
             connection = DriverManager.getConnection(url, "root", "billeeloan21980108");
+                            System.out.println(connection);
+            
         } catch (Exception e) {
             System.err.println("sai");
         };
