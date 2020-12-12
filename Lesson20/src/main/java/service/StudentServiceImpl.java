@@ -25,14 +25,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAll() {
-
         return studentDao.getAll();
     }
 
-    @Override
-    public void addStudent(String id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade gradeID, String avatarPath, String comments) {
-        studentDao.addStudent(id, fullname, gender, hobbies, math, literature, gradeID, avatarPath, comments);
-    }
 
     @Override
     public List<Grade> getListGrade() {
@@ -42,6 +37,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student get(String id) {
         return studentDao.get(id);
+    }
+
+    @Override
+    public void addStudent(Student student) {
+        studentDao.addStudent(student);
+    }
+
+    @Override
+    public void updateStudent(Student student) {
+       studentDao.updateStudent(student);
     }
 
 

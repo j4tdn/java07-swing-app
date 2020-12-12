@@ -5,13 +5,13 @@
  */
 package connection;
 
-import java.sql.Connection;
+import java.util.Properties;
 
 /**
  *
  * @author ADMIN
  */
-public interface ConnectionManager {
+public interface ConfigurationProvider {
 
-    Connection getConnection();
+    Properties getProperties();
 }

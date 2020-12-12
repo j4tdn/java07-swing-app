@@ -5,8 +5,6 @@
  */
 package view.sub;
 
-import dao.StudentDao;
-import dao.StudentDaoImpl;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +16,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -42,6 +39,7 @@ public class FrStudentForm extends javax.swing.JFrame {
 
     StudentService studentService = new StudentServiceImpl();
     private Student student;
+
     private File targetFile;
     private boolean isEditform;
 
@@ -58,10 +56,9 @@ public class FrStudentForm extends javax.swing.JFrame {
         isEditform = student != null;
         initComponents();
         initComponentManually();
-        //initData();
-        initEvent();
+
         initDataModel();
-        initEvents();
+        initEvents(student);
         showStudentInfo(student);
 
     }
@@ -70,38 +67,76 @@ public class FrStudentForm extends javax.swing.JFrame {
         initCbbGradeModel();
     }
 
-    public void initEvents() {
+    public void initEvents(Student student) {
         btUploadEvent();
-        btSubmitEvent();
+        btEditEvent();
+        //btSubmitEvent();
+
     }
 
-    public void btSubmitEvent() {
+    public void btEditEvent() {
         btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Grade grade = (Grade) cbbGrade.getSelectedItem();
-                String gender = getGender();
-                String hobbies = getHobies(cbBadminton, cbFootball, cbVolleyball);
-                String fileName = targetFile != null ? targetFile.getName() : "Undefined!";
-                System.out.println("=================");
-                System.out.println("grade : " + grade);
-                System.out.println("gender : " + gender);
-                System.out.println("hobbies : " + hobbies);
-                System.out.println("fileName: " + fileName);
+                if (isEditform) {
+                    editStudent();
+                } else {
+                    addStudent();
+                }
             }
 
         });
+    }
+
+    private void editStudent() {
+        List<Grade> grade = studentService.getListGrade();
+
+        student.setFullname(tfName.getText());
+        student.setMath(Double.parseDouble(tfMath.getText()));
+        student.setLiterature(Double.parseDouble(tfLiterature.getText()));
+        student.setComment(taComment.getText());
+        student.setGender(getGender().equals("Nữ") ? TRUE : FALSE);
+        student.setGrade(grade.get(cbbGrade.getSelectedIndex()));
+        student.setHobbies(getHobies(cbBadminton, cbFootball, cbVolleyball));
+        studentService.updateStudent(student);
+    }
+
+
+    private void addStudent() {
+        List<Student> students = studentService.getAll();
+        List<Grade> grade = studentService.getListGrade();
+        Student student = new Student();
+
+        student.setFullname(tfName.getText());
+        student.setMath(Double.parseDouble(tfMath.getText()));
+        student.setLiterature(Double.parseDouble(tfLiterature.getText()));
+        student.setComment(taComment.getText());
+        student.setGender(getGender().equals("Nữ") ? TRUE : FALSE);
+        student.setGrade(grade.get(cbbGrade.getSelectedIndex()));
+        String hobbies = "";
+        if (cbBadminton.isSelected()) {
+            hobbies += cbBadminton.getText() + ",";
+        }
+        if (cbFootball.isSelected()) {
+            hobbies += cbFootball.getText() + ",";
+        }
+        if (cbVolleyball.isSelected()) {
+            hobbies += cbVolleyball.getText();
+        }
+        student.setHobbies(getHobies(cbBadminton,cbFootball,cbVolleyball));
+        students.add(student);
+        studentService.addStudent(student);
     }
 
     private String getHobies(JCheckBox... checkBoxs) {
         //Immutable :String literal,object  công chuỗi thì trên head tạo ô nhớ mới
         //Mutable :StringBulder,Stirng Buffer ko tạo ô nhwos mới mà cộng thêm vào ô nhwos cũ
 
-        StringBuilder buider = new StringBuilder();
         return Arrays.stream(checkBoxs)
                 .filter(JCheckBox::isSelected)
                 .map(JCheckBox::getText)
                 .collect(Collectors.joining(","));
+
     }
 
     private String getGender() {
@@ -165,87 +200,22 @@ public class FrStudentForm extends javax.swing.JFrame {
     }
 
     private void initCbbGradeModel() {
+        List<Grade> grade = studentService.getListGrade();
+        Grade[] grades = new Grade[grade.size()];
 
-        Grade[] grades = {
-            new Grade(1, "Lớp 12T1"),
-            new Grade(2, "Lớp 12T2"),
-            new Grade(3, "Lớp 12T3"),
-            new Grade(4, "Lớp 12T4"),};
+        for (int i = 0; i < grade.size(); i++) {
+            grades[i] = grade.get(i);
+        }
 
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbbGrade.setModel(gradeModel);
     }
 
-    private void initEvent() {
-        btSubmit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addStudent();
-            }
-
-        });
-    }
-
-    private void addStudent() {
-        List<Student> students = studentService.getAll();
-        Student student = new Student();
-        student.setId("5");
-        student.setFullname(tfName.getText());
-        student.setMath(Double.parseDouble(tfMath.getText()));
-        student.setLiterature(Double.parseDouble(tfLiterature.getText()));
-        student.setComment(taComment.getText());
-        student.setGender(btgGender.getSelection().equals(rdFemale) ? TRUE : FALSE);
-        // student.setGrade(cbbGrade.getSelectedIndex());
-        String hobbies = "";
-        if (cbBadminton.isSelected()) {
-            hobbies += cbBadminton.getName();
-        }
-        if (cbFootball.isSelected()) {
-            hobbies += cbFootball.getName();
-        }
-        if (cbVolleyball.isSelected()) {
-            hobbies += cbVolleyball.getName();
-        }
-
-        student.setHobbies(hobbies);
-        students.add(student);
-
-    }
-
-    private void edit() {
-        PnStudent pnStudent = new PnStudent();
-
-    }
-
-    private void initData() {
-        String id = "a";
-        String fullname = tfName.getText();
-        Boolean gender = btgGender.equals("Nam");
-        String hobbies = "";
-
-        if (cbBadminton.isEnabled()) {
-            hobbies += cbBadminton.toString();
-        }
-        if (cbFootball.isEnabled()) {
-            hobbies += cbFootball.toString();
-        }
-        if (cbVolleyball.isEnabled()) {
-            hobbies += cbVolleyball.toString();
-        }
-        Double math = Double.parseDouble(tfMath.getText());
-        Double literature = Double.parseDouble(tfLiterature.getText());
-        studentService.getListGrade();
-        // Grade grade=cbbGrade.getName().;
-
-        StudentDao addStudent = new StudentDaoImpl();
-        //addStudent.addStudent(id,fullname,gender,hobbies,math,literature,gradeID,avatarPath,comments);
-    }
     //9h 31 p
-
     private void initComponentManually() {
         setLocationRelativeTo(null);
         showStudentInfo(student);
-        //submit();
+
     }
 
     private void showStudentInfo(Student student) {
@@ -272,6 +242,7 @@ public class FrStudentForm extends javax.swing.JFrame {
 
     private void setHobbies() {
         //List hobbies = Pattern.compile(" ,").splitAsStream(student.getHobbies()).collect(Collectors.toList());
+
         String hobbies = student.getHobbies();
         JCheckBox[] cbHobbies = {cbBadminton, cbFootball, cbVolleyball};
         for (JCheckBox checkbox : cbHobbies) {
@@ -279,17 +250,6 @@ public class FrStudentForm extends javax.swing.JFrame {
                 checkbox.setSelected(true);
             }
         }
-    }
-
-    private void submit() {
-        btSubmit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-        });
-
     }
 
     /**
@@ -398,7 +358,7 @@ public class FrStudentForm extends javax.swing.JFrame {
         });
 
         cbFootball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        cbFootball.setText("Đá bóng");
+        cbFootball.setText("Bóng đá");
         cbFootball.setContentAreaFilled(false);
         cbFootball.setFocusPainted(false);
 
@@ -519,7 +479,7 @@ public class FrStudentForm extends javax.swing.JFrame {
                         .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btUpload)
-                        .addContainerGap(119, Short.MAX_VALUE))))
+                        .addContainerGap(271, Short.MAX_VALUE))))
         );
         pnDetailRightLayout.setVerticalGroup(
             pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

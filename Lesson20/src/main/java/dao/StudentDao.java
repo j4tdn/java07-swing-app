@@ -18,12 +18,14 @@ public interface StudentDao {
 
     List<Student> getAll();
 
-    void addStudent(String id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade gradeID, String avatarPath, String comments);
-
     List<Student> getListStudent();
 
     List<Grade> getListGrade();
 
     Student get(String id);
+
+    void addStudent(Student student);
+
+    void updateStudent(Student student);
 
 }

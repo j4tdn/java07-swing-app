@@ -7,6 +7,7 @@ package connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 
 /**
  *
@@ -14,20 +15,23 @@ import java.sql.DriverManager;
  */
 public class ConnectionManagerImpl implements ConnectionManager {
 
-    @Override
-    public Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/java07_student";
-            connection = DriverManager.getConnection(url, "root", "billeeloan21980108");
-                            System.out.println(connection);
-            
-        } catch (Exception e) {
-            System.err.println("sai");
-        };
-        return connection;
+    private final ConfigurationProvider provider;
 
+    public ConnectionManagerImpl() {
+        provider = new ConfigurationProviderImpl();
     }
 
+    @Override
+    public Connection getConnection() {
+        Properties props = provider.getProperties();
+
+        Connection connection = null;
+        try {
+            Class.forName(props.getProperty("driverClassName"));
+            connection = DriverManager.getConnection(props.getProperty("URL"), props.getProperty("USERNAME"), props.getProperty("PASSWORD"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
 }

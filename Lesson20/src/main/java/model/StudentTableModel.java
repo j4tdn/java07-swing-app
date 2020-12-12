@@ -36,6 +36,8 @@ public class StudentTableModel extends AbstractTableModel {
 
         studentService = new StudentServiceImpl();
         students = studentService.getAll();
+        System.out.println(students.size());
+        
     }
 
     @Override
@@ -103,8 +105,8 @@ public class StudentTableModel extends AbstractTableModel {
         table.getTableHeader().setPreferredSize(new Dimension(0, 32));
 
         table.setRowHeight(26);
-        table.getColumnModel().getColumn(0).setMinWidth(0);
-        table.getColumnModel().getColumn(0).setMaxWidth(0);
+        //table.getColumnModel().getColumn(0).setMinWidth(0);
+        //table.getColumnModel().getColumn(0).setMaxWidth(0);
         
         TableRender.setHorizontaAlighment(table, SwingConstants.CENTER);
 

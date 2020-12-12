@@ -19,7 +19,8 @@ public interface StudentService {
 
     List<Grade> getListGrade();
 
-    void addStudent(String id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade gradeID, String avatarPath, String comments);
-
     Student get(String id);
+
+    void addStudent(Student student);
+    void updateStudent(Student student);
 }

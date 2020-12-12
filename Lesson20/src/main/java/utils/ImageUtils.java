@@ -25,6 +25,8 @@ public class ImageUtils {
             path = "image_upload"+File.separator+"default.jpg";
         }
         Image image = new ImageIcon(path).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                    System.out.println(path);
+
         return new ImageIcon(image);
     }
 }
