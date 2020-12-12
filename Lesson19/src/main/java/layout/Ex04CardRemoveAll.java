@@ -102,6 +102,7 @@ public class Ex04CardRemoveAll extends JFrame {
             btHomePage.setFocusPainted(false);
             btHomePage.setFont(font);
             btHomePage.setText(cards[0].name());
+           
             defaultBorder=btHomePage.getBorder();
             btHomePage.setBorder(highlightBorder);
             previousClickedButton=btHomePage;
@@ -113,6 +114,7 @@ public class Ex04CardRemoveAll extends JFrame {
             button.setFont(font);
             button.setText(cards[i].name());
             pnLeftTop.add(button);
+             System.out.println(cards[i].name());
         }
         
         pnLeftBottom = new JPanel();
@@ -128,7 +130,6 @@ public class Ex04CardRemoveAll extends JFrame {
         splitPanePnLeft=new JSplitPane();
         splitPanePnLeft.setOneTouchExpandable(true);
         splitPanePnLeft.setOrientation(VERTICAL_SPLIT);
-        
         splitPanePnLeft.add(pnLeftTop,TOP);
         splitPanePnLeft.add(pnLeftBottom,BOTTOM);
         
@@ -157,8 +158,6 @@ public class Ex04CardRemoveAll extends JFrame {
                     // show correct card panel
                     JPanel panel=cardMap.get(CardType.from(button.getText()));
                     pnCenter.add(panel);
-                    
-                    //validate
                     pnCenter.repaint();
                     pnCenter.revalidate();
                         // unhighlight previous button
