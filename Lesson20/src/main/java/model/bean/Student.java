@@ -23,6 +23,18 @@ public class Student {
 
     public Student() {
     }
+    
+    
+    public Student( String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment) {
+        this.fullname = fullname;
+        this.gender = gender;
+        this.hobbies = hobbies;
+        this.math = math;
+        this.literature = literature;
+        this.grade = grade;
+        this.avatarPath = avatarPath;
+        this.comment = comment;
+    }
 
     public Student(String id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment) {
         this.id = id;

@@ -35,13 +35,23 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public boolean addStudent(Student student) {
+    public Integer addStudent(Student student) {
        return studentDao.addStudent(student);
     }
 
     @Override
     public List<Grade> getAllGrade() {
        return studentDao.getAllGrade();
+    }
+
+    @Override
+    public boolean updateStudent(Student student) {
+        return studentDao.updateStudent(student);
+    }
+
+    @Override
+    public boolean deleteStudent(Student student) {
+        return studentDao.deleteStudent(student);
     }
     
 }

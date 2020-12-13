@@ -258,6 +258,9 @@
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdMale">
                   <Properties>
+                    <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                      <ComponentRef name="btngGender"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Nam"/>
                     <Property name="contentAreaFilled" type="boolean" value="false"/>
                     <Property name="focusPainted" type="boolean" value="false"/>
@@ -268,6 +271,9 @@
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdFemale">
                   <Properties>
+                    <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                      <ComponentRef name="btngGender"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="N&#x1eef;"/>
                     <Property name="contentAreaFilled" type="boolean" value="false"/>
                     <Property name="focusPainted" type="boolean" value="false"/>
@@ -278,6 +284,9 @@
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdMiddle">
                   <Properties>
+                    <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                      <ComponentRef name="btngGender"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Kh&#xe1;c"/>
                     <Property name="contentAreaFilled" type="boolean" value="false"/>
                     <Property name="focusPainted" type="boolean" value="false"/>

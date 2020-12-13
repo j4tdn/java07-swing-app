@@ -16,6 +16,8 @@ import model.bean.Student;
 public interface StudentService {
     List<Student> getAll();
     Student get(String id);
-    boolean addStudent(Student student);
+    Integer addStudent(Student student);
     List<Grade> getAllGrade();
+    boolean updateStudent(Student student);
+    boolean deleteStudent(Student student);
 }

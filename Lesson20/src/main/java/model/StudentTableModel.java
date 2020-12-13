@@ -36,6 +36,14 @@ public class StudentTableModel extends AbstractTableModel{
         studentService = new StudentServiceImpl();
         students = studentService.getAll();
     }
+    
+    public void add(Student student){
+            Integer id = studentService.addStudent(student);
+            student.setId(id.toString());
+            students.add(student);
+            //fireTableDataChanged();
+    }
+
 
     @Override
     public int getRowCount() {

@@ -1,4 +1,3 @@
-
 package view.sub;
 
 import java.awt.Image;
@@ -18,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import model.StudentTableModel;
 import model.bean.Grade;
 import model.bean.Student;
 import service.StudentService;
@@ -29,65 +30,66 @@ import utils.ImageUtils;
  * @author khanh
  */
 public class FrStudentForm extends javax.swing.JFrame {
-    private File targetFile;
+
     private final StudentService service;
     private Student student;
-    private int size;
     private String imagePath;
+    private JTable tbStudent;
+
     /**
      * Creates new form FrStudentForm
-     * @param size
      */
-    
-    public FrStudentForm() {
-        service = new StudentServiceImpl();
-        initComponents();
-        initComponentsManually();
-        initEvents();
-     
-    }
-    public FrStudentForm(int size) {
-        this.size=size;
-        service = new StudentServiceImpl();
-        initComponents();
-        initComponentsManually();
-        initEvents();
-     
+
+    public  FrStudentForm(){
+        this(null,null);
     }
     
-    public FrStudentForm(Student student,int size) {
+    public FrStudentForm(JTable table) {
+        this(null,table);
+
+    }
+
+    public FrStudentForm(Student student,JTable table) {
+        this.tbStudent = table;
         this.student = student;
-        this.size=size;
         service = new StudentServiceImpl();
         initComponents();
-        initComponentsManually(student);
+        initComponentsManually();
         initEvents();
-       
-     
+
     }
-    
-    
-    private void initEvents(){
+
+    private void initComponentsManually() {
+
+        initDataModel();
+        setLocationRelativeTo(null);
+        showStudentInfo(student);
+    }
+
+    private void initEvents() {
         btnSubmitEvents();
         btUploadEvents();
     }
+
     private void initDataModel() {
         initCbbGradeModel();
     }
-    private String getGender(){
-        Enumeration<AbstractButton> elements =   btngGender.getElements();
-        while(elements.hasMoreElements()){
+    
+
+    private String getGender() {
+        Enumeration<AbstractButton> elements = btngGender.getElements();
+        while (elements.hasMoreElements()) {
             AbstractButton button = elements.nextElement();
-            
-            if(button.isSelected()){
+
+            if (button.isSelected()) {
                 return button.getText();
             }
         }
-        
+
         return "";
     }
-    
-     private void setGender() {
+
+    private void setGender() {
         if (student.getGender() != null) {
             if (student.getGender()) {
                 rdFemale.setSelected(true);
@@ -96,8 +98,91 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         }
     }
-    
-     private void btUploadEvents() {
+
+    private void initCbbGradeModel() {
+        List<Grade> list = service.getAllGrade();
+        Grade[] grades = new Grade[list.size()];
+        list.toArray(grades);
+        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
+        cbbGrade.setModel(gradeModel);
+    }
+
+    private void showStudentInfo(Student student) {
+        if (student != null) {
+            tfName.setText(student.getFullname());
+            tfMath.setText(student.getMath().toString());
+            tfLiterature.setText(student.getLiterature().toString());
+            cbbGrade.setSelectedItem(student.getGrade());
+            taComment.setText(student.getComment());
+            setGender();
+            setHobbies();
+            lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
+        }
+    }
+
+    private void setHobbies() {
+        List hobbies = Pattern.compile(", ")
+                .splitAsStream(student.getHobbies())
+                .collect(Collectors.toList());
+        JCheckBox[] cbHobbies = {cbFootball, cbcau, cbvolleyball};
+        for (JCheckBox checkBox : cbHobbies) {
+            if (hobbies.contains(checkBox.getText())) {
+                checkBox.setSelected(true);
+            }
+        }
+    }
+
+    private String getHobbies(JCheckBox... checkBoxs) {
+        return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
+    }
+
+    private void btnSubmitEvents() {
+        
+        btnReset.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                FrStudentForm.this.setVisible(false);
+            }
+            
+        });
+        btnSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (student == null) {
+                    student = new Student(
+                            tfName.getText(),
+                             getGender().equals("Nữ"),getHobbies(cbFootball,cbcau,cbvolleyball),
+                             Double.parseDouble(tfMath.getText()),
+                             Double.parseDouble(tfLiterature.getText()),
+                             (Grade) cbbGrade.getSelectedItem(),
+                             imagePath,
+                             taComment.getText());
+                    StudentTableModel studentModel = new StudentTableModel(tbStudent);
+                    studentModel.loadData();
+                    studentModel.cssForTable();
+                    studentModel.add(student);  
+                    FrStudentForm.this.setVisible(false);
+                }else{
+                    student.setFullname(tfName.getText());
+                    student.setGrade((Grade) cbbGrade.getSelectedItem());
+                    student.setGender(getGender().equals("Nữ"));
+                    student.setAvatarPath(imagePath);
+                    student.setLiterature(Double.parseDouble(tfLiterature.getText()));
+                    student.setMath(Double.parseDouble(tfMath.getText()));
+                    student.setHobbies(getHobbies(cbFootball,cbcau,cbvolleyball));
+                    student.setComment(taComment.getText());
+                    service.updateStudent(student);
+                    StudentTableModel studentModel = new StudentTableModel(tbStudent);
+                    studentModel.loadData();
+                    studentModel.cssForTable();
+                    FrStudentForm.this.setVisible(false);
+                }
+            }
+
+        });
+    }
+
+    private void btUploadEvents() {
         btnUpload.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -122,80 +207,7 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void initCbbGradeModel() {
-        List<Grade> list = service.getAllGrade();
-        Grade[] grades = new Grade[list.size()];
-        list.toArray(grades);
-        ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
-        cbbGrade.setModel(gradeModel);
-    }
-    
-    private void btnSubmitEvents(){
-        btnSubmit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if(student==null){
-                    student = new Student(String.valueOf(size+1)
-                            , tfName.getText()
-                            , getGender().equals("Nữ"),"a"
-                            ,Double.parseDouble(tfMath.getText())
-                            , Double.parseDouble(tfLiterature.getText())
-                            ,(Grade) cbbGrade.getSelectedItem()
-                            , imagePath
-                            ,taComment.getText());
-                    service.addStudent(student);
-                }
-            }
-            
-        });
-    }
-    private void initComponentsManually(){
-        initDataModel();
-        setLocationRelativeTo(null);
-    }
-    
-    private void showStudentInfo(Student student) {
-        if(student!=null){
-        tfName.setText(student.getFullname());
-        tfMath.setText(student.getMath().toString());
-        tfLiterature.setText(student.getLiterature().toString());
-        cbbGrade.setSelectedItem(student.getGrade());
-        taComment.setText(student.getComment());
-        setGender();
-        setHobbies();
-        lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(),lbAvatar.getWidth(),lbAvatar.getHeight()));
-        }
-    }
-    private void initComponentsManually(Student student){
-       
-        initDataModel();
-        setLocationRelativeTo(null);
-        showStudentInfo(student);
-        
-        
-    }
-    private void setHobbies(){
-        List hobbies = Pattern.compile(", ")
-                .splitAsStream(student.getHobbies())
-                .collect(Collectors.toList());
-        JCheckBox[] cbHobbies ={cbFootball,cbcau,cbvolleyball};
-        for(JCheckBox checkBox:cbHobbies){
-            if(hobbies.contains(checkBox.getText())){
-            checkBox.setSelected(true);
-            }
-        }
-    }
-    private String getHobbies(JCheckBox...checkBoxs){
-        StringBuilder builder = new StringBuilder();
-         return Arrays.stream(checkBoxs).filter(JCheckBox::isSelected).map(JCheckBox::getText).collect(Collectors.joining(", "));
-    }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -291,6 +303,7 @@ public class FrStudentForm extends javax.swing.JFrame {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích:");
 
+        btngGender.add(rdMale);
         rdMale.setText("Nam");
         rdMale.setContentAreaFilled(false);
         rdMale.setFocusPainted(false);
@@ -300,6 +313,7 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         });
 
+        btngGender.add(rdFemale);
         rdFemale.setText("Nữ");
         rdFemale.setContentAreaFilled(false);
         rdFemale.setFocusPainted(false);
@@ -309,6 +323,7 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         });
 
+        btngGender.add(rdMiddle);
         rdMiddle.setText("Khác");
         rdMiddle.setContentAreaFilled(false);
         rdMiddle.setFocusPainted(false);
