@@ -18,4 +18,6 @@ public interface StudentService {
     int insert(String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment);
     int update(int id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment);
     Student get(int id);
+    boolean save(Student student);
+    boolean update(Student student);
 }

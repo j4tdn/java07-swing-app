@@ -14,6 +14,6 @@ import model.bean.Grade;
 public class Test {
     public static void main(String[] args) {
         StudentDao s = new StudentDaoImpl();
-        s.update(1, "Phan Văn B", Boolean.TRUE, "Bóng đá, Cầu lông", 7.2d, 8.1d, new Grade(1, "17T1"), "path", "Nhất lớp");
+        //s.update(1, "Phan Văn B", Boolean.TRUE, "Bóng đá, Cầu lông", 7.2d, 8.1d, new Grade(1, "17T1"), "path", "Nhất lớp");
     }
 }

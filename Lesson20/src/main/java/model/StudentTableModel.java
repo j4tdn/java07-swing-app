@@ -23,13 +23,13 @@ import table.render.TableRender;
  *
  * @author OS
  */
-public class StudentTableModel extends AbstractTableModel{
-    
+public class StudentTableModel extends AbstractTableModel {
+
     private List<Student> students;
     private final StudentService studentService;
     private final StudentTableCulumn[] columns;
     private final JTable table;
-    
+
     public StudentTableModel(JTable table) {
         this.table = table;
         columns = StudentTableCulumn.values();
@@ -51,7 +51,7 @@ public class StudentTableModel extends AbstractTableModel{
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object value = null;
         Student student = students.get(rowIndex);
-        switch(columns[columnIndex]) {
+        switch (columns[columnIndex]) {
             case ID:
                 value = student.getId();
                 break;
@@ -86,7 +86,7 @@ public class StudentTableModel extends AbstractTableModel{
         }
         return super.getColumnClass(columnIndex);
     }
-        
+
     public void cssForTable() {
         Font font = new Font("Tahoma", Font.PLAIN, 18);
         table.getTableHeader().setReorderingAllowed(false);
@@ -96,9 +96,26 @@ public class StudentTableModel extends AbstractTableModel{
         table.setRowHeight(26);
         TableRender.setHorizontalAlignMent(table, SwingConstants.CENTER);
     }
-    
+
     public void loadData() {
         table.setModel(this);
     }
-         
+
+    public void save(Student newStudent) {
+        boolean isValid = studentService.save(newStudent);
+        if (isValid) {
+            students.add(newStudent);
+        }
+        fireTableDataChanged();
+        //scroll to the end row
+        table.scrollRectToVisible(table.getCellRect(table.getRowCount() - 1, 0, true));
+    }
+
+    public void update(Student newStudent, int row) {
+        boolean isValid = studentService.save(newStudent);
+        if (isValid) {
+            students.set(row, newStudent);
+        }
+        fireTableRowsDeleted(row, row);
+    }
 }

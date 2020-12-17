@@ -16,6 +16,7 @@ import model.bean.Student;
 public interface StudentDao {
     List<Student> getAll();
     int insert(String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment);
-    int update(int id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment);
+    boolean update(Student student);
     Student get(int id);
+    boolean save(Student student);
 }

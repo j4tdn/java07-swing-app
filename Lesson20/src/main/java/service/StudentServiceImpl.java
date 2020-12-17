@@ -42,5 +42,15 @@ public class StudentServiceImpl implements StudentService{
     public Student get(int id) {
         return studentDao.get(id);
     }
+
+    @Override
+    public boolean save(Student student) {
+        return studentDao.save(student);
+    }
+
+    @Override
+    public boolean update(Student student) {
+        return studentDao.update(student);
+    }
     
 }

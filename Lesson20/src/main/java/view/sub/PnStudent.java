@@ -17,6 +17,7 @@ import model.StudentTableModel;
 import model.bean.Student;
 import service.StudentService;
 import service.StudentServiceImpl;
+import utils.ImageUtils;
 import view.FrStudent;
 
 /**
@@ -29,6 +30,9 @@ public class PnStudent extends javax.swing.JPanel {
      * Creates new form pnList
      */
     private final StudentService service;
+    private Student selectedStudent;
+    private StudentTableModel tableModel;
+    private int row = -1;
     
     public PnStudent() {
         service = new StudentServiceImpl();
@@ -61,14 +65,21 @@ public class PnStudent extends javax.swing.JPanel {
     }
     
     private void tableRowSelectionTrigger() {
-        int row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
+        row = tbStudent.convertRowIndexToModel(tbStudent.getSelectedRow());
         String studentId = (String)tbStudent.getModel().getValueAt(row, 0);
-        Student student = service.get(Integer.parseInt(studentId));
-        setText(student);
+        selectedStudent = service.get(Integer.parseInt(studentId));
+        showInfoStudent(selectedStudent);
+        btEdit.setEnabled(true);
     }
     
-    private void setText(Student student) {
+    private void showInfoStudent(Student student) {
         lbNameStudent.setText(student.getFullname());
+        lbGradeStudent.setText(student.getGrade().getName());
+        lbGenderStudent.setText(student.getGender()? "Nam" : "Nữ");
+        lbHobbiesStudent.setText(student.getHobbies());
+        lbMathStudent.setText(String.valueOf(student.getMath()));
+        lbLiteratureStudent.setText(String.valueOf(student.getLiterature()));
+        lbAvatar.setIcon(ImageUtils.getIcon(student.getAvartarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
     }
     
     private void tfSearchEvents() {
@@ -94,7 +105,7 @@ public class PnStudent extends javax.swing.JPanel {
     }
     
     private void initTableStudentModel() {
-        StudentTableModel tableModel = new StudentTableModel(tbStudent);
+        tableModel = new StudentTableModel(tbStudent);
         tableModel.loadData();
         tableModel.cssForTable();
     }
@@ -103,15 +114,24 @@ public class PnStudent extends javax.swing.JPanel {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                FrStudent frStudent = new FrStudent();
-                frStudent.setVisible(true);
+                FrStudent frStudent = new FrStudent(tableModel);          
                 frStudent.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                frStudent.setVisible(true);
             }
         });
     }
     
     private void btEditEvents() {
-        
+        btEdit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(btEdit.isEnabled()) {
+                    FrStudent form = new FrStudent(selectedStudent, tableModel, row);
+                    form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    form.setVisible(true);
+                }
+            }
+        });
     }
 
     /**
@@ -137,11 +157,11 @@ public class PnStudent extends javax.swing.JPanel {
         lbHobbies = new javax.swing.JLabel();
         lbHobbiesStudent = new javax.swing.JLabel();
         lbMath = new javax.swing.JLabel();
-        lbStudentStudent = new javax.swing.JLabel();
+        lbMathStudent = new javax.swing.JLabel();
         lbLiterature = new javax.swing.JLabel();
         lbLiteratureStudent = new javax.swing.JLabel();
         lbAvatar = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btEdit = new javax.swing.JButton();
         pnCenter = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbStudent = new javax.swing.JTable();
@@ -225,8 +245,8 @@ public class PnStudent extends javax.swing.JPanel {
         lbMath.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbMath.setText("Điểm toán:");
 
-        lbStudentStudent.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        lbStudentStudent.setText(".............");
+        lbMathStudent.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbMathStudent.setText(".............");
 
         lbLiterature.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbLiterature.setText("Điểm văn");
@@ -236,13 +256,14 @@ public class PnStudent extends javax.swing.JPanel {
 
         lbAvatar.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 255, 102), null));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-icon.gif"))); // NOI18N
-        jButton1.setText("Sửa");
-        jButton1.setFocusPainted(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btEdit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-icon.gif"))); // NOI18N
+        btEdit.setText("Sửa");
+        btEdit.setEnabled(false);
+        btEdit.setFocusPainted(false);
+        btEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btEditActionPerformed(evt);
             }
         });
 
@@ -274,7 +295,7 @@ public class PnStudent extends javax.swing.JPanel {
                     .addGroup(pnBottomLayout.createSequentialGroup()
                         .addComponent(lbMath)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbStudentStudent))
+                        .addComponent(lbMathStudent))
                     .addGroup(pnBottomLayout.createSequentialGroup()
                         .addComponent(lbLiterature)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -282,7 +303,7 @@ public class PnStudent extends javax.swing.JPanel {
                 .addGap(100, 100, 100)
                 .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btEdit)
                 .addContainerGap())
         );
         pnBottomLayout.setVerticalGroup(
@@ -303,7 +324,7 @@ public class PnStudent extends javax.swing.JPanel {
                                     .addComponent(lbGrade)
                                     .addComponent(lbGradeStudent)
                                     .addComponent(lbMath)
-                                    .addComponent(lbStudentStudent))
+                                    .addComponent(lbMathStudent))
                                 .addGap(30, 30, 30)
                                 .addGroup(pnBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(lbGender)
@@ -313,7 +334,7 @@ public class PnStudent extends javax.swing.JPanel {
                             .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnBottomLayout.createSequentialGroup()
                         .addGap(57, 57, 57)
-                        .addComponent(jButton1)))
+                        .addComponent(btEdit)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -351,14 +372,14 @@ public class PnStudent extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btAddActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btEditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btEdit;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbGender;
@@ -370,10 +391,10 @@ public class PnStudent extends javax.swing.JPanel {
     private javax.swing.JLabel lbLiterature;
     private javax.swing.JLabel lbLiteratureStudent;
     private javax.swing.JLabel lbMath;
+    private javax.swing.JLabel lbMathStudent;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbNameStudent;
     private javax.swing.JLabel lbSearch;
-    private javax.swing.JLabel lbStudentStudent;
     private javax.swing.JPanel pnBottom;
     private javax.swing.JPanel pnCenter;
     private javax.swing.JPanel pnTop;

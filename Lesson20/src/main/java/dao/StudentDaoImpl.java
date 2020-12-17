@@ -109,7 +109,7 @@ public class StudentDaoImpl implements StudentDao{
     }
 
     @Override
-    public int update(int id, String fullname, Boolean gender, String hobbies, Double math, Double literature, Grade grade, String avartarPath, String comment) {
+    public boolean update(Student student) {
         int result = 0;
         Connection connection = manager.getConnection();
         String query = "UPDATE `school`.`student` "
@@ -124,22 +124,22 @@ public class StudentDaoImpl implements StudentDao{
                 + " WHERE StudentId = ?";
         try {
             pst = connection.prepareStatement(query);
-            pst.setString(1, fullname);
-            pst.setBoolean(2, gender);
-            pst.setString(3, hobbies);
-            pst.setDouble(4, math);
-            pst.setDouble(5, literature);
-            pst.setString(6, avartarPath);
-            pst.setString(7, comment);
-            pst.setInt(8, grade.getId());
-            pst.setInt(9, id);
+            pst.setString(1, student.getFullname());
+            pst.setBoolean(2, student.getGender());
+            pst.setString(3, student.getHobbies());
+            pst.setDouble(4, student.getMath());
+            pst.setDouble(5, student.getLiterature());
+            pst.setString(6, student.getAvartarPath());
+            pst.setString(7, student.getComment());
+            pst.setInt(8, student.getGrade().getId());
+            pst.setInt(9, Integer.parseInt(student.getId()));
             result = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(StudentDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             SqlUtils.close(pst, connection);
         }
-        return result;
+        return result != 0;
     }
 
     @Override
@@ -176,6 +176,32 @@ public class StudentDaoImpl implements StudentDao{
             SqlUtils.close(rs, st, connection);
         }
         return student;
+    }
+
+    @Override
+    public boolean save(Student student) {
+        boolean flag = false;
+        Connection connection = manager.getConnection();
+        boolean gender = student.getGender();
+        int grade = student.getGrade().getId();
+        String query = "insert into student(FullName, Gender, Hobbies, Math, Literature, AvatarPath, Comments, GradeId) \n" +
+                        "value(?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setString(1, student.getFullname());
+            pst.setBoolean(2, student.getGender());
+            pst.setString(3, student.getHobbies());
+            pst.setDouble(4, student.getMath());
+            pst.setDouble(5, student.getLiterature());
+            pst.setString(6, student.getAvartarPath());
+            pst.setString(7, student.getComment());
+            pst.setInt(8, student.getGrade().getId());
+            pst.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
     
 }

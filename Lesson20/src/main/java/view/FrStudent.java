@@ -7,6 +7,8 @@ package view;
 
 import model.bean.Grade;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -14,8 +16,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -25,6 +29,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import model.StudentTableModel;
+import model.bean.Student;
+import service.GradeService;
+import service.GradeServiceImpl;
+import service.StudentService;
+import service.StudentServiceImpl;
+import utils.ImageUtils;
 import view.sub.PnStudentForm;
 
 /**
@@ -32,49 +43,188 @@ import view.sub.PnStudentForm;
  * @author OS
  */
 public class FrStudent extends javax.swing.JFrame {
-    
+
+    private final GradeService gradeService;
+    private final StudentService studentService;
+    private boolean isEditForm;
     private File targetFile;
+    private Student student;
+    private StudentTableModel studentTableModel;
+    private int row;
+
     /**
      * Creates new form FrStudent
+     * @param studentTableModel
      */
-    public FrStudent() {
+    public FrStudent(StudentTableModel studentTableModel) {
+        this(null, studentTableModel, -1);
+    }
+
+    public FrStudent(Student student, StudentTableModel studentTableModel, int row) {
+        this.student = student;
+        this.isEditForm = student != null;
+        this.row = row;
+        this.studentTableModel = studentTableModel;
+        gradeService = new GradeServiceImpl();
+        studentService = new StudentServiceImpl();
         initComponents();
         initDataModel();
         initEvents();
         initComponentManually();
     }
-    
+
+    private void showInfoStudent(Student student) {
+        if (this.student != null) {
+            tfName.setText(student.getFullname());
+            cbbGrade.setSelectedItem(student.getGrade());
+            setGender(student.getGender());
+            setHobbies();
+            tfMath.setText(student.getMath() + "");
+            tfLiterature.setText(student.getLiterature() + "");
+            taComment.setText(student.getComment());
+            lbAvatar.setIcon(ImageUtils.getIcon(student.getAvartarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
+        }
+    }
+
+    private void setHobbies() {
+        List<String> hobbies = Pattern.compile(", ").splitAsStream(student.getHobbies()).collect(Collectors.toList());
+        JCheckBox[] cbHobbies = {cbBadminton, cbFootball, cbBadminton};
+        for (JCheckBox checkbox : cbHobbies) {
+            if (hobbies.contains(checkbox.getText())) {
+                checkbox.setSelected(true);
+            }
+        }
+    }
+
     private void initComponentManually() {
         setLocationRelativeTo(null);
+        showInfoStudent(student);
+        pnDetailLeft.setComponentPopupMenu(popupLeft);
     }
-    
+
+    private void setGender(boolean gender) {
+        if (gender) {
+            rdMale.setSelected(true);
+        } else {
+            rdFemale.setSelected(true);
+        }
+    }
+
     private void initEvents() {
         btUpLoadEvents();
         btSubmitEvents();
+        btResetEvent();
+        menuItemEvents();
     }
     
-    private void btSubmitEvents() {
-        btSubmit.addMouseListener(new MouseAdapter() {
+    private void menuItemEvents() {
+        mniNewProjectEvent();
+    }
+    
+    private void mniNewProjectEvent() {
+        mniNewProject.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Grade grade = (Grade) cbbGrade.getSelectedItem();
-                String gender = getGender();
-                String hobbies = getHobbies(cbBadminton, cbFootball, cbVolleyball);
-                String fileName = targetFile != null ? targetFile.getName() : "Undefined";
-                System.out.println(grade + " " + gender + " " + hobbies + " " + fileName);
+                JOptionPane.showMessageDialog(null, "Menu Item Event");
+            }
+        });
+        
+        mniNewProject.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_Y) {
+                    JOptionPane.showMessageDialog(null, "Menu Item Event");
+                }
             }
         });
     }
     
-    private String getHobbies(JCheckBox ... checkBoxs) {
+    
+    private void btResetEvent() {
+        btReset.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                tfName.setText("");
+                cbbGrade.setSelectedIndex(-1);
+                btgGender.clearSelection();
+                cbFootball.setSelected(false);
+                cbVolleyball.setSelected(false);
+                cbBadminton.setSelected(false);
+                tfMath.setText("");
+                tfLiterature.setText("");
+                taComment.setText("");
+                lbAvatar.setIcon(new ImageIcon());
+            }            
+        });
+    }
+
+    private void btSubmitEvents() {
+        btSubmit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                 Student newStudent = getStudent();
+                if (!isEditForm) {
+//                    boolean isSuccess = studentService.save(newStudent);
+//                    if (isSuccess) {
+//                        JOptionPane.showMessageDialog(null, "Thêm thành công");
+//                        setVisible(false);
+//                    } else {
+//                        JOptionPane.showMessageDialog(null, "Thêm thất bại");
+//                    }
+                    studentTableModel.save(newStudent);
+                    setVisible(false);
+                } else {
+//                    Student newStudent = getStudent();
+//                    System.out.println(newStudent.getFullname());
+//                    boolean isSuccess = studentService.update(newStudent);
+//
+//                    if (isSuccess) {
+//                        JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+//                        setVisible(false);
+//                    } else {
+//                        JOptionPane.showMessageDialog(null, "Cập nhật thất bại");
+//                    }
+                    studentTableModel.update(newStudent, row);
+                    setVisible(false);
+                }
+            }
+        });
+    }
+
+    private Student getStudent() {
+        Student newStudent = new Student();
+        Grade grade = (Grade) cbbGrade.getSelectedItem();
+        Boolean gender = rdMale.isSelected();
+        String hobbies = getHobbies(cbBadminton, cbFootball, cbVolleyball);
+        String fileName = targetFile != null ? targetFile.getName() : "Undefined";
+        String name = tfName.getText();
+        Double math = Double.parseDouble(tfMath.getText());
+        Double literature = Double.parseDouble(tfLiterature.getText());
+        String comment = taComment.getText();
+        
+        if (student != null) {
+            newStudent.setId(student.getId());
+        }
+        newStudent.setFullname(name);
+        newStudent.setGrade(grade);
+        newStudent.setGender(gender);
+        newStudent.setHobbies(hobbies);
+        newStudent.setMath(math);
+        newStudent.setLiterature(literature);
+        newStudent.setComment(comment);
+        newStudent.setAvartarPath(fileName);
+        return newStudent;
+    }
+
+    private String getHobbies(JCheckBox... checkBoxs) {
         return Arrays.stream(checkBoxs)
                 .filter(JCheckBox::isSelected)
                 .map(JCheckBox::getText)
                 .collect(Collectors.joining(", "));
     }
-    
+
     private String getGender() {
-        Enumeration<AbstractButton> elements =  btgGender.getElements();
+        Enumeration<AbstractButton> elements = btgGender.getElements();
         while (elements.hasMoreElements()) {
             AbstractButton button = elements.nextElement();
             if (button.isSelected()) {
@@ -83,7 +233,7 @@ public class FrStudent extends javax.swing.JFrame {
         }
         return "";
     }
-    
+
     private void btUpLoadEvents() {
         btUpload.addMouseListener(new MouseAdapter() {
             @Override
@@ -93,13 +243,13 @@ public class FrStudent extends javax.swing.JFrame {
                 if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
                     String regex = "[\\w-]+[.]{1}(?i)(?:png|jpg|jpeg|gif)";
                     File sourceFile = fc.getSelectedFile();
-                    String fileName = sourceFile.getName(); 
+                    String fileName = sourceFile.getName();
                     if (!fileName.matches(regex)) {
                         JOptionPane.showMessageDialog(null, "INVALID IMAGE PATH");
                         return;
                     }
                     String renamedFile = System.currentTimeMillis() + fileName;
-                    targetFile = new File("image_upload/"+ File.separator + renamedFile);
+                    targetFile = new File("image_upload/" + File.separator + renamedFile);
                     try {
                         //step1: copy & rename to project's file upload
                         Files.copy(sourceFile.toPath(), targetFile.toPath());
@@ -114,11 +264,11 @@ public class FrStudent extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void initDataModel() {
         initCbbGradeModel();
     }
-    
+
     private void initCbbGradeModel() {
         Grade[] grades = {
             new Grade(1, "17T1"),
@@ -139,11 +289,14 @@ public class FrStudent extends javax.swing.JFrame {
     private void initComponents() {
 
         btgGender = new javax.swing.ButtonGroup();
+        popupLeft = new javax.swing.JPopupMenu();
+        mniLeftFirst = new javax.swing.JMenuItem();
+        mniLeftSecond = new javax.swing.JMenuItem();
         pnMainTop = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
         btSubmit = new javax.swing.JButton();
-        btSubmit1 = new javax.swing.JButton();
+        btReset = new javax.swing.JButton();
         pnMainCenter = new javax.swing.JPanel();
         sppDetailInfo = new javax.swing.JSplitPane();
         pnDetailLeft = new javax.swing.JPanel();
@@ -155,7 +308,6 @@ public class FrStudent extends javax.swing.JFrame {
         lbHodbies = new javax.swing.JLabel();
         rdMale = new javax.swing.JRadioButton();
         rdFemale = new javax.swing.JRadioButton();
-        rdDiffer = new javax.swing.JRadioButton();
         cbFootball = new javax.swing.JCheckBox();
         cbVolleyball = new javax.swing.JCheckBox();
         cbBadminton = new javax.swing.JCheckBox();
@@ -170,6 +322,24 @@ public class FrStudent extends javax.swing.JFrame {
         lbImage = new javax.swing.JLabel();
         lbAvatar = new javax.swing.JLabel();
         btUpload = new javax.swing.JButton();
+        mnBar = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        mniNewProject = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+
+        mniLeftFirst.setText("jMenuItem1");
+        popupLeft.add(mniLeftFirst);
+
+        mniLeftSecond.setText("jMenuItem1");
+        popupLeft.add(mniLeftSecond);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,14 +365,14 @@ public class FrStudent extends javax.swing.JFrame {
         });
         pnMainBottom.add(btSubmit);
 
-        btSubmit1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btSubmit1.setText("Reset");
-        btSubmit1.addActionListener(new java.awt.event.ActionListener() {
+        btReset.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btReset.setText("Reset");
+        btReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSubmit1ActionPerformed(evt);
+                btResetActionPerformed(evt);
             }
         });
-        pnMainBottom.add(btSubmit1);
+        pnMainBottom.add(btReset);
 
         getContentPane().add(pnMainBottom, java.awt.BorderLayout.PAGE_END);
 
@@ -256,17 +426,6 @@ public class FrStudent extends javax.swing.JFrame {
             }
         });
 
-        btgGender.add(rdDiffer);
-        rdDiffer.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        rdDiffer.setText("Khác");
-        rdDiffer.setContentAreaFilled(false);
-        rdDiffer.setFocusPainted(false);
-        rdDiffer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdDifferActionPerformed(evt);
-            }
-        });
-
         cbFootball.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cbFootball.setText("Bóng đá");
         cbFootball.setContentAreaFilled(false);
@@ -305,26 +464,21 @@ public class FrStudent extends javax.swing.JFrame {
                     .addComponent(lbHodbies))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                        .addComponent(cbbGrade, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnDetailLeftLayout.createSequentialGroup()
                         .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rdMale)
-                            .addComponent(cbFootball))
-                        .addGap(30, 30, 30)
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbVolleyball)
-                            .addComponent(rdFemale))
-                        .addGap(30, 30, 30)
-                        .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbbGrade, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                                .addComponent(cbBadminton)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(pnDetailLeftLayout.createSequentialGroup()
-                                .addComponent(rdDiffer)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(rdMale)
+                                    .addComponent(cbFootball))
+                                .addGap(30, 30, 30)
+                                .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbVolleyball)
+                                    .addComponent(rdFemale))
+                                .addGap(30, 30, 30)
+                                .addComponent(cbBadminton)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnDetailLeftLayout.setVerticalGroup(
@@ -342,8 +496,7 @@ public class FrStudent extends javax.swing.JFrame {
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbGender)
                     .addComponent(rdMale)
-                    .addComponent(rdFemale)
-                    .addComponent(rdDiffer))
+                    .addComponent(rdFemale))
                 .addGap(29, 29, 29)
                 .addGroup(pnDetailLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbHodbies)
@@ -448,6 +601,58 @@ public class FrStudent extends javax.swing.JFrame {
 
         getContentPane().add(pnMainCenter, java.awt.BorderLayout.CENTER);
 
+        jMenu1.setText("File");
+
+        mniNewProject.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniNewProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/power_off.png"))); // NOI18N
+        mniNewProject.setText("New Project");
+        mniNewProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniNewProjectActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mniNewProject);
+
+        jMenuItem3.setText("New File");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+        jMenu1.add(jSeparator1);
+
+        jMenu5.setText("Open Recent");
+
+        jMenuItem4.setText("Open Project");
+        jMenu5.add(jMenuItem4);
+
+        jMenuItem5.setText("Open Folder");
+        jMenu5.add(jMenuItem5);
+
+        jMenu1.add(jMenu5);
+
+        jMenuItem6.setText("Option");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        mnBar.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        mnBar.add(jMenu2);
+
+        jMenu3.setText("View");
+        mnBar.add(jMenu3);
+
+        jMenu4.setText("Source");
+        mnBar.add(jMenu4);
+
+        setJMenuBar(mnBar);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -455,9 +660,9 @@ public class FrStudent extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btSubmitActionPerformed
 
-    private void btSubmit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmit1ActionPerformed
+    private void btResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btResetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btSubmit1ActionPerformed
+    }//GEN-LAST:event_btResetActionPerformed
 
     private void tfNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNameActionPerformed
         // TODO add your handling code here:
@@ -471,10 +676,6 @@ public class FrStudent extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rdFemaleActionPerformed
 
-    private void rdDifferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdDifferActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdDifferActionPerformed
-
     private void cbVolleyballActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVolleyballActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbVolleyballActionPerformed
@@ -486,6 +687,18 @@ public class FrStudent extends javax.swing.JFrame {
     private void cbBadmintonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBadmintonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbBadmintonActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void mniNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniNewProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniNewProjectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -515,16 +728,11 @@ public class FrStudent extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrStudent().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btReset;
     private javax.swing.JButton btSubmit;
-    private javax.swing.JButton btSubmit1;
     private javax.swing.JButton btUpload;
     private javax.swing.ButtonGroup btgGender;
     private javax.swing.JCheckBox cbBadminton;
@@ -532,6 +740,16 @@ public class FrStudent extends javax.swing.JFrame {
     private javax.swing.JCheckBox cbVolleyball;
     private javax.swing.JComboBox cbbGrade;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbCommnent;
     private javax.swing.JLabel lbGender;
@@ -541,12 +759,16 @@ public class FrStudent extends javax.swing.JFrame {
     private javax.swing.JLabel lbLiterature;
     private javax.swing.JLabel lbMath;
     private javax.swing.JLabel lbName;
+    private javax.swing.JMenuBar mnBar;
+    private javax.swing.JMenuItem mniLeftFirst;
+    private javax.swing.JMenuItem mniLeftSecond;
+    private javax.swing.JMenuItem mniNewProject;
     private javax.swing.JPanel pnDetailLeft;
     private javax.swing.JPanel pnDetailRight;
     private javax.swing.JPanel pnMainBottom;
     private javax.swing.JPanel pnMainCenter;
     private javax.swing.JPanel pnMainTop;
-    private javax.swing.JRadioButton rdDiffer;
+    private javax.swing.JPopupMenu popupLeft;
     private javax.swing.JRadioButton rdFemale;
     private javax.swing.JRadioButton rdMale;
     private javax.swing.JScrollPane scrollComment;
@@ -557,5 +779,4 @@ public class FrStudent extends javax.swing.JFrame {
     private javax.swing.JTextField tfName;
     // End of variables declaration//GEN-END:variables
 
-    
 }

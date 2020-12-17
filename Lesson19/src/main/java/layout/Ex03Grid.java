@@ -52,8 +52,8 @@ public class Ex03Grid extends JFrame {
         setSize(1080, 700);
         setLocationRelativeTo(null);
 
-        Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
-        setIconImage(image);
+//        Image image = new ImageIcon(getClass().getResource("/images/48px_like.png")).getImage();
+//        setIconImage(image);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         conn.setLayout(gridLayout);
