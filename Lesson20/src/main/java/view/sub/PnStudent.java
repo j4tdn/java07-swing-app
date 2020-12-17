@@ -73,7 +73,7 @@ public class PnStudent extends javax.swing.JPanel {
 
     private void tableRowSelectionTrigger() {
         int rowIndex = tbStudent.getSelectedRow();
-        int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
+        int rowModel = tbStudent.convertRowIndexToModel(rowIndex);
         String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
         selectedStudent=studentService.get(studentId);
         showStudentInfo(selectedStudent);
@@ -84,7 +84,7 @@ public class PnStudent extends javax.swing.JPanel {
         if (student != null) {
             lbNameDetail.setText(student.getFullname());
             lbGradeDetail.setText(student.getGrade().getName());
-            lbGenderDetail.setText((student.getGender()) ? "Nữ" : "Nam");
+            lbGenderDetail.setText((student.getGender()) ? "Nam" : "Nữ");
             lbMathDetail.setText(student.getMath().toString());
             lbLiteratureDetail.setText(student.getLiterature().toString());
             lbHobbiesDetail.setText(student.getHobbies());
@@ -123,7 +123,7 @@ public class PnStudent extends javax.swing.JPanel {
 
         });
     }
-
+    
     private void btnEditEvent() {
         btnEdit.addMouseListener(new MouseAdapter() {
             @Override

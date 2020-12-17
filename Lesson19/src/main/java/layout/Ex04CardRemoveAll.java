@@ -18,21 +18,19 @@ import javax.swing.WindowConstants;
 import javax.swing.JSplitPane;
 
 import static java.awt.BorderLayout.*;
-import java.awt.Button;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import static javax.swing.JSplitPane.*;
 import javax.swing.border.Border;
 import view.sub.PanelEmployee;
 import view.sub.PanelHomePage;
+import view.sub.PanelStudent;
 
 /**
  *
@@ -61,6 +59,7 @@ public class Ex04CardRemoveAll extends JFrame {
         cardMap=new EnumMap<>(CardType.class);
         cardMap.put(CardType.HomePage,new PanelHomePage());
         cardMap.put(CardType.Employee,new PanelEmployee());
+        cardMap.put(CardType.Student,new PanelStudent());
         //UI
         initComponents();
         //events

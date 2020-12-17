@@ -8,8 +8,6 @@ package layout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -48,7 +46,6 @@ public class Ex05Absolute extends javax.swing.JFrame {
                 if(option==JOptionPane.YES_OPTION){
                     Ex05Absolute.this.setVisible(false);
                 }
-                
             }
         });
     }

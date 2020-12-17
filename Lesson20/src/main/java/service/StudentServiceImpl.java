@@ -9,6 +9,7 @@ import dao.StudentDao;
 import dao.StudentDaoImpl;
 import java.util.List;
 import model.bean.Student;
+import model.bean.Grade;
 
 /**
  *
@@ -26,8 +27,12 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Student get(String id) {
+    public Student get(String id) { 
         return studentDao.get(id);
     }
     
+    @Override
+    public boolean updateStudent(String id, String fullname, int gender, String hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment) {
+        return studentDao.updateStudent(id,fullname,gender,hobbies,math,literature,grade,avatarPath,comment);
+    }
 }

@@ -27,7 +27,8 @@ import javax.swing.JOptionPane;
 import model.bean.Grade;
 import model.bean.Student;
 import utils.ImageUtils;
-
+import service.StudentService;
+import service.StudentServiceImpl;
 /**
  *
  * @author ADMIN
@@ -36,6 +37,8 @@ public class FrStudentForm extends javax.swing.JFrame {
     private boolean isEditForm;
     private File targetFile;
     private Student student;
+    
+    private final StudentService studentService= new StudentServiceImpl();
 
     /**
      * Creates new form FrStudentForm
@@ -52,7 +55,7 @@ public class FrStudentForm extends javax.swing.JFrame {
         initDataModel();
         initEvents();
         showStudentInfo();
-
+        isEditForm=true;
     }
 
     private void initComponentsManually() {
@@ -103,14 +106,19 @@ public class FrStudentForm extends javax.swing.JFrame {
         btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                String name = tfName.getText();
                 Grade grade = (Grade) cbbGrade.getSelectedItem();
-                String gender = getGender();
+                int gender = ("Nam".equals(getGender()))?1:0;
                 String hobbies = getHobbies(cbBadminton, cbVolleyball, cbFootball);
                 String fileName = targetFile != null ? targetFile.getName() : "Undefined!";
-                System.out.println(grade);
-                System.out.println(gender);
-                System.out.println(hobbies);
-                System.out.println(fileName);
+                String comment = taComment.getText();
+                Double math = Double.parseDouble(tfMath.getText());
+                Double literature = Double.parseDouble(tfLiterature.getText());
+                if (studentService.updateStudent(student.getId(),name,gender,hobbies,math,literature,grade,fileName,comment)) {
+                    FrStudentForm.this.setVisible(false);
+                } else {
+                    System.out.println("loiiiii");
+                }
             }
         });
     }
@@ -175,9 +183,9 @@ public class FrStudentForm extends javax.swing.JFrame {
     private void initCbbGradeModel() {
         Grade[] grades = {
             new Grade(1, "Lớp 11T1"),
-            new Grade(1, "Lớp 12T2"),
-            new Grade(1, "Lớp 13T3"),
-            new Grade(1, "Lớp 14T4")
+            new Grade(2, "Lớp 12T2"),
+            new Grade(3, "Lớp 13T3"),
+            new Grade(4, "Lớp 14T4")
         };
         ComboBoxModel<Grade> gradeModel = new DefaultComboBoxModel<>(grades);
         cbbGrade.setModel(gradeModel);
@@ -241,10 +249,12 @@ public class FrStudentForm extends javax.swing.JFrame {
 
         btSubmit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btSubmit.setText("Submit");
+        btSubmit.setFocusPainted(false);
         pnMainBottom.add(btSubmit);
 
         btReset.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btReset.setText("Reset");
+        btReset.setFocusPainted(false);
         pnMainBottom.add(btReset);
 
         getContentPane().add(pnMainBottom, java.awt.BorderLayout.PAGE_END);
@@ -276,11 +286,13 @@ public class FrStudentForm extends javax.swing.JFrame {
         lbHobbies.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbHobbies.setText("Sở thích: ");
 
+        btgGenger.add(rbMale);
         rbMale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbMale.setText("Nam");
         rbMale.setContentAreaFilled(false);
         rbMale.setFocusPainted(false);
 
+        btgGenger.add(rbFemale);
         rbFemale.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbFemale.setText("Nữ");
         rbFemale.setContentAreaFilled(false);
@@ -291,6 +303,7 @@ public class FrStudentForm extends javax.swing.JFrame {
             }
         });
 
+        btgGenger.add(rbDifferent);
         rbDifferent.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         rbDifferent.setText("Khác");
         rbDifferent.setContentAreaFilled(false);
@@ -373,7 +386,7 @@ public class FrStudentForm extends javax.swing.JFrame {
                     .addComponent(cbFootball)
                     .addComponent(cbVolleyball)
                     .addComponent(cbBadminton))
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addContainerGap(227, Short.MAX_VALUE))
         );
 
         sppDetailInfo.setLeftComponent(pnDetailLeft);
@@ -418,6 +431,7 @@ public class FrStudentForm extends javax.swing.JFrame {
         lbAvatar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 51), 2));
 
         btUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
+        btUpload.setFocusPainted(false);
 
         javax.swing.GroupLayout pnDetailRightLayout = new javax.swing.GroupLayout(pnDetailRight);
         pnDetailRight.setLayout(pnDetailRightLayout);
@@ -464,7 +478,7 @@ public class FrStudentForm extends javax.swing.JFrame {
                         .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbImage)
                             .addComponent(btUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 141, Short.MAX_VALUE)))
+                        .addGap(0, 142, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 

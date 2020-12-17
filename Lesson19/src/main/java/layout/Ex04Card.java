@@ -17,7 +17,6 @@ import javax.swing.WindowConstants;
 import javax.swing.JSplitPane;
 
 import static java.awt.BorderLayout.*;
-import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;

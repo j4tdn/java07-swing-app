@@ -7,6 +7,7 @@ package service;
 
 import java.util.List;
 import model.bean.Student;
+import model.bean.Grade;
 
 /**
  *
@@ -15,4 +16,5 @@ import model.bean.Student;
 public interface StudentService {
     List<Student> getAll();
     Student get(String id);
+    boolean updateStudent(String id, String fullname, int gender, String hobbies, Double math, Double literature, Grade grade, String avatarPath, String comment);
 }
