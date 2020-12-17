@@ -22,28 +22,35 @@ import tabble.render.TableRender;
  *
  * @author khanh
  */
-public class StudentTableModel extends AbstractTableModel{
-    
+public class StudentTableModel extends AbstractTableModel {
+
     private final List<Student> students;
-    private final StudentService studentService; 
-    
+    private final StudentService studentService;
+
     private final StudentTableColumns[] columns;
     private final JTable table;
-    
-    public StudentTableModel(JTable table){
+
+    public StudentTableModel(JTable table) {
         this.table = table;
         columns = StudentTableColumns.values();
         studentService = new StudentServiceImpl();
         students = studentService.getAll();
     }
-    
-    public void add(Student student){
-            Integer id = studentService.addStudent(student);
-            student.setId(id.toString());
-            students.add(student);
-            //fireTableDataChanged();
+
+    public void add(Student student) {
+        Integer id = studentService.addStudent(student);
+        student.setId(id.toString());
+        students.add(student);
+        fireTableDataChanged();
+        table.scrollRectToVisible(table.getCellRect(table.getRowCount() - 1, 0, true));
     }
 
+    public void update(Student student, int rowModel) {
+        studentService.updateStudent(student);
+
+        students.set(rowModel, student);
+        fireTableRowsUpdated(rowModel, rowModel);
+    }
 
     @Override
     public int getRowCount() {
@@ -62,23 +69,19 @@ public class StudentTableModel extends AbstractTableModel{
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if(columns[columnIndex]==StudentTableColumns.MATH || columns[columnIndex]==StudentTableColumns.LITERATURE){
+        if (columns[columnIndex] == StudentTableColumns.MATH || columns[columnIndex] == StudentTableColumns.LITERATURE) {
             return Double.class;
         }
         return super.getColumnClass(columnIndex); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
-    
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object value =null;
+        Object value = null;
         Student student = students.get(rowIndex);
-        switch(columns[columnIndex]){
+        switch (columns[columnIndex]) {
             case ID:
-                value =student.getId();
+                value = student.getId();
                 break;
             case FULLNAME:
                 value = student.getFullname();
@@ -95,29 +98,28 @@ public class StudentTableModel extends AbstractTableModel{
             case COMMENT:
                 value = student.getComment();
                 break;
-            
-                
+
         }
         return value;
     }
-    
-    public  void loadData(){
+
+    public void loadData() {
         table.setModel(this);
-        
+
     }
-    
-    public void cssForTable(){
-        Font font = new Font("Tahoma",Font.PLAIN,18);
+
+    public void cssForTable() {
+        Font font = new Font("Tahoma", Font.PLAIN, 18);
         table.setFont(font);
         table.getTableHeader().setFont(font);
         table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setPreferredSize(new Dimension(0,32));
+        table.getTableHeader().setPreferredSize(new Dimension(0, 32));
         table.setRowHeight(26);
-        
+
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
-        
+
         TableRender.setHorizontalAligment(table, SwingConstants.CENTER);
     }
-    
+
 }

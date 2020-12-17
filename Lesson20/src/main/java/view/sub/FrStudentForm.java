@@ -1,6 +1,7 @@
 package view.sub;
 
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -35,23 +36,26 @@ public class FrStudentForm extends javax.swing.JFrame {
     private Student student;
     private String imagePath;
     private JTable tbStudent;
+    private StudentTableModel studentModel;
+    int rowModel =-1;
 
     /**
      * Creates new form FrStudentForm
      */
 
     public  FrStudentForm(){
-        this(null,null);
+        this(null,null,-1);
     }
     
-    public FrStudentForm(JTable table) {
-        this(null,table);
+    public FrStudentForm(StudentTableModel studentModel) {
+        this(null,studentModel,-1);
 
     }
 
-    public FrStudentForm(Student student,JTable table) {
-        this.tbStudent = table;
+    public FrStudentForm(Student student,StudentTableModel studentModel,int rowModel) {
+        this.rowModel= rowModel;
         this.student = student;
+        this.studentModel = studentModel;
         service = new StudentServiceImpl();
         initComponents();
         initComponentsManually();
@@ -64,13 +68,32 @@ public class FrStudentForm extends javax.swing.JFrame {
         initDataModel();
         setLocationRelativeTo(null);
         showStudentInfo(student);
+        pnDetailLeft.setComponentPopupMenu(pupLeft);
     }
 
     private void initEvents() {
         btnSubmitEvents();
         btUploadEvents();
+        menuItemsEvents();
     }
 
+    private void menuItemsEvents(){
+        mnNewProjectEvent();
+    }
+    
+    private void mnNewProjectEvent(){
+        mniNewProject.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Menu Item Events");
+            }
+             
+        });
+        mniNewProject.addKeyListener(new KeyAdapter() {
+            //hihi
+        });
+    }
+    
     private void initDataModel() {
         initCbbGradeModel();
     }
@@ -157,10 +180,8 @@ public class FrStudentForm extends javax.swing.JFrame {
                              (Grade) cbbGrade.getSelectedItem(),
                              imagePath,
                              taComment.getText());
-                    StudentTableModel studentModel = new StudentTableModel(tbStudent);
-                    studentModel.loadData();
-                    studentModel.cssForTable();
-                    studentModel.add(student);  
+
+                    studentModel.add(student); 
                     FrStudentForm.this.setVisible(false);
                 }else{
                     student.setFullname(tfName.getText());
@@ -171,10 +192,8 @@ public class FrStudentForm extends javax.swing.JFrame {
                     student.setMath(Double.parseDouble(tfMath.getText()));
                     student.setHobbies(getHobbies(cbFootball,cbcau,cbvolleyball));
                     student.setComment(taComment.getText());
-                    service.updateStudent(student);
-                    StudentTableModel studentModel = new StudentTableModel(tbStudent);
-                    studentModel.loadData();
-                    studentModel.cssForTable();
+                    studentModel.update(student, rowModel);
+
                     FrStudentForm.this.setVisible(false);
                 }
             }
@@ -213,6 +232,9 @@ public class FrStudentForm extends javax.swing.JFrame {
     private void initComponents() {
 
         btngGender = new javax.swing.ButtonGroup();
+        pupLeft = new javax.swing.JPopupMenu();
+        mniLeftFirst = new javax.swing.JMenu();
+        mniLeftSecond = new javax.swing.JMenu();
         pnMainBottom = new javax.swing.JPanel();
         btnSubmit = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
@@ -244,6 +266,26 @@ public class FrStudentForm extends javax.swing.JFrame {
         lbImage = new javax.swing.JLabel();
         lbAvatar = new javax.swing.JLabel();
         btnUpload = new javax.swing.JButton();
+        mnBar = new javax.swing.JMenuBar();
+        mnFile = new javax.swing.JMenu();
+        mniNewProject = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        mnEdit = new javax.swing.JMenu();
+        mnView = new javax.swing.JMenu();
+        mnSource = new javax.swing.JMenu();
+
+        mniLeftFirst.setText("jMenu2");
+        pupLeft.add(mniLeftFirst);
+
+        mniLeftSecond.setText("jMenu2");
+        pupLeft.add(mniLeftSecond);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -492,6 +534,67 @@ public class FrStudentForm extends javax.swing.JFrame {
 
         getContentPane().add(pnMainCenter, java.awt.BorderLayout.CENTER);
 
+        mnFile.setText("File");
+
+        mniNewProject.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniNewProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/power_off.png"))); // NOI18N
+        mniNewProject.setText("New Project");
+        mniNewProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniNewProjectActionPerformed(evt);
+            }
+        });
+        mnFile.add(mniNewProject);
+
+        jMenuItem2.setText("New File");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        mnFile.add(jMenuItem2);
+        mnFile.add(jSeparator1);
+
+        jMenuItem3.setText("Open Project");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        mnFile.add(jMenuItem3);
+
+        jMenu1.setText("Open Recent Project");
+
+        jMenuItem5.setText("Lesson 17");
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setText("Lesson 18");
+        jMenu1.add(jMenuItem6);
+
+        mnFile.add(jMenu1);
+        mnFile.add(jSeparator2);
+
+        jMenuItem4.setText("Close Project");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        mnFile.add(jMenuItem4);
+
+        mnBar.add(mnFile);
+
+        mnEdit.setText("Edit");
+        mnBar.add(mnEdit);
+
+        mnView.setText("View");
+        mnBar.add(mnView);
+
+        mnSource.setText("Source");
+        mnBar.add(mnSource);
+
+        setJMenuBar(mnBar);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -522,6 +625,22 @@ public class FrStudentForm extends javax.swing.JFrame {
     private void cbcauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbcauActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbcauActionPerformed
+
+    private void mniNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniNewProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniNewProjectActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -567,6 +686,14 @@ public class FrStudentForm extends javax.swing.JFrame {
     private javax.swing.JComboBox cbbGrade;
     private javax.swing.JCheckBox cbcau;
     private javax.swing.JCheckBox cbvolleyball;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbComment;
     private javax.swing.JLabel lbGender;
@@ -577,11 +704,20 @@ public class FrStudentForm extends javax.swing.JFrame {
     private javax.swing.JLabel lbMath;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbStudentInfo;
+    private javax.swing.JMenuBar mnBar;
+    private javax.swing.JMenu mnEdit;
+    private javax.swing.JMenu mnFile;
+    private javax.swing.JMenu mnSource;
+    private javax.swing.JMenu mnView;
+    private javax.swing.JMenu mniLeftFirst;
+    private javax.swing.JMenu mniLeftSecond;
+    private javax.swing.JMenuItem mniNewProject;
     private javax.swing.JPanel pnDetailLeft;
     private javax.swing.JPanel pnDetailRight;
     private javax.swing.JPanel pnMainBottom;
     private javax.swing.JPanel pnMainCenter;
     private javax.swing.JPanel pnMainTop;
+    private javax.swing.JPopupMenu pupLeft;
     private javax.swing.JRadioButton rdFemale;
     private javax.swing.JRadioButton rdMale;
     private javax.swing.JRadioButton rdMiddle;

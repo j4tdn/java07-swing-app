@@ -27,6 +27,8 @@ public class pnStudent extends javax.swing.JPanel {
 
     private final StudentService studentService;
     private Student SelectStudent;
+    private StudentTableModel studentModel;
+    private int rowModel = -1;
 
     /**
      * Creates new form pnStudent
@@ -92,7 +94,7 @@ public class pnStudent extends javax.swing.JPanel {
 
     private void tableRowSelectionTrigger() {
         int rowIndex = tbStudent.getSelectedRow();
-        int rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
+        rowModel = tbStudent.convertColumnIndexToModel(rowIndex);
         String studentId = (String) tbStudent.getModel().getValueAt(rowModel, 0);
         SelectStudent = studentService.get(studentId);
         showStudentInfo(SelectStudent);
@@ -114,7 +116,7 @@ public class pnStudent extends javax.swing.JPanel {
 
 
     private void initTableStudentModel() {
-        StudentTableModel studentModel = new StudentTableModel(tbStudent);
+        studentModel = new StudentTableModel(tbStudent);
         studentModel.loadData();
         studentModel.cssForTable();
 
@@ -124,7 +126,7 @@ public class pnStudent extends javax.swing.JPanel {
         btnAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                FrStudentForm form = new FrStudentForm(tbStudent);
+                FrStudentForm form = new FrStudentForm(studentModel);
                 form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 form.setVisible(true);
             }
@@ -139,7 +141,7 @@ public class pnStudent extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btnEdit.isEnabled()) {
-                    FrStudentForm form = new FrStudentForm(SelectStudent,tbStudent);
+                    FrStudentForm form = new FrStudentForm(SelectStudent, studentModel,rowModel);
                     form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     form.setVisible(true);
                 }
