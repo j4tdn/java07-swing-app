@@ -21,6 +21,6 @@ public interface StudentService {
 
     Student get(String id);
 
-    void addStudent(Student student);
-    void updateStudent(Student student);
+    int addStudent(Student student);
+    boolean updateStudent(Student student);
 }

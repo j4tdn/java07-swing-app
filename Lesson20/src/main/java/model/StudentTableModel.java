@@ -37,7 +37,7 @@ public class StudentTableModel extends AbstractTableModel {
         studentService = new StudentServiceImpl();
         students = studentService.getAll();
         System.out.println(students.size());
-        
+
     }
 
     @Override
@@ -71,7 +71,7 @@ public class StudentTableModel extends AbstractTableModel {
 
         switch (columns[columnIndex]) {
             case ID:
-                value =student.getId();
+                value = student.getId();
                 break;
             case FULLNAME:
                 value = student.getFullname();
@@ -100,15 +100,35 @@ public class StudentTableModel extends AbstractTableModel {
     public void cssForTable() {
         table.setFont(new Font("tahoma", Font.PLAIN, 18));
         table.getTableHeader().setFont(new Font("tahoma", Font.BOLD, 18));
-        
+
         table.getTableHeader().setReorderingAllowed(false);//ko cho keo o Header
         table.getTableHeader().setPreferredSize(new Dimension(0, 32));
 
         table.setRowHeight(26);
         //table.getColumnModel().getColumn(0).setMinWidth(0);
         //table.getColumnModel().getColumn(0).setMaxWidth(0);
-        
+
         TableRender.setHorizontaAlighment(table, SwingConstants.CENTER);
 
+    }
+
+    public void update(Student student, int index) {
+        boolean isValid = studentService.updateStudent(student);
+        if (isValid) {
+            students.set(index, student);
+        }
+        fireTableRowsUpdated(index, index);
+    }
+
+    public void add(Student student) {
+         int studentId=studentService.addStudent(student);
+        if(studentId!=0){
+            student.setId("");
+            students.add(student);
+        }
+        fireTableDataChanged();
+        
+        table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+        
     }
 }

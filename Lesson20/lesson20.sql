@@ -3,7 +3,7 @@ use java07_student;
 
     
 create table Student
-(ID varchar(20) primary key not null,
+(ID int primary key auto_increment,
 Fullname varchar(20),
 Gender boolean,
 Hobbies text,

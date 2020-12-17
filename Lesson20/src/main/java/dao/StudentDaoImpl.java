@@ -110,12 +110,11 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void addStudent(Student student) {
+    public int addStudent(Student student) {
         Connection conn = connection.getConnection();
 
         List<Student> students = new ArrayList<>();
         String query = "insert into Student(ID ,Fullname,Gender,Hobbies,Math ,Literature ,GradeID ,AvatarPath ,`Comment`) value('"
-                + Integer.toString(getListStudent().size() + 1) + "','"
                 + student.getFullname() + "',"
                 + student.getGender() + ",'"
                 + student.getHobbies() + "',"
@@ -124,20 +123,28 @@ public class StudentDaoImpl implements StudentDao {
                 + student.getGrade().getId() + ",'"
                 + student.getAvatarPath() + "','"
                 + student.getComment() + "');";
-
+        int affectedRows = 0;
+        int id=-1;
         try {
-            st = conn.createStatement();
-            st.executeUpdate(query);
-
+            pst = conn.prepareStatement(query,PreparedStatement.RETURN_GENERATED_KEYS);
+            pst.executeUpdate(query);
+            affectedRows = pst.executeUpdate();
+            if(affectedRows!=0){
+                rs=pst.getGeneratedKeys();
+                if(rs.next()){
+                    id=rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             SqlUtils.close(rs, st, conn);
         }
+        return id;
     }
 
     @Override
-    public void updateStudent(Student student) {
+    public boolean updateStudent(Student student) {
 
         Connection conn = connection.getConnection();
 
@@ -151,16 +158,17 @@ public class StudentDaoImpl implements StudentDao {
                 + "AvatarPath='" + student.getAvatarPath() + "',"
                 + "Comment='" + student.getAvatarPath() + "' "
                 + "where ID='" + student.getId() + "'";
-
+        int affectedRows = 0;
         try {
-            st = conn.createStatement();
-            st.executeUpdate(q);
-
+            pst = conn.prepareStatement(q);
+            pst.executeUpdate(q);
+            affectedRows = pst.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            SqlUtils.close(rs, st, conn);
+            SqlUtils.close(rs, pst, conn);
         }
+        return affectedRows > 0;
     }
 
 }

@@ -28,7 +28,6 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.getAll();
     }
 
-
     @Override
     public List<Grade> getListGrade() {
         return studentDao.getListGrade();
@@ -40,15 +39,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void addStudent(Student student) {
-        studentDao.addStudent(student);
+    public int addStudent(Student student) {
+
+        return studentDao.addStudent(student);
     }
 
     @Override
-    public void updateStudent(Student student) {
-       studentDao.updateStudent(student);
+    public boolean updateStudent(Student student) {
+        return studentDao.updateStudent(student);
     }
-
-
 
 }
