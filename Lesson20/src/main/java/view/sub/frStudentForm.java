@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import model.StudentTableModel;
 import model.bean.Grade;
 import model.bean.Student;
 import service.GradeService;
@@ -34,87 +35,133 @@ import utils.ImageUtils;
  *
  * @author USER
  */
-public class frStudentForm extends javax.swing.JFrame {
-    
+public class FrStudentForm extends javax.swing.JFrame {
+
     private final GradeService gradeService;
-    
+
     private final StudentService studentService;
-    
+
     private File targetFile;
-    
+
     private Student student;
-    
+
     private boolean isEditForm;
+
+    private StudentTableModel studentModel;
 
     /**
      * Creates new form frStudentForm
+     * @param studentModel
      */
-    public frStudentForm() {
-        this(null);
+    public FrStudentForm(StudentTableModel studentModel) {
+        this(null, studentModel);
     }
-    
-    public frStudentForm(Student student) {
+
+    public FrStudentForm(Student student, StudentTableModel studentModel) {
         this.student = student;
+        this.studentModel = studentModel;
         isEditForm = student != null;
         gradeService = new GradeServiceImpl();
         studentService = new StudentServiceImpl();
-        
+
         initComponents();
         initDataModel();
         initComponentManually();
         initEvents();
     }
-    
+
     private void initEvents() {
         btUploadEvents();
         btSubmitEvents();
         btResetEvent();
     }
-    
+
     private void btSubmitEvents() {
         btSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Student newStudent = new Student();
-                
-                String fullname = tfName.getText();
-                Grade grade = (Grade) cbGrade.getSelectedItem();
-                Boolean gender = rdMale.isSelected();
-                String hobbies = getHobbies(cbBasketball, cbFootball, cbSmileball);
-                Double math = Double.parseDouble(tfMath.getText());
-                Double literature = Double.parseDouble(tfLiterature.getText());
-                String comment = taComment.getText();
-                String filename = targetFile != null ? targetFile.getName() : "Undefined";
-                
-                newStudent.setFullname(fullname);
-                newStudent.setGrade(grade);
-                newStudent.setGender(gender);
-                newStudent.setHobbies(hobbies);
-                newStudent.setMath(math);
-                newStudent.setLiterature(literature);
-                newStudent.setComment(comment);
-                newStudent.setAvatarPath(filename);
-                
-                boolean isSuccess = studentService.save(newStudent);
-                
-                if (isSuccess) {
-                    JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
-                    setVisible(false);
+                boolean isSuccess;
+
+                if (isEditForm) {
+                    getInfo(student, isEditForm);
+
+                    isSuccess = studentService.update(student);
+
+                    if (isSuccess) {
+                        int idOfUpdatedStudent = student.getId();
+                        JOptionPane.showMessageDialog(null, "Sửa thành công!!!");
+                        setVisible(false);
+                        studentModel.refreshUpdate(student, idOfUpdatedStudent);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Sửa thất bại!!!");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Thêm thất bại!!!");
+                    Student newStudent = new Student();
+                    getInfo(newStudent, isEditForm);
+
+                    isSuccess = studentService.save(newStudent);
+
+                    if (isSuccess) {
+                        JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
+                        setVisible(false);
+                        studentModel.refreshAdd(newStudent);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Thêm thất bại!!!");
+                    }
                 }
             }
-            
         });
     }
-    
+
+    private void getInfo(Student student, boolean isEditForm) {
+        String fullname = tfName.getText();
+        Grade grade = (Grade) cbGrade.getSelectedItem();
+        Boolean gender = rdMale.isSelected();
+        String hobbies = getHobbies(cbBasketball, cbFootball, cbSmileball);
+        Double math = Double.parseDouble(tfMath.getText());
+        Double literature = Double.parseDouble(tfLiterature.getText());
+        String comment = taComment.getText();
+        String filename;
+
+        student.setFullname(fullname);
+        student.setGrade(grade);
+        student.setGender(gender);
+        student.setHobbies(hobbies);
+        student.setMath(math);
+        student.setLiterature(literature);
+        student.setComment(comment);
+
+        if (isEditForm) {
+            String[] stringArrayOfFilename = student.getAvatarPath().split("\\\\");
+            String newFileName = targetFile != null ? targetFile.getName() : "Undefined";
+            String oldFileName = stringArrayOfFilename[1];
+            filename = changeUploadFile(student, oldFileName, newFileName);
+        } else {
+            filename = targetFile != null ? targetFile.getName() : "Undefined";
+        }
+
+        student.setAvatarPath(filename);
+    }
+
+    private String changeUploadFile(Student student, String oldFileName, String newFileName) {
+        String[] stringArrayOfFilename = student.getAvatarPath().split("\\\\");
+        oldFileName = stringArrayOfFilename[1];
+        newFileName = targetFile != null ? targetFile.getName() : "Undefined";
+
+        if (newFileName.equals("Undefined")) {
+            return oldFileName;
+        }
+
+        return newFileName;
+    }
+
     private String getHobbies(JCheckBox... checkBoxs) {
         return Arrays.stream(checkBoxs)
                 .filter(JCheckBox::isSelected)
                 .map(JCheckBox::getText)
                 .collect(Collectors.joining(", "));
     }
-    
+
     private void btResetEvent() {
         btReset.addMouseListener(new MouseAdapter() {
             @Override
@@ -130,10 +177,10 @@ public class frStudentForm extends javax.swing.JFrame {
                 taComment.setText("");
                 lbAvatar.setIcon(new ImageIcon());
             }
-            
+
         });
     }
-    
+
     private void btUploadEvents() {
         btUpload.addMouseListener(new MouseAdapter() {
             @Override
@@ -143,14 +190,14 @@ public class frStudentForm extends javax.swing.JFrame {
                 if (JFileChooser.APPROVE_OPTION == fc.showDialog(null, "Upload")) {
                     File sourceFile = fc.getSelectedFile();
                     String fileName = sourceFile.getName();
-                    
+
                     String regex = "[\\w-]+[.]{1}(?)(?:png|jpg|jpeg|gif)";
                     if (!fileName.matches(regex)) {
                         JOptionPane.showMessageDialog(null, "Invalid image path!");
                         return;
                     }
                     String renamedFile = System.currentTimeMillis() + fileName;
-                    
+
                     targetFile = new File("image_upload" + File.separator + renamedFile);
                     try {
                         // Step 1: Copy & rename to project's file upload
@@ -169,14 +216,14 @@ public class frStudentForm extends javax.swing.JFrame {
                     lbAvatar.setIcon(icon);
                 }
             }
-            
+
         });
     }
-    
+
     private void initDataModel() {
         initCbbGradeModel();
     }
-    
+
     private void initCbbGradeModel() {
         List<Grade> grades = gradeService.getAll();
         Grade[] gradesArray = grades.stream().toArray(Grade[]::new);
@@ -184,13 +231,13 @@ public class frStudentForm extends javax.swing.JFrame {
         cbGrade.setModel(gradeModel);
         cbGrade.setSelectedIndex(-1);
     }
-    
+
     private void initComponentManually() {
         setLocationRelativeTo(null);
-        
+
         showStudentInfo();
     }
-    
+
     private void showStudentInfo() {
         if (student != null) {
             tfName.setText(student.getFullname());
@@ -203,7 +250,7 @@ public class frStudentForm extends javax.swing.JFrame {
             lbAvatar.setIcon(ImageUtils.getIcon(student.getAvatarPath(), lbAvatar.getWidth(), lbAvatar.getHeight()));
         }
     }
-    
+
     private void setGender() {
         if (student.getGender()) {
             rdMale.setSelected(true);
@@ -211,7 +258,7 @@ public class frStudentForm extends javax.swing.JFrame {
             rdFemale.setSelected(true);
         }
     }
-    
+
     private void setHobbies() {
         List<String> hobbies = Pattern.compile(", ").splitAsStream(student.getHobbies()).collect(Collectors.toList());
         JCheckBox[] cbHobbies = {cbBasketball, cbFootball, cbSmileball};
@@ -605,20 +652,20 @@ public class frStudentForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrStudentForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frStudentForm().setVisible(true);
             }
         });
     }

@@ -99,11 +99,26 @@ public class StudentTableModel extends AbstractTableModel {
         table.getTableHeader().setPreferredSize(new Dimension(0, 40));
         table.getTableHeader().setFont(font);
         table.setRowHeight(26);
-        
+
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
 
         TableRender.setHorizontalAlignment(table, SwingConstants.CENTER);
     }
 
+    public void refreshAdd(Student newStudent) {
+        students.add(newStudent);
+        fireTableDataChanged();
+    }
+
+    public void refreshUpdate(Student student, int idOfStudent) {
+        int idOfStudentList = 0;
+        for (Student st : students) {
+            if ((int) st.getId() == idOfStudent) {
+                idOfStudentList = students.indexOf(st);
+            }
+        }
+        students.set(idOfStudentList, student);
+        fireTableDataChanged();
+    }
 }

@@ -18,4 +18,6 @@ public interface StudentService {
     Student getStudent(int id);
     
     boolean save(Student student);
+    
+    boolean update(Student student);
 }

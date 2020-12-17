@@ -9,6 +9,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
@@ -23,20 +24,26 @@ import utils.ImageUtils;
  *
  * @author USER
  */
-public class pnStudent extends javax.swing.JPanel {
+public class PnStudent extends javax.swing.JPanel {
 
     private final StudentService studentService;
 
     private Student selectedStudent;
 
+    public StudentTableModel studentModel;
+
     /**
      * Creates new form pnStudent
      */
-    public pnStudent() {
+    public PnStudent() {
         studentService = new StudentServiceImpl();
         initComponents();
         initDataModel();
         initEvents();
+    }
+
+    public JTable getTbStudent() {
+        return tbStudent;
     }
 
     private void initDataModel() {
@@ -44,9 +51,10 @@ public class pnStudent extends javax.swing.JPanel {
     }
 
     private void initTableStudentModel() {
-        StudentTableModel studentModel = new StudentTableModel(tbStudent);
+        studentModel = new StudentTableModel(tbStudent);
         studentModel.loadData();
         studentModel.cssForTable();
+
     }
 
     private void initEvents() {
@@ -117,7 +125,7 @@ public class pnStudent extends javax.swing.JPanel {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                frStudentForm form = new frStudentForm();
+                FrStudentForm form = new FrStudentForm(studentModel);
                 form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 form.setVisible(true);
             }
@@ -129,7 +137,7 @@ public class pnStudent extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btEdit.isEnabled()) {
-                    frStudentForm form = new frStudentForm(selectedStudent);
+                    FrStudentForm form = new FrStudentForm(selectedStudent, studentModel);
                     form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     form.setVisible(true);
                 }

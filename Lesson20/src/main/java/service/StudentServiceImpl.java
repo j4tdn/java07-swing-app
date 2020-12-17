@@ -37,4 +37,9 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.save(student);
     }
 
+    @Override
+    public boolean update(Student student) {
+        return studentDao.update(student);
+    }
+
 }

@@ -28,14 +28,14 @@ import javax.swing.JOptionPane;
  *
  * @author USER
  */
-public class pnStudentForm extends javax.swing.JPanel {
+public class PnStudentForm extends javax.swing.JPanel {
 
     private File targetFile;
 
     /**
      * Creates new form pnStudent
      */
-    public pnStudentForm() {
+    public PnStudentForm() {
         initComponents();
 
         initDataModel();
