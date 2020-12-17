@@ -109,6 +109,7 @@ public class StudentTableModel extends AbstractTableModel {
     public void refreshAdd(Student newStudent) {
         students.add(newStudent);
         fireTableDataChanged();
+        table.scrollRectToVisible(table.getCellRect(table.getRowCount() - 1, 0, true));
     }
 
     public void refreshUpdate(Student student, int idOfStudent) {
