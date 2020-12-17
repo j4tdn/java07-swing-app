@@ -96,5 +96,7 @@ public class StudentTableModel extends AbstractTableModel {
         tbStudent.getColumnModel().getColumn(0).setMinWidth(0);
 
         setHorizontalAlignment(tbStudent, SwingConstants.CENTER);
+        
+//        fireTableRowsDeleted(index, index);
     }
 }

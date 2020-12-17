@@ -85,6 +85,9 @@ public class FrAddStudent extends JFrame {
     private void initComponents() {
 
         btgGender = new javax.swing.ButtonGroup();
+        pmCenterLeft = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         pnMainTop = new javax.swing.JPanel();
         lbStudentInfo = new javax.swing.JLabel();
         pnMainBottom = new javax.swing.JPanel();
@@ -117,6 +120,25 @@ public class FrAddStudent extends JFrame {
         lbPicture = new javax.swing.JLabel();
         lbAvatar = new javax.swing.JLabel();
         btChoose = new javax.swing.JButton();
+        mnBar = new javax.swing.JMenuBar();
+        mnFile = new javax.swing.JMenu();
+        mniNewPr = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        mnEdit = new javax.swing.JMenu();
+        mnHelp = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
+        pmCenterLeft.add(jMenuItem1);
+
+        jMenuItem7.setText("jMenuItem7");
+        pmCenterLeft.add(jMenuItem7);
 
         pnMainTop.setBackground(new java.awt.Color(0, 153, 153));
         pnMainTop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 51), 2));
@@ -249,7 +271,7 @@ public class FrAddStudent extends JFrame {
                     .addComponent(cbSocer)
                     .addComponent(cbBadminton)
                     .addComponent(cbVolleyball))
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
 
         spMain.setLeftComponent(pnDetailLeft);
@@ -335,7 +357,7 @@ public class FrAddStudent extends JFrame {
                         .addGroup(pnDetailRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPicture)
                             .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 135, Short.MAX_VALUE)))
+                        .addGap(0, 113, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -344,7 +366,54 @@ public class FrAddStudent extends JFrame {
         pnMainCenter.add(spMain, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnMainCenter, java.awt.BorderLayout.CENTER);
+
+        mnFile.setText("File");
+
+        mniNewPr.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniNewPr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/power_off.png"))); // NOI18N
+        mniNewPr.setText("New Project");
+        mnFile.add(mniNewPr);
+
+        jMenuItem2.setText("New File");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        mnFile.add(jMenuItem2);
+        mnFile.add(jSeparator1);
+
+        jMenuItem3.setText("Open Project");
+        mnFile.add(jMenuItem3);
+
+        jMenu1.setText("Open Recent Project");
+
+        jMenuItem5.setText("jMenuItem5");
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setText("jMenuItem6");
+        jMenu1.add(jMenuItem6);
+
+        mnFile.add(jMenu1);
+        mnFile.add(jSeparator2);
+
+        jMenuItem4.setText("Exit");
+        mnFile.add(jMenuItem4);
+
+        mnBar.add(mnFile);
+
+        mnEdit.setText("Edit");
+        mnBar.add(mnEdit);
+
+        mnHelp.setText("Help");
+        mnBar.add(mnHelp);
+
+        setJMenuBar(mnBar);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -357,6 +426,16 @@ public class FrAddStudent extends JFrame {
     private javax.swing.JComboBox cbClass;
     private javax.swing.JCheckBox cbSocer;
     private javax.swing.JCheckBox cbVolleyball;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbClass;
     private javax.swing.JLabel lbComment;
@@ -367,6 +446,12 @@ public class FrAddStudent extends JFrame {
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbPicture;
     private javax.swing.JLabel lbStudentInfo;
+    private javax.swing.JMenuBar mnBar;
+    private javax.swing.JMenu mnEdit;
+    private javax.swing.JMenu mnFile;
+    private javax.swing.JMenu mnHelp;
+    private javax.swing.JMenuItem mniNewPr;
+    private javax.swing.JPopupMenu pmCenterLeft;
     private javax.swing.JPanel pnDetailLeft;
     private javax.swing.JPanel pnDetailRight;
     private javax.swing.JPanel pnMainBottom;
@@ -407,6 +492,8 @@ public class FrAddStudent extends JFrame {
                 FrAddStudent.this.setVisible(false);
             }
         });
+
+        menuItemsEvents();
     }
 
     private void btUploadEvents() {
@@ -466,6 +553,8 @@ public class FrAddStudent extends JFrame {
                                 taComment.getText(), image);
                         System.out.println(service.updateStudent(student));
                         setTableData();
+// scroll to the end row
+                        tbStudent.scrollRectToVisible(tbStudent.getCellRect(tbStudent.getRowCount() - 1, 0, true));
                         showMessage("Successfully updated!", "Updated", JOptionPane.INFORMATION_MESSAGE);
                         FrAddStudent.this.setVisible(false);
                     } else {
@@ -476,6 +565,7 @@ public class FrAddStudent extends JFrame {
                             System.out.println(service.addStudent(std));
                             students.add(std);
                             setTableData();
+                            tbStudent.scrollRectToVisible(tbStudent.getCellRect(tbStudent.getRowCount() - 1, 0, true));
                             showMessage("Add students successfully!", "Added", JOptionPane.INFORMATION_MESSAGE);
                             FrAddStudent.this.setVisible(false);
                         } else {
@@ -529,6 +619,8 @@ public class FrAddStudent extends JFrame {
         setUndecorated(true);
         setSize(800, 500);
         setLocationRelativeTo(null);
+        
+        pnDetailLeft.setComponentPopupMenu(pmCenterLeft);
 
         pnMainCenter.setBorder(borderCenter);
         tfName.setText(student.getName());
@@ -595,5 +687,18 @@ public class FrAddStudent extends JFrame {
             zero += 0;
         }
         return zero + (students.size() + 1);
+    }
+
+    private void menuItemsEvents() {
+        mniNewProjectEvents();
+    }
+
+    private void mniNewProjectEvents() {
+        mniNewPr.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "HI HI HI");
+            }
+        });
     }
 }
