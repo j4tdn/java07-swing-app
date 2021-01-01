@@ -33,8 +33,8 @@ public class FrMain extends javax.swing.JFrame {
 //    private final Icon imageContinue = new ImageIcon(getClass().getResource("/images/icons/pause.png"));
     private final Icon iconDogGif = new ImageIcon(getClass().getResource("/images/gif/dog.gif"));
     private final Icon iconClapsGif = new ImageIcon(getClass().getResource("/images/gif/claps04.gif"));
-    private final Dimension defaultDimension = new Dimension(101, 25);
-    private final Dimension dimension = new Dimension(106, 30);
+//    private final Dimension defaultDimension = new Dimension(101, 25);
+//    private final Dimension dimension = new Dimension(106, 30);
     private final QuestionAndAnswer[] list = QuestionAndAnswer.values();
     private final int lengthOfAnswer = 6;
     private final JButton[] buttons = new JButton[lengthOfAnswer];
@@ -157,12 +157,12 @@ public class FrMain extends javax.swing.JFrame {
 
         pnCenterCenter.setPreferredSize(new java.awt.Dimension(150, 180));
         pnCenterCenter.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        pnCenterCenter.add(btPause, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, -1));
+        pnCenterCenter.add(btPause, new org.netbeans.lib.awtextra.AbsoluteConstraints(345, 15, -1, -1));
 
         lbTime.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         lbTime.setToolTipText("");
         pnCenterCenter.add(lbTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-        pnCenterCenter.add(lbClock, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        pnCenterCenter.add(lbClock, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, 350, 350));
 
         pnCenter.add(pnCenterCenter, java.awt.BorderLayout.CENTER);
 
@@ -264,25 +264,33 @@ public class FrMain extends javax.swing.JFrame {
         pnTop.setBackground(Color.WHITE);
         pnBot.setPreferredSize(new Dimension(0, 60));
         pnBot.setBackground(Color.WHITE);
+//        btStart.setPreferredSize(defaultDimension);
+
         pnCenterTop.setPreferredSize(new Dimension(0, 200));
-        pnCenterLeft.setPreferredSize(new Dimension(1240, 0));
-        pnCenterLeft.setBackground(Color.WHITE);
-
-        btStart.setPreferredSize(defaultDimension);
-
         layoutCenterLeft();
-        layoutCenterRight();
+        layoutCenterCenter();
 
         createButtonQuestions();
     }
 
-    private void layoutCenterRight() {
-        pnCenterCenter.setPreferredSize(new Dimension(getPreWidth(pnCenter) / 3 - 50, getPreHeight(pnCenter) - 125));
+    private void layoutCenterLeft() {
+        pnCenterLeft.setLayout(null);
+        pnCenterLeft.setBackground(Color.WHITE);
+        pnCenterLeft.setPreferredSize(new Dimension(920, 0));
+        pnCenterLeft.setBorder(BorderFactory.createEtchedBorder());
+
+        lbTitleColor.setBackground(Color.DARK_GRAY);
+        lbQuestion.setFont(new Font("Tahoma", Font.PLAIN, 28));
+
+        lbGif.setBounds(350, 100, 180, 180);
+        setIcon("/images/gif/dog.png");
+    }
+
+    private void layoutCenterCenter() {
         pnCenterCenter.setBorder(BorderFactory.createEtchedBorder());
 
-        lbClock.setBounds(20, 5, getPreWidth(pnCenterCenter) + 47, getPreHeight(pnCenterCenter) - 4);
         Image image = new ImageIcon(getClass().getResource("/images/imageClocks/clock339.jpg"))
-                .getImage().getScaledInstance(lbClock.getWidth(), lbClock.getHeight(), Image.SCALE_SMOOTH);
+                .getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
         lbClock.setIcon(new ImageIcon(image));
 
         lbTime.setFont(new Font("Tahoma", Font.PLAIN, 100));
@@ -291,18 +299,6 @@ public class FrMain extends javax.swing.JFrame {
 
         btPause.setIcon(imagePause);
         btPause.setBounds(250, 10, getPreWidth(btPause), getPreHeight(btPause));
-    }
-
-    private void layoutCenterLeft() {
-        pnCenterLeft.setLayout(null);
-        pnCenterLeft.setPreferredSize(new Dimension(getPreWidth(pnCenter) * 2 / 3, getPreHeight(pnCenter) - 100));
-        pnCenterLeft.setBorder(BorderFactory.createEtchedBorder());
-
-        lbTitleColor.setBackground(Color.DARK_GRAY);
-        lbQuestion.setFont(new Font("Tahoma", Font.PLAIN, 32));
-
-        lbGif.setBounds(pnCenterLeft.getWidth() - 220, 90, 250, 270);
-        setIcon("/images/gif/dog.png");
     }
 
     private void setIcon(String path) {
@@ -444,12 +440,12 @@ public class FrMain extends javax.swing.JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btStart.setPreferredSize(defaultDimension);
+//                btStart.setPreferredSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                btStart.setPreferredSize(dimension);
+//                btStart.setPreferredSize(dimension);
             }
         });
     }
@@ -463,12 +459,10 @@ public class FrMain extends javax.swing.JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btStart.setPreferredSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                btStart.setPreferredSize(dimension);
             }
         });
     }
@@ -482,12 +476,10 @@ public class FrMain extends javax.swing.JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btStart.setPreferredSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                btStart.setPreferredSize(dimension);
             }
         });
     }

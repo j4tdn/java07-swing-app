@@ -5,6 +5,7 @@
  */
 package service;
 
+import java.util.Arrays;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -53,6 +54,7 @@ public class HandleButtonEvents {
         this.answer = answer;
         this.lbGif = lbGif;
         this.lbGif.setIcon(icon);
+        Arrays.fill(btStatus, false);
         createAnswerButtons(pnCenterTop, buttons, answer);
         questionDisplay(lbQuestion, question, pnCenterLeft);
     }
@@ -84,6 +86,7 @@ public class HandleButtonEvents {
     }
 
     public void handleButtonOpenAllEvent(Icon icon) {
+        Arrays.fill(btStatus, true);
         if (selectedButton != null) {
             lbGif.setIcon(icon);
             for (int i = 0; i < answer.length(); i++) {

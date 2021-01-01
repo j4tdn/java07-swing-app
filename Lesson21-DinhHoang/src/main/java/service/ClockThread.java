@@ -9,6 +9,10 @@ package service;
  *
  * @author DangHoang
  */
-public class CountTimeThread extends Thread {
+public class ClockThread implements Runnable{
 
+    @Override
+    public void run() {
+        
+    }
 }
