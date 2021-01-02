@@ -19,29 +19,32 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import service.HandleButtonEvents;
-import static utils.ComponentUtils.*;
 
 /**
  *
  * @author DangHoang
  */
-public class FrMain extends javax.swing.JFrame {
+public class FrMain extends javax.swing.JFrame implements Runnable {
 
     private final HandleButtonEvents handleButtonEvents;
     private final Font font = new Font("Tahoma", Font.PLAIN, 48);
     private final Icon imagePause = new ImageIcon(getClass().getResource("/images/icons/resume.png"));
-//    private final Icon imageContinue = new ImageIcon(getClass().getResource("/images/icons/pause.png"));
+    private final Icon imageContinue = new ImageIcon(getClass().getResource("/images/icons/pause.png"));
     private final Icon iconDogGif = new ImageIcon(getClass().getResource("/images/gif/dog.gif"));
     private final Icon iconClapsGif = new ImageIcon(getClass().getResource("/images/gif/claps04.gif"));
-//    private final Dimension defaultDimension = new Dimension(101, 25);
-//    private final Dimension dimension = new Dimension(106, 30);
+    private final Icon iconFireWorkGif = new ImageIcon(getClass().getResource("/images/gif/firework.gif"));
+    private final Dimension defaultDimension = new Dimension(105, 25);
+    private final Dimension dimension = new Dimension(105, 30);
     private final QuestionAndAnswer[] list = QuestionAndAnswer.values();
     private final int lengthOfAnswer = 6;
     private final JButton[] buttons = new JButton[lengthOfAnswer];
 
     private Image imageQues;
     private Icon icon;
-//    private int second = 15;
+    private boolean status = true;
+    private boolean start = false;
+    private static Thread thread;
+    private int second = -1;
 
     /**
      * Creates new form FrMain
@@ -78,7 +81,7 @@ public class FrMain extends javax.swing.JFrame {
         pnCenterLeft = new javax.swing.JPanel();
         lbQuestion = new javax.swing.JLabel();
         lbGif = new javax.swing.JLabel();
-        lbTitleColor = new javax.swing.JLabel();
+        pnTitleColor = new javax.swing.JPanel();
         pnCenterCenter = new javax.swing.JPanel();
         btPause = new javax.swing.JButton();
         lbTime = new javax.swing.JLabel();
@@ -150,8 +153,22 @@ public class FrMain extends javax.swing.JFrame {
 
         lbQuestion.setBackground(new java.awt.Color(204, 204, 204));
         pnCenterLeft.add(lbQuestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(72, 0, 440, 33));
-        pnCenterLeft.add(lbGif, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 51, 166, 151));
-        pnCenterLeft.add(lbTitleColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 510, 30));
+        pnCenterLeft.add(lbGif, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 51, -1, -1));
+
+        pnTitleColor.setBackground(new java.awt.Color(153, 153, 153));
+
+        javax.swing.GroupLayout pnTitleColorLayout = new javax.swing.GroupLayout(pnTitleColor);
+        pnTitleColor.setLayout(pnTitleColorLayout);
+        pnTitleColorLayout.setHorizontalGroup(
+            pnTitleColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 510, Short.MAX_VALUE)
+        );
+        pnTitleColorLayout.setVerticalGroup(
+            pnTitleColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnCenterLeft.add(pnTitleColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pnCenter.add(pnCenterLeft, java.awt.BorderLayout.LINE_START);
 
@@ -161,7 +178,7 @@ public class FrMain extends javax.swing.JFrame {
 
         lbTime.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         lbTime.setToolTipText("");
-        pnCenterCenter.add(lbTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        pnCenterCenter.add(lbTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(153, 115, -1, -1));
         pnCenterCenter.add(lbClock, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, 350, 350));
 
         pnCenter.add(pnCenterCenter, java.awt.BorderLayout.CENTER);
@@ -219,9 +236,14 @@ public class FrMain extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new FrMain().setVisible(true);
-        });
+//        java.awt.EventQueue.invokeLater(() -> {
+//            new FrMain().setVisible(true);
+//        });
+        FrMain main = new FrMain();
+        main.setVisible(true);
+        thread = new Thread(main);
+        thread.start();
+        thread.suspend();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -243,7 +265,6 @@ public class FrMain extends javax.swing.JFrame {
     private javax.swing.JLabel lbGif;
     private javax.swing.JLabel lbQuestion;
     private javax.swing.JLabel lbTime;
-    private javax.swing.JLabel lbTitleColor;
     private javax.swing.JMenu mnbTG;
     private javax.swing.JMenu mnbTN;
     private javax.swing.JPanel pnBot;
@@ -251,6 +272,7 @@ public class FrMain extends javax.swing.JFrame {
     private javax.swing.JPanel pnCenterCenter;
     private javax.swing.JPanel pnCenterLeft;
     private javax.swing.JPanel pnCenterTop;
+    private javax.swing.JPanel pnTitleColor;
     private javax.swing.JPanel pnTop;
     private javax.swing.JPopupMenu.Separator sprTN;
     // End of variables declaration//GEN-END:variables
@@ -264,13 +286,14 @@ public class FrMain extends javax.swing.JFrame {
         pnTop.setBackground(Color.WHITE);
         pnBot.setPreferredSize(new Dimension(0, 60));
         pnBot.setBackground(Color.WHITE);
-//        btStart.setPreferredSize(defaultDimension);
+        btStart.setPreferredSize(defaultDimension);
+        btOpen.setPreferredSize(defaultDimension);
+        btReset.setPreferredSize(defaultDimension);
 
+        createButtonQuestions();
         pnCenterTop.setPreferredSize(new Dimension(0, 200));
         layoutCenterLeft();
         layoutCenterCenter();
-
-        createButtonQuestions();
     }
 
     private void layoutCenterLeft() {
@@ -279,11 +302,14 @@ public class FrMain extends javax.swing.JFrame {
         pnCenterLeft.setPreferredSize(new Dimension(920, 0));
         pnCenterLeft.setBorder(BorderFactory.createEtchedBorder());
 
-        lbTitleColor.setBackground(Color.DARK_GRAY);
+        pnTitleColor.setSize(new Dimension(918, 38));
         lbQuestion.setFont(new Font("Tahoma", Font.PLAIN, 28));
 
         lbGif.setBounds(350, 100, 180, 180);
         setIcon("/images/gif/dog.png");
+
+        handleButtonEvents.processingQuestions(pnCenterTop, pnCenterLeft, buttons, lbQuestion,
+                list[0].getQuestion(), String.valueOf(list[0]), lbGif, icon, btQs1);
     }
 
     private void layoutCenterCenter() {
@@ -294,11 +320,9 @@ public class FrMain extends javax.swing.JFrame {
         lbClock.setIcon(new ImageIcon(image));
 
         lbTime.setFont(new Font("Tahoma", Font.PLAIN, 100));
-        lbTime.setBounds(getPreWidth(pnCenterCenter) / 2, getPreHeight(pnCenterCenter) / 2, 150, 150);
-        lbTime.contains(150, 150);
+        lbTime.setBounds(226, 200, 70, 70);
 
         btPause.setIcon(imagePause);
-        btPause.setBounds(250, 10, getPreWidth(btPause), getPreHeight(btPause));
     }
 
     private void setIcon(String path) {
@@ -435,17 +459,21 @@ public class FrMain extends javax.swing.JFrame {
         btStart.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                thread.resume();
+                start = true;
                 handleButtonEvents.handleButtonStartEvent(iconDogGif);
+                btPause.setIcon(imageContinue);
+                status = true;
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-//                btStart.setPreferredSize(defaultDimension);
+                btStart.setSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-//                btStart.setPreferredSize(dimension);
+                btStart.setSize(dimension);
             }
         });
     }
@@ -454,15 +482,17 @@ public class FrMain extends javax.swing.JFrame {
         btOpen.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                handleButtonEvents.handleButtonOpenAllEvent(iconClapsGif);
+                handleButtonEvents.handleButtonOpenAllEvent(iconClapsGif, true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
+                btOpen.setSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
+                btOpen.setSize(dimension);
             }
         });
     }
@@ -476,10 +506,12 @@ public class FrMain extends javax.swing.JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
+                btReset.setSize(defaultDimension);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
+                btReset.setSize(dimension);
             }
         });
     }
@@ -488,6 +520,15 @@ public class FrMain extends javax.swing.JFrame {
         btPause.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (status) {
+                    thread.suspend();
+                    btPause.setIcon(imagePause);
+                    status = false;
+                } else {
+                    thread.resume();
+                    btPause.setIcon(imageContinue);
+                    status = true;
+                }
             }
         });
     }
@@ -503,5 +544,30 @@ public class FrMain extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "AUTHOR: DANG DINH HOANG");
             }
         });
+    }
+
+    @Override
+    @SuppressWarnings("SleepWhileInLoop")
+    public void run() {
+        while (true) {
+            if (start) {
+                second = 15;
+                start = false;
+            }
+            if (second >= 0) {
+                lbTime.setText(String.valueOf(second--));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                }
+                if (second == 0) {
+                    btPause.setIcon(imagePause);
+                    status = false;
+                    handleButtonEvents.handleButtonOpenAllEvent(iconFireWorkGif, false);
+                }
+            } else {
+                thread.suspend();
+            }
+        }
     }
 }

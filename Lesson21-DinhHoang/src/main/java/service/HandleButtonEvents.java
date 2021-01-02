@@ -10,8 +10,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static utils.ComponentUtils.getPreHeight;
-import static utils.ComponentUtils.getPreWidth;
+import static utils.ComponentUtils.*;
 
 /**
  *
@@ -40,11 +39,10 @@ public class HandleButtonEvents {
         panel.revalidate();
     }
 
-    private void questionDisplay(JLabel lbQuestion, String question, JPanel panelCenterLeft) {
+    private void questionDisplay(JLabel lbQuestion, String question) {
         lbQuestion.setText(question);
-        lbQuestion.setBounds((panelCenterLeft.getWidth() - getPreWidth(lbQuestion)) / 2, 0,
+        lbQuestion.setBounds((920 - getPreWidth(lbQuestion)) / 2, 0,
                 getPreWidth(lbQuestion), getPreHeight(lbQuestion));
-
     }
 
     public void processingQuestions(JPanel pnCenterTop, JPanel pnCenterLeft, JButton[] buttons,
@@ -53,10 +51,11 @@ public class HandleButtonEvents {
         this.selectedButton = selectedButton;
         this.answer = answer;
         this.lbGif = lbGif;
+        this.lbGif.setBounds(350, 100, 180, 180);
         this.lbGif.setIcon(icon);
         Arrays.fill(btStatus, false);
         createAnswerButtons(pnCenterTop, buttons, answer);
-        questionDisplay(lbQuestion, question, pnCenterLeft);
+        questionDisplay(lbQuestion, question);
     }
 
     public void buttonTextStatus(JButton button, int index) {
@@ -81,14 +80,21 @@ public class HandleButtonEvents {
     public void handleButtonStartEvent(Icon icon) {
         if (selectedButton != null) {
             handleButtonResetEvent();
+            lbGif.setBounds(350, 100, 180, 180);
             lbGif.setIcon(icon);
         }
     }
 
-    public void handleButtonOpenAllEvent(Icon icon) {
+    public void handleButtonOpenAllEvent(Icon icon, boolean isButton) {
         Arrays.fill(btStatus, true);
         if (selectedButton != null) {
-            lbGif.setIcon(icon);
+            if (isButton) {
+                lbGif.setBounds(370, 100, 180, 180);
+                lbGif.setIcon(icon);
+            } else {
+                lbGif.setBounds(235, 40, 450, 300);
+                lbGif.setIcon(icon);
+            }
             for (int i = 0; i < answer.length(); i++) {
                 buttons[i].setText(String.valueOf(answer.charAt(i)));
             }
