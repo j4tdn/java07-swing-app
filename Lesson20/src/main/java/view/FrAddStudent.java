@@ -221,7 +221,7 @@ public class FrAddStudent extends javax.swing.JFrame {
         }
         
         setGender();
-        setHobbiess();
+        setHobbies();
         if (student.getMath() != null) {
             tfMath.setText(String.valueOf(student.getMath()));
         }
@@ -250,17 +250,17 @@ public class FrAddStudent extends javax.swing.JFrame {
             });
         }
     }
- private void setHobbiess(){
-     String hobbies = student.getBobbies();
-     JCheckBox[] cbHobbies ={cbBadminton,cbSocer,cbVolleyball};
-     for(JCheckBox checkBox : cbHobbies){
-         if(hobbies.contains((checkBox.getText()))){
-             checkBox.setSelected(true);
-         }
-     }
-     
-     
- }
+// private void setHobbies(){
+//     String hobbies = student.getBobbies();
+//     JCheckBox[] cbHobbies ={cbBadminton,cbSocer,cbVolleyball};
+//     for(JCheckBox checkBox : cbHobbies){
+//         if(hobbies.contains((checkBox.getText()))){
+//             checkBox.setSelected(true);
+//         }
+//     }
+//     
+//     
+// }
  private void setGender() {
         if (student.getGender() != null) {
             if (student.getGender()) {
@@ -330,6 +330,19 @@ public class FrAddStudent extends javax.swing.JFrame {
         btCancel = new javax.swing.JButton();
         pnMainTop = new javax.swing.JPanel();
         lbStudentInfo = new javax.swing.JLabel();
+        mnBar = new javax.swing.JMenuBar();
+        mnFile = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        mnEdit = new javax.swing.JMenu();
+        mnView = new javax.swing.JMenu();
+        mnNavigate = new javax.swing.JMenu();
+        mnSource = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -431,7 +444,7 @@ public class FrAddStudent extends javax.swing.JFrame {
                     .addComponent(cbSocer)
                     .addComponent(cbBadminton)
                     .addComponent(cbVolleyball))
-                .addContainerGap(254, Short.MAX_VALUE))
+                .addContainerGap(233, Short.MAX_VALUE))
         );
 
         spMain.setLeftComponent(pnDetailLeft);
@@ -515,7 +528,7 @@ public class FrAddStudent extends javax.swing.JFrame {
                     .addComponent(lbPicture)
                     .addComponent(btChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         spMain.setRightComponent(pnDetailRight);
@@ -550,6 +563,41 @@ public class FrAddStudent extends javax.swing.JFrame {
 
         getContentPane().add(pnMainTop, java.awt.BorderLayout.PAGE_START);
 
+        mnFile.setText("File");
+
+        jMenuItem1.setText("jMenuItem1");
+        mnFile.add(jMenuItem1);
+        mnFile.add(jSeparator1);
+
+        jMenuItem2.setText("jMenuItem1");
+        mnFile.add(jMenuItem2);
+
+        jMenuItem3.setText("jMenuItem1");
+        mnFile.add(jMenuItem3);
+        mnFile.add(jSeparator2);
+
+        jMenuItem4.setText("jMenuItem1");
+        mnFile.add(jMenuItem4);
+
+        jMenuItem5.setText("jMenuItem1");
+        mnFile.add(jMenuItem5);
+
+        mnBar.add(mnFile);
+
+        mnEdit.setText("Edit");
+        mnBar.add(mnEdit);
+
+        mnView.setText("View");
+        mnBar.add(mnView);
+
+        mnNavigate.setText("Navigate");
+        mnBar.add(mnNavigate);
+
+        mnSource.setText("Source");
+        mnBar.add(mnSource);
+
+        setJMenuBar(mnBar);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -568,6 +616,13 @@ public class FrAddStudent extends javax.swing.JFrame {
     private javax.swing.JComboBox cbClass;
     private javax.swing.JCheckBox cbSocer;
     private javax.swing.JCheckBox cbVolleyball;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel lbAvatar;
     private javax.swing.JLabel lbClass;
     private javax.swing.JLabel lbComment;
@@ -578,6 +633,12 @@ public class FrAddStudent extends javax.swing.JFrame {
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbPicture;
     private javax.swing.JLabel lbStudentInfo;
+    private javax.swing.JMenuBar mnBar;
+    private javax.swing.JMenu mnEdit;
+    private javax.swing.JMenu mnFile;
+    private javax.swing.JMenu mnNavigate;
+    private javax.swing.JMenu mnSource;
+    private javax.swing.JMenu mnView;
     private javax.swing.JPanel pnDetailLeft;
     private javax.swing.JPanel pnDetailRight;
     private javax.swing.JPanel pnMainBottom;
